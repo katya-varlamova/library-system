@@ -22,7 +22,8 @@
 
 ## Use-Case - диаграмма
 
-![use-case drawio](https://user-images.githubusercontent.com/55718346/162637660-74324a15-1d8a-4cd1-9e01-54c9b961a2ca.png)
+![use-case drawio](https://user-images.githubusercontent.com/55718346/162726609-a464c58a-830e-4ae6-a5a7-23e424ee4e4b.png)
+
 
 ## ER-диаграмма сущностей
 
@@ -43,7 +44,7 @@
 - QT - интерфейс;
 - SOCI - библиотека для доступа к БД;
 - Postgres - БД;
-- asio - библиотека для реализации многопоточности.
+- oat++ - библиотека для реализации сервера.
 
 ## Верхнеуровневое разбиение на компоненты
 
