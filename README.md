@@ -27,7 +27,7 @@
 
 ## ER-диаграмма сущностей
 
-![er drawio](https://user-images.githubusercontent.com/55718346/162637672-0bfa50b1-179b-4672-9728-92ad85b2a0e0.png)
+![er drawio](https://user-images.githubusercontent.com/55718346/162729403-afc7b148-92f1-413f-96cb-96677646f932.png)
 
 ## Архитектурные характеристики, важные для проекта
 
