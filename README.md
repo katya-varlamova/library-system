@@ -24,9 +24,15 @@
 
 ![use-case drawio-3](https://user-images.githubusercontent.com/55718346/165075886-90b63cc9-87bf-4622-8f23-99394b184903.png)
 
-## ER-диаграмма сущностей
+## ER-диаграмма сущностей (база данных)
 
-![er drawio](https://user-images.githubusercontent.com/55718346/162729403-afc7b148-92f1-413f-96cb-96677646f932.png)
+![er_db drawio](https://user-images.githubusercontent.com/55718346/165080002-d49af3f7-c95f-49ab-9517-cd90d48ea9b7.png)
+
+
+## ER-диаграмма сущностей 
+
+![er drawio-3](https://user-images.githubusercontent.com/55718346/165080019-56efd73e-6c26-46a6-88c6-8a812f2d4a09.png)
+
 
 ## Архитектурные характеристики, важные для проекта
 
@@ -56,8 +62,10 @@
 
 ### Доступ к данным
 
-![DBAccess drawio](https://user-images.githubusercontent.com/55718346/162639533-66dba828-ea98-4ef3-9917-298d147f49cb.png)
+![DBAccess drawio-4](https://user-images.githubusercontent.com/55718346/165079533-a1808bd6-4fdf-431f-92b1-d4a263fe62d8.png)
 
 ### Компонент с бизнес-логикой
+
+![Logic drawio](https://user-images.githubusercontent.com/55718346/165078101-89ce0a79-2073-4639-9071-6d38d6dbac1b.png)
 
 
