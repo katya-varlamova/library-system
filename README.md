@@ -66,6 +66,7 @@
 
 ### Компонент с бизнес-логикой
 
-![Logic drawio](https://user-images.githubusercontent.com/55718346/165078101-89ce0a79-2073-4639-9071-6d38d6dbac1b.png)
+![Logic drawio-2](https://user-images.githubusercontent.com/55718346/165086722-fd8626ed-5c8d-408a-b23e-68a420ffd4c6.png)
+
 
 
