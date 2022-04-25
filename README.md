@@ -22,8 +22,7 @@
 
 ## Use-Case - диаграмма
 
-![use-case drawio](https://user-images.githubusercontent.com/55718346/162726609-a464c58a-830e-4ae6-a5a7-23e424ee4e4b.png)
-
+![use-case drawio-3](https://user-images.githubusercontent.com/55718346/165075886-90b63cc9-87bf-4622-8f23-99394b184903.png)
 
 ## ER-диаграмма сущностей
 
