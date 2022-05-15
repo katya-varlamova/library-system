@@ -13,7 +13,9 @@ class BookConverter {
 public:
     std::shared_ptr<Book> convert(DBBook book, std::shared_ptr<Library> lib)
     {
-        return std::shared_ptr<Book>(new Book(book.get_name(), book.get_author(), lib));
+        std::shared_ptr<Book> b = std::shared_ptr<Book> (new Book(book.get_name(), book.get_author(), lib));
+        b->setID(book.get_mapped_book_item().id);
+        return b;
     }
     DBBook convert(std::shared_ptr<Book> &book)
     {
@@ -21,6 +23,7 @@ public:
         b.set_name(book->getName());
         b.set_author(book->getAuthor());
         b.set_lib_id(book->getLibrary()->getID());
+        b.set_item_id(book->getID());
         return b;
     }
 };

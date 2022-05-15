@@ -5,12 +5,11 @@
 #ifndef SRC_COMMAND_H
 #define SRC_COMMAND_H
 
-
-#include <soci/session.h>
+#include "../../Connection/Session.h"
 
 class Command {
 public:
-    virtual void execute(soci::session & session) = 0 ;
+    virtual void execute(std::shared_ptr<Session> session) = 0 ;
 };
 
 

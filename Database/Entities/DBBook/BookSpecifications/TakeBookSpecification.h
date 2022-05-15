@@ -6,16 +6,23 @@
 #define SRC_TAKEBOOKSPECIFICATION_H
 
 #include "BookSpecification.h"
+#include "../../../../Logic/Entities/Account/LibrarianAccount.h"
+#include "../../../../Logic/Entities/Account/ReaderAccount.h"
+#include "../../../../Logic/Entities/Book/Book.h"
+
 class TakeBookSpecification : public BookSpecification {
 public:
-    TakeBookSpecification(int acc_id, int book_id)
+    TakeBookSpecification(const std::string &login_lib, const std::string &login_user, const std::shared_ptr<Book> &book)
     {
-        this->acc_id = acc_id;
+        this->book = book;
+        this->login_user = login_user;
+        this->login_lib = login_lib;
     }
-    std::vector<DBBook> exec(soci::session &session) override;
+    std::vector<DBBook> exec(std::shared_ptr<Session> session) override;
 private:
-    int acc_id;
-    int book_id;
+    std::string login_user;
+    std::string login_lib;
+    std::shared_ptr<Book> book;
 };
 
 

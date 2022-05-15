@@ -8,9 +8,8 @@ void PostgresDataAccessFacade::connectDB(const std::vector<std::string> &roles)
     conn = std::shared_ptr<Connection>(new Connection());
 
     conn->registerRoleConnection("admin", 30, "postgresql://host='localhost' port='5433' dbname='postgres' user='postgres' password='rfktdf17'");
-    for (int i = 0; i < roles.size(); i++)
-        conn->registerRoleConnection(roles[i], 30, "postgresql://host='localhost' port='5433' dbname='postgres' user='postgres' password='rfktdf17'");
-
+    conn->registerRoleConnection("librarian", 30, "postgresql://host='localhost' port='5433' dbname='postgres' user='librarian' password='librarian'");
+    conn->registerRoleConnection("reader", 30, "postgresql://host='localhost' port='5433' dbname='postgres' user='reader' password='reader'");
     //conn->registerRoleConnection("librarian", 30, "");
     }
 

@@ -10,10 +10,10 @@
 //#include <libpq-fe.h>
 //#include <soci/soci.h>
 #include "../DBAccount.h"
+#include "../../../Connection/Session.h"
 class AccountSpecification {
 public:
-    AccountSpecification() = default;
-    virtual std::vector<DBAccount> exec(soci::session & session) = 0;
+    virtual std::vector<DBAccount> exec(std::shared_ptr<Session> session) = 0;
 };
 
 

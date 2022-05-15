@@ -17,12 +17,11 @@ bool Connection::registerRoleConnection(const std::string &role_name, unsigned i
     }
     return true;
 }
-#include <iostream>
-soci::session &Connection::getConnectionByRole(const std::string &role, int &pos)
+std::shared_ptr<Session> Connection::getConnectionByRole(const std::string &role, int &pos)
 {
     auto it = pools.find(role);
     pos = pools[role]->lease();
-    return pools[role]->at(pos);
+    return std::shared_ptr<Session>(new Session(pools[role]->at(pos)));
 }
 void Connection::putConnectionByRole(const std::string &role, int pos)
 {

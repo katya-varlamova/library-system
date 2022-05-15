@@ -14,7 +14,7 @@ public:
     {
         this->books = books;
     }
-    void execute(soci::session &session) override;
+    void execute(std::shared_ptr<Session> session) override;
 
 protected:
     std::vector<std::shared_ptr<Book>> books;

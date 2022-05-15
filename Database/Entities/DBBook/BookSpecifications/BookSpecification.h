@@ -11,11 +11,13 @@
 #include <libpq-fe.h>
 #include <soci/soci.h>
 #include "../../../DatabseException.h"
+#include "../../../Connection/Session.h"
+#include "../BookFilters/BookFilter.h"
 class BookSpecification
 {
 public:
     BookSpecification() = default;
-    virtual std::vector<DBBook> exec(soci::session & session) = 0;
+    virtual std::vector<DBBook> exec(std::shared_ptr<Session> session) = 0;
 };
 
 

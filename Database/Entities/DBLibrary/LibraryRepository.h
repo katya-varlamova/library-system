@@ -8,15 +8,17 @@
 #include "DBLibrary.h"
 #include "../../../Logic/Entities/Library/Library.h"
 #include "LibrarySpecifications/LibarySpecification.h"
-#include "LibrarySpecifications/CheckExistanceLibrary.h"
+#include "LibrarySpecifications/GetLibrary.h"
+#include "LibraryFilters/ByLibraryNameFilter.h"
+#include "LibraryFilters/ByAddressFilter.h"
 #include "LibraryConverter.h"
 class LibraryRepository {
 public:
-    void addLibrary(soci::session & session, const std::shared_ptr<Library> &library);
-    void removeLibrary(soci::session & session, std::shared_ptr<Library> library);
-    void updateLibrary(soci::session & session, std::shared_ptr<Library> library);
+    int addLibrary(std::shared_ptr<Session> session, const std::shared_ptr<Library> &library);
+    void removeLibrary(std::shared_ptr<Session> session, int id);
+    void updateLibrary(std::shared_ptr<Session> session, std::shared_ptr<Library> library);
 
-    std::vector<std::shared_ptr<Library>> query(soci::session & session, std::shared_ptr<LibarySpecification> specification);
+    std::vector<std::shared_ptr<Library>> query(std::shared_ptr<Session> session, std::shared_ptr<LibarySpecification> specification);
 };
 
 

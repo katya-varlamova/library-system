@@ -9,7 +9,7 @@
 class CreateDatabaseCommand : public Command{
 public:
     CreateDatabaseCommand()  = default;
-    virtual void execute(soci::session & session) override;
+    virtual void execute(std::shared_ptr<Session> session) override;
 };
 
 

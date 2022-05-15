@@ -12,13 +12,8 @@ class LogicException : public std::exception //base_matrix nam
 public:
     LogicException(const char* file, int line, const char* time, const char* msg)
     {
-        this->err_str = (char *)malloc(strlen(file) + strlen(time) + strlen(msg) + 40);
+        this->err_str = new char [strlen(file) + strlen(time) + strlen(msg) + 40];
         sprintf(this->err_str, "file: %s, line: %-3d, time: %s, error: %s", file, line, time, msg);
-    }
-
-    virtual ~LogicException()
-    {
-        delete[] err_str;
     }
 
     virtual const char * what() const noexcept override

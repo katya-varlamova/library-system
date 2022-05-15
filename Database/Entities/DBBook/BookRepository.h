@@ -9,15 +9,17 @@
 #include "DBBook.h"
 #include "../../../Logic/Entities/Book/Book.h"
 #include "BookSpecifications/BookSpecification.h"
+#include "../DBLibrary/LibraryRepository.h"
+#include "../DBLibrary/LibraryFilters/ByLibraryIDFilter.h"
 #include "BookConverter.h"
 #include <soci/error.h>
 class BookRepository {
 public:
-    void addBook(soci::session & session, std::shared_ptr<Book> book);
-    void removeBook(soci::session & session, std::shared_ptr<Book> book);
-    void updateBook(soci::session & session, std::shared_ptr<Book> book);
+    void addBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book);
+    void removeBook(std::shared_ptr<Session> session, int id);
+    void updateBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book);
 
-    std::vector<std::shared_ptr<Book>> query(soci::session & session, std::shared_ptr<BookSpecification> specification);
+    std::vector<std::shared_ptr<Book>> query(std::shared_ptr<Session> session, std::shared_ptr<BookSpecification> specification);
 };
 
 

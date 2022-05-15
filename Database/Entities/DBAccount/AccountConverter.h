@@ -13,7 +13,9 @@ class AccountConverter {
 public:
     std::shared_ptr<Account> convert(DBAccount account)
     {
-        return std::shared_ptr<Account>(new Account(account.login, account.password, account.role, account.name));
+        std::shared_ptr<Account> acc = std::shared_ptr<Account>(new Account(account.login, account.password, account.role, account.name));
+        acc->setID(account.id);
+        return acc;
     }
     DBAccount convert(std::shared_ptr<Account> account)
     {

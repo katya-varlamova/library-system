@@ -9,11 +9,12 @@
 #include <libpq-fe.h>
 #include <soci/soci.h>
 #include "../DBLibrary.h"
+#include "../../../Connection/Session.h"
 
 class LibarySpecification {
 public:
     LibarySpecification() = default;
-    virtual std::vector<DBLibrary> exec(soci::session & session) = 0;
+    virtual std::vector<DBLibrary> exec(std::shared_ptr<Session> session) = 0;
 };
 
 

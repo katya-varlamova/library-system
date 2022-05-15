@@ -2,10 +2,8 @@
 //#include <libpq-fe.h>
 //#include <soci/soci.h>
 #include "Database/DataAccessFacade/PostgresDataAccessFacade.h"
-#include "Database/DataAccessFacade/Commands/RegisterCommand/RegisterCommand.h"
+#include "Database/DataAccessFacade/Commands/RegisterCommand/RegisterAdminCommand.h"
 #include "Logic/DataAccessManager/DataAccessManager.h"
-#include "Database/DataAccessFacade/Commands/GetFreeBooksCommands/GetFreeBooksByNameCommand.h"
-#include "Database/DataAccessFacade/Commands/GetFreeBooksCommands/GetFreeBooksByAuthorCommand.h"
 #include "Database/DataAccessFacade/Commands/AddBooksCommand/AddBooksCommand.h"
 //
 //
@@ -92,14 +90,14 @@ int main(int argc, const char * argv[]) {
     ServerController::manager->connect();
     ServerController::manager->del();
     ServerController::manager->create();
-    ServerController::manager->registration(std::shared_ptr<Account>(new Account("admin",
-                                                              "admin",
-                                                              "admin",
-                                                              "admin")));
-    ServerController::manager->registration(std::shared_ptr<Account>(new Account("katya_varlamova",
-                                                                          "12345",
-                                                                          "reader",
-                                                                          "Ekaterina")));
+//    ServerController::manager->registration(std::shared_ptr<AdminAccount>(new AdminAccount(std::shared_ptr<Account>(new Account("admin",
+//                                                              "admin",
+//                                                              "admin",
+//                                                              "admin")))));
+//    ServerController::manager->registration(std::shared_ptr<ReaderAccount>(new ReaderAccount(std::shared_ptr<Account>(new Account("katya_varlamova",
+//                                                                          "12345",
+//                                                                          "reader",
+//                                                                          "Ekaterina")), "89961008307")));
     run();
     ServerController::manager->disconnect();
 

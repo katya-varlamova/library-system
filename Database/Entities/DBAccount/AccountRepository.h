@@ -10,16 +10,18 @@
 #include <soci/rowset.h>
 #include <libpq-fe.h>
 #include <soci/soci.h>
+#include "../../Connection/Session.h"
 #include "../../../Logic/Entities/Account/Account.h"
 #include "AccountSpecifications/AccountSpecification.h"
 #include "AccountConverter.h"
+#include "../DBBook/BookRepository.h"
 class AccountRepository {
 public:
-    void addAccount(soci::session & session, std::shared_ptr<Account> account);
-    void removeAccount(soci::session & session, std::shared_ptr<Account> account);
-    void updateAccount(soci::session & session, std::shared_ptr<Account> account);
+    int addAccount(std::shared_ptr<Session> session, std::shared_ptr<Account> account);
+    void removeAccount(std::shared_ptr<Session> session, int id);
+    void updateAccount(std::shared_ptr<Session> session, std::shared_ptr<Account> account);
 
-    std::vector<std::shared_ptr<Account>> query(soci::session & session, std::shared_ptr<AccountSpecification> specification);
+    std::vector<std::shared_ptr<Account>> query(std::shared_ptr<Session> session, std::shared_ptr<AccountSpecification> specification);
 };
 
 

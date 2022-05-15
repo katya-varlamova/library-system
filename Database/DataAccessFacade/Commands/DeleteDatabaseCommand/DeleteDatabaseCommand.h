@@ -9,7 +9,7 @@
 class DeleteDatabaseCommand : public Command{
 public:
     DeleteDatabaseCommand()  = default;
-    virtual void execute(soci::session & session) override;
+    virtual void execute(std::shared_ptr<Session> session) override;
 };
 
 

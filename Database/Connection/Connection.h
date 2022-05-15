@@ -8,11 +8,12 @@
 #include <soci/connection-pool.h>
 #include <map>
 #include <soci/session.h>
+#include "Session.h"
 class Connection {
 public:
     Connection() = default;
     bool registerRoleConnection(const std::string &role_name, unsigned max_role_connections, const std::string &conn_str);
-    soci::session & getConnectionByRole(const std::string &role, int &pos);
+    std::shared_ptr<Session> getConnectionByRole(const std::string &role, int &pos);
     void disconnect();
     void putConnectionByRole(const std::string &role, int pos);
 private:

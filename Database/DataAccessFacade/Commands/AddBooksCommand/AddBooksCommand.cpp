@@ -5,13 +5,13 @@
 #include "AddBooksCommand.h"
 #include "../../../Entities/DBBook/BookRepository.h"
 
-void AddBooksCommand::execute(soci::session &session)
+void AddBooksCommand::execute(std::shared_ptr<Session> session)
 {
     BookRepository repository;
 
     for (int i = 0; i < books.size(); i++) {
-        soci::transaction tr(session);
+        session->begin_transaction();
         repository.addBook(session, books[i]);
-        tr.commit();
+        session->commit_transaction();
     }
 }

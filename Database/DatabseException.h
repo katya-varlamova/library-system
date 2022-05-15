@@ -18,10 +18,6 @@ public:
         sprintf(this->err_str, "file: %s, line: %-3d, time: %s, error: %s", file, line, time, msg);
     }
 
-    virtual ~DatabaseException()
-    {
-        delete[] err_str;
-    }
 
     virtual const char * what() const noexcept override
     {

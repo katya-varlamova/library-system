@@ -3,24 +3,16 @@
 //
 
 #include "TakeBookSpecification.h"
-std::vector<DBBook> TakeBookSpecification::exec(soci::session &session)
+std::vector<DBBook> TakeBookSpecification::exec(std::shared_ptr<Session> session)
 {
-    soci::indicator ind;
     int id;
-    session << "select acc_id "
-               "from BookItem "
-               "where book_id = :book_id",
-               soci::into(id, ind), soci::use(book_id);
-    if (ind != soci::i_ok) {
+    std::string q = "select take_book('" + login_user +
+                   "', '" + login_lib +
+                   "', '" + book->getName() +
+                   "', '" + book->getAuthor() + "')";
+    int ok = session->exec_into(q, id);
+    if (ok != 0)
         throw DatabaseException(__FILE__, __LINE__, __TIME__,
-                                "book has already been taken");
-    }
-    session << "update bookitem "
-               "set acc_id = :acc_id "
-               "where book_id = :book_id and id = "
-               "(select min(id) "
-               "from bookitem "
-               "where acc_id is null and book_id = :book_id)",
-               soci::use(book_id), soci::use(acc_id);
+                                "impossible to take book!");
     return std::vector<DBBook>();
 }

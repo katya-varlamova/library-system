@@ -3,28 +3,52 @@
 //
 
 #include "DataAccessManager.h"
-#include "../../Database/DataAccessFacade/Commands/DeleteDatabaseCommand/DeleteDatabaseCommand.h"
-
 static struct
 {
     std::string admin = "admin";
     std::string librarian = "librarian";
     std::string reader = "reader";
 } roles;
-void DataAccessManager::registration(const std::shared_ptr<Account> &account)
+void DataAccessManager::registration(const std::shared_ptr<AdminAccount> &account)
 {
     int pos;
     std::vector<std::shared_ptr<Account>> acc;
-    AuthCommand authCommand(account->getLogin(), acc);
+    AuthCommand authCommand(account->getAccount()->getLogin(), acc);
     facade->execute(authCommand, roles.reader);
     if (!acc.empty()) {
         throw LogicException(__FILE__, __LINE__, __TIME__,
                              "user exists!");
     }
-    RegisterCommand rc(account);
+    RegisterAdminCommand rc(account);
     facade->execute(rc, roles.admin);
 }
-void DataAccessManager::login(const std::string &login, const std::string &password)
+void DataAccessManager::registration(const std::shared_ptr<LibrarianAccount> &account)
+{
+    int pos;
+    std::vector<std::shared_ptr<Account>> acc;
+    AuthCommand authCommand(account->getAccount()->getLogin(), acc);
+    facade->execute(authCommand, roles.reader);
+    if (!acc.empty()) {
+        throw LogicException(__FILE__, __LINE__, __TIME__,
+                             "user exists!");
+    }
+    RegisterLibrarianCommand rc(account);
+    facade->execute(rc, roles.admin);
+}
+void DataAccessManager::registration(const std::shared_ptr<ReaderAccount> &account)
+{
+    int pos;
+    std::vector<std::shared_ptr<Account>> acc;
+    AuthCommand authCommand(account->getAccount()->getLogin(), acc);
+    facade->execute(authCommand, roles.reader);
+    if (!acc.empty()) {
+        throw LogicException(__FILE__, __LINE__, __TIME__,
+                             "user exists!");
+    }
+    RegisterReaderCommand rc(account);
+    facade->execute(rc, roles.admin);
+}
+void DataAccessManager::login(const std::string &login, const std::string &password, std::shared_ptr<Account> &account)
 {
     std::vector<std::shared_ptr<Account>> acc;
     AuthCommand authCommand(login, acc);
@@ -36,6 +60,8 @@ void DataAccessManager::login(const std::string &login, const std::string &passw
     if (password != acc[0]->getPassword())
         throw LogicException(__FILE__, __LINE__, __TIME__,
                              "login failed");
+    account = acc[0];
+
 }
 void DataAccessManager::exec(const std::shared_ptr<Command> &command, const std::string &login, const std::string &password)
 {

@@ -13,7 +13,16 @@ public:
     std::string getPassword();
     std::string getRole();
     std::string getName();
+    int getID()
+    {
+        return id;
+    }
+    void setID(int id)
+    {
+        this->id = id;
+    }
 private:
+    int id;
     std::string login;
     std::string password;
     std::string role;
