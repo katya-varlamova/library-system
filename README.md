@@ -26,7 +26,7 @@
 
 ## ER-диаграмма сущностей (база данных)
 
-![er_db drawio](https://user-images.githubusercontent.com/55718346/165080002-d49af3f7-c95f-49ab-9517-cd90d48ea9b7.png)
+![er_db](https://user-images.githubusercontent.com/55718346/168496516-f038b9a1-ad3f-49ff-8c5c-05d7e3002478.jpg)
 
 
 ## ER-диаграмма сущностей 
@@ -62,11 +62,11 @@
 
 ### Доступ к данным
 
-![DBAccess drawio-4](https://user-images.githubusercontent.com/55718346/165079533-a1808bd6-4fdf-431f-92b1-d4a263fe62d8.png)
+![DBAccess](https://user-images.githubusercontent.com/55718346/168496490-57286a56-6185-4d32-a5d8-a107b1caf2ab.jpg)
+
 
 ### Компонент с бизнес-логикой
 
-![Logic drawio-2](https://user-images.githubusercontent.com/55718346/165086722-fd8626ed-5c8d-408a-b23e-68a420ffd4c6.png)
 
-
+![Logic](https://user-images.githubusercontent.com/55718346/168496482-8abefa9e-2b8c-453c-af5f-53f118d5c7a2.jpg)
 
