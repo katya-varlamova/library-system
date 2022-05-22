@@ -20,7 +20,7 @@ int AccountRepository::addAccount(std::shared_ptr<Session> session, std::shared_
     AccountConverter converter;
     DBAccount dbacc = converter.convert(account);
     int id;
-    session->exec_using("insert into Account values(default, :login, :password, :name, :role);", dbacc);
+    session->exec_using("insert into Account (login, password, name, role) values(:login, :password, :name, :role);", dbacc);
     session->exec_into("select max(id) "
                        "from Account;", id);
     return id;

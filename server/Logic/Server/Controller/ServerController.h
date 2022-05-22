@@ -35,7 +35,10 @@
 #include "../../../Database/DataAccessFacade/Commands/DeleteAccounts/DeleteLibrarianAccountCommand.h"
 #include "../../../Database/DataAccessFacade/Commands/DeleteAccounts/DeleteAdminAccountCommand.h"
 #include "../../../Database/DataAccessFacade/Commands/DeleteAccounts/DeleteReaderAccountCommand.h"
-
+#include "../../../Database/DataAccessFacade/Commands/EBookCommands/GetEBooksCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/EBookCommands/UpdateEBookCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/EBookCommands/DeleteEBookCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/EBookCommands/AddEBooksCommand.h"
 std::string replaceAll(std::string str, const std::string& from, const std::string& to) {
     size_t start_pos = 0;
     while((start_pos = str.find(from, start_pos)) != std::string::npos) {
@@ -95,16 +98,16 @@ public:
                 std::string s = queryParams.get("login_filter");
                 filters.push_back(std::shared_ptr<Filter>(new ByLoginFilter(replaceAll(s, "+", " "))));
                 if (s == login)
-                    manager->exec(ioc, std::shared_ptr<GetBooksByLoginCommand> (new GetBooksByLoginCommand(ioc->getBookRepository(), books, filters)), login, pwd);
+                    manager->exec(std::shared_ptr<GetBooksByLoginCommand> (new GetBooksByLoginCommand(ioc->getBookRepository(), books, filters)), login, pwd);
 
             } else {
                 if (queryParams.get("free") != nullptr) {
-                    manager->exec(ioc, std::shared_ptr<GetFreeBooksCommand>(
+                    manager->exec(std::shared_ptr<GetFreeBooksCommand>(
                             new GetFreeBooksCommand(ioc->getBookRepository(), books, filters)), login, pwd);
                 }
                 else
                 {
-                    manager->exec(ioc, std::shared_ptr<GetBooksByLoginCommand> (new GetBooksByLoginCommand(ioc->getBookRepository(), books, filters)), login, pwd);
+                    manager->exec(std::shared_ptr<GetBooksByLoginCommand> (new GetBooksByLoginCommand(ioc->getBookRepository(), books, filters)), login, pwd);
                 }
             }
 
@@ -153,7 +156,7 @@ public:
                 return _return(controller->createResponse(Status::CODE_500));
 
             try {
-                manager->exec(ioc, std::shared_ptr<TakeBookCommand>(new TakeBookCommand(ioc->getBookRepository(), login_user, login, book_id)), login,
+                manager->exec(std::shared_ptr<TakeBookCommand>(new TakeBookCommand(ioc->getBookRepository(), login_user, login, book_id)), login,
                               pwd);
             }
             catch (LogicException)
@@ -190,7 +193,7 @@ public:
                 return _return(controller->createResponse(Status::CODE_500));
 
             try {
-                manager->exec(ioc, std::shared_ptr<ReturnBookCommand>(new ReturnBookCommand(ioc->getBookRepository(), login_user, login, book_id)), login,
+                manager->exec(std::shared_ptr<ReturnBookCommand>(new ReturnBookCommand(ioc->getBookRepository(), login_user, login, book_id)), login,
                               pwd);
             }
             catch (LogicException)
@@ -222,7 +225,7 @@ public:
                                                                         body->lib_id));
             book->setID(body->id);
 
-            manager->exec(ioc, std::shared_ptr<Command> (new UpdateBookCommand(ioc->getBookRepository(), book)), login, pwd);
+            manager->exec(std::shared_ptr<Command> (new UpdateBookCommand(ioc->getBookRepository(), book)), login, pwd);
 
             return _return(controller->createResponse(Status::CODE_200));
         }
@@ -244,7 +247,7 @@ public:
             std::vector<std::shared_ptr<Book>> books;
             std::shared_ptr<Book> book = std::shared_ptr<Book>(new Book(body->name, body->author, body->lib_id));
             books.push_back(book);
-            manager->exec(ioc, std::shared_ptr<Command>( new AddBooksCommand(ioc->getBookRepository(), books)), login, pwd);
+            manager->exec(std::shared_ptr<Command>( new AddBooksCommand(ioc->getBookRepository(), books)), login, pwd);
             return _return(controller->createResponse(Status::CODE_200));
         }
 
@@ -263,7 +266,7 @@ public:
             int id;
             if (queryParams.get("id") != nullptr) {
                 id = atoi(queryParams.get("id")->c_str());
-                manager->exec(ioc, std::shared_ptr<Command>(new DeleteBooksCommand(ioc->getBookRepository(), id)), login, pwd);
+                manager->exec(std::shared_ptr<Command>(new DeleteBooksCommand(ioc->getBookRepository(), id)), login, pwd);
                 return _return(controller->createResponse(Status::CODE_200));
             }
             else
@@ -272,6 +275,130 @@ public:
         }
 
     };
+
+
+    ENDPOINT_ASYNC("GET", "/api/v1/ebook", EBooks ) {
+
+    ENDPOINT_ASYNC_INIT(EBooks)
+
+        Action act() override {
+
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            if (login.empty() || pwd.empty())
+                return _return(controller->createResponse(Status::CODE_300));
+
+            std::vector<std::shared_ptr<EBook>> books;
+            std::vector<std::shared_ptr<Filter>> filters;
+
+            String tail = request->getPathTail();
+            auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
+
+
+            if (queryParams.get("author") != nullptr) {
+                std::string s = queryParams.get("author");
+                filters.push_back(std::shared_ptr<Filter>(new ByAuthorFilter(replaceAll(s, "+", " "))));
+            }
+            if (queryParams.get("name") != nullptr)
+            {
+                std::string s = queryParams.get("name");
+                filters.push_back(std::shared_ptr<Filter>(new ByBookNameFilter(replaceAll(s, "+", " "))));
+            }
+
+            manager->exec(std::shared_ptr<GetEBooksCommand> (new GetEBooksCommand(ioc->getEBookRepository(), books, filters)), login, pwd);
+
+
+            auto booksDto = EBooksDto::createShared();
+            oatpp::Vector<oatpp::Object<EBookDto>> booksVector ({});
+
+            for (auto &book : books) {
+                auto bookDto = EBookDto::createShared();
+                bookDto->name = book->getName();
+                bookDto->author = book->getAuthor();
+                bookDto->id = book->getID();
+                bookDto->link = book->getLink();
+                booksVector->push_back(bookDto);
+            }
+
+            booksDto->books = booksVector;
+            /* return Action to start child coroutine to read body */
+            return _return(controller->createDtoResponse(Status::CODE_200, booksDto));
+        }
+
+
+    };
+
+    ENDPOINT_ASYNC("PUT", "/api/v1/ebook", EBookUpdate ) {
+
+    ENDPOINT_ASYNC_INIT(EBookUpdate)
+        Action act() override {
+            return request->readBodyToDtoAsync<oatpp::Object<EBookDto>>(
+                    controller->getDefaultObjectMapper()).callbackTo(&EBookUpdate::returnBookResponse);
+        }
+        Action returnBookResponse( const oatpp::Object<EBookDto>& body) {
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            if (login.empty() || pwd.empty())
+                return _return(controller->createResponse(Status::CODE_300));
+
+            std::shared_ptr<EBook> book = std::shared_ptr<EBook>(new EBook(body->name,
+                                                                        body->author,
+                                                                        body->link));
+            book->setID(body->id);
+
+            manager->exec(std::shared_ptr<Command> (new UpdateEBookCommand(ioc->getEBookRepository(), book)), login, pwd);
+
+            return _return(controller->createResponse(Status::CODE_200));
+        }
+
+
+    };
+
+    ENDPOINT_ASYNC("POST", "/api/v1/ebook", EBookPoint) {
+
+    ENDPOINT_ASYNC_INIT(EBookPoint)
+
+        Action act() override {
+            return request->readBodyToDtoAsync<oatpp::Object<EBookDto>>(controller->getDefaultObjectMapper()).callbackTo(&EBookPoint::returnResponse);
+        }
+
+        Action returnResponse(const oatpp::Object<EBookDto>& body){
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+            std::vector<std::shared_ptr<EBook>> books;
+            std::shared_ptr<EBook> book = std::shared_ptr<EBook>(new EBook(body->name, body->author, body->link));
+            books.push_back(book);
+            manager->exec(std::shared_ptr<Command>( new AddEBooksCommand(ioc->getEBookRepository(), books)), login, pwd);
+            return _return(controller->createResponse(Status::CODE_200));
+        }
+
+    };
+
+    ENDPOINT_ASYNC("DELETE", "/api/v1/ebook", EBookDeletePoint) {
+
+    ENDPOINT_ASYNC_INIT(EBookDeletePoint)
+
+        Action act() override {
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            String tail = request->getPathTail();
+            auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
+            int id;
+            if (queryParams.get("id") != nullptr) {
+                id = atoi(queryParams.get("id")->c_str());
+                manager->exec(std::shared_ptr<Command>(new DeleteEBooksCommand(ioc->getEBookRepository(), id)), login, pwd);
+                return _return(controller->createResponse(Status::CODE_200));
+            }
+            else
+                return _return(controller->createResponse(Status::CODE_500));
+
+        }
+
+    };
+
 
     ENDPOINT_ASYNC("GET", "/api/v1/login", LoginPoint) {
 
@@ -282,7 +409,7 @@ public:
             std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
             std::shared_ptr<Account> account;
             try {
-                manager->login(ioc, login, pwd, account);
+                manager->login(login, pwd, account);
             }
             catch (LogicException)
             {
@@ -296,7 +423,7 @@ public:
             accDto->role = account->getRole();
             if (account->getRole() == "librarian") {
                 std::shared_ptr<LibrarianAccount> lacc;
-                manager->exec(ioc, std::shared_ptr<Command>(
+                manager->exec(std::shared_ptr<Command>(
                         new GetLibrarianAccountCommand(ioc->getLibrarianAccountRepository(), lacc,
                                                        std::vector<std::shared_ptr<AccountFilter>>(
                                                                {std::shared_ptr<AccountFilter>(
@@ -311,7 +438,7 @@ public:
             if (account->getRole() == "reader")
             {
                 std::shared_ptr<ReaderAccount> racc;
-                manager->exec(ioc, std::shared_ptr<Command>(new GetReaderAccountCommand(ioc->getReaderAccountRepository(),racc, std::vector<std::shared_ptr<AccountFilter>> ({std::shared_ptr<AccountFilter>(new ByAccountIDFilter(account->getID()))}))),
+                manager->exec(std::shared_ptr<Command>(new GetReaderAccountCommand(ioc->getReaderAccountRepository(),racc, std::vector<std::shared_ptr<AccountFilter>> ({std::shared_ptr<AccountFilter>(new ByAccountIDFilter(account->getID()))}))),
                               login,
                               pwd);
                 auto raccDto = ReaderAccountDTO::createShared();
@@ -347,14 +474,14 @@ public:
 
         Action returnResponse(const oatpp::Object<AccountDto> &body) {
             if (body->role == "admin") {
-                manager->registration(ioc, std::shared_ptr<AdminAccount>(
+                manager->registration(std::shared_ptr<AdminAccount>(
                         new AdminAccount(std::shared_ptr<Account>(new Account(body->login,
                                                                               body->password,
                                                                               body->role,
                                                                               body->name)))));
             }
             if (body->role == "librarian") {
-                manager->registration(ioc, std::shared_ptr<LibrarianAccount>(
+                manager->registration(std::shared_ptr<LibrarianAccount>(
                         new LibrarianAccount(std::shared_ptr<Account>(new Account(body->login,
                                                                               body->password,
                                                                               body->role,
@@ -362,7 +489,7 @@ public:
 
             }
             if (body->role == "reader") {
-                manager->registration(ioc, std::shared_ptr<ReaderAccount>(new ReaderAccount (std::shared_ptr<Account>(new Account(body->login,
+                manager->registration(std::shared_ptr<ReaderAccount>(new ReaderAccount (std::shared_ptr<Account>(new Account(body->login,
                                                                                                                                    body->password,
                                                                                                                                    body->role,
                                                                                                                                    body->name)),
@@ -381,7 +508,7 @@ public:
 //            if (role == "reader")
 //                return request->readBodyToDtoAsync<oatpp::Object<ReaderAccountDTO>>(controller->getDefaultObjectMapper()).callbackTo(&RegistrationPoint::returnResponseReader);
 //            try {
-//                manager->registration(ioc, std::shared_ptr<AdminAccount>(new AdminAccount (std::shared_ptr<Account>(new Account(body->account->login,
+//                manager->registration(std::shared_ptr<AdminAccount>(new AdminAccount (std::shared_ptr<Account>(new Account(body->account->login,
 //                                                                                                                       body->account->password,
 //                                                                                                                       body->account->role,
 //                                                                                                                       body->account->name)))));
@@ -394,7 +521,7 @@ public:
 //        }
 //        Action returnResponseLibrarian(const oatpp::Object<LibrarianAccountDTO>& body){
 //            try {
-//                manager->registration(ioc, std::shared_ptr<LibrarianAccount>(new LibrarianAccount (std::shared_ptr<Account>(new Account(body->account->login,
+//                manager->registration(std::shared_ptr<LibrarianAccount>(new LibrarianAccount (std::shared_ptr<Account>(new Account(body->account->login,
 //                                                                                                                           body->account->password,
 //                                                                                                                           body->account->role,
 //                                                                                                                           body->account->name)), body->lib_id)));
@@ -407,7 +534,7 @@ public:
 //        }
 //        Action returnResponseReader(const oatpp::Object<ReaderAccountDTO>& body){
 //            try {
-//                manager->registration(ioc, std::shared_ptr<ReaderAccount>(new ReaderAccount (std::shared_ptr<Account>(new Account(body->account->login,
+//                manager->registration(std::shared_ptr<ReaderAccount>(new ReaderAccount (std::shared_ptr<Account>(new Account(body->account->login,
 //                                                                                                                                   body->account->password,
 //                                                                                                                                   body->account->role,
 //                                                                                                                                   body->account->name)),
@@ -433,7 +560,7 @@ public:
 //
 //            std::shared_ptr<Account> account;
 //            try {
-//                manager->login(ioc, login, pwd, account);
+//                manager->login(login, pwd, account);
 //            }
 //            catch (LogicException)
 //            {
@@ -451,34 +578,34 @@ public:
 //            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
 //            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
 //            std::shared_ptr<Account> account;
-//            manager->login(ioc, login, pwd, account);
+//            manager->login(login, pwd, account);
 //            std::shared_ptr<Account> acc = std::shared_ptr<Account>(new Account(body->account->login,
 //                                                                                body->account->password,
 //                                                                                body->account->role,
 //                                                                                body->account->name));
 //            std::shared_ptr<LibrarianAccount> lacc = std::shared_ptr<LibrarianAccount>(new LibrarianAccount(acc, body->lib_id));
-//            manager->exec(ioc, std::shared_ptr<Command>(new UpdateLibrarianAccountCommand(ioc->getLibrarianAccountRepository(), lacc)), "admin", "admin");
+//            manager->exec(std::shared_ptr<Command>(new UpdateLibrarianAccountCommand(ioc->getLibrarianAccountRepository(), lacc)), "admin", "admin");
 //            return _return(controller->createResponse(Status::CODE_200));
 //        }
 //        Action returnAdminResponse(const oatpp::Object<AdminAccountDTO>& body) {
 //            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
 //            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
 //            std::shared_ptr<Account> account;
-//            manager->login(ioc, login, pwd, account);
+//            manager->login(login, pwd, account);
 //            std::shared_ptr<Account> acc = std::shared_ptr<Account>(new Account(body->account->login,
 //                                                                                body->account->password,
 //                                                                                body->account->role,
 //                                                                                body->account->name));
 //            acc->setID(account->getID());
 //            std::shared_ptr<AdminAccount> aacc = std::shared_ptr<AdminAccount>(new AdminAccount(acc));
-//            manager->exec(ioc, std::shared_ptr<Command>(new UpdateAdminAccountCommand(ioc->getAdminAccountRepository(), aacc)), "admin", "admin");
+//            manager->exec(std::shared_ptr<Command>(new UpdateAdminAccountCommand(ioc->getAdminAccountRepository(), aacc)), "admin", "admin");
 //            return _return(controller->createResponse(Status::CODE_200));
 //        }
 //        Action returnReaderResponse(const oatpp::Object<ReaderAccountDTO>& body) {
 //            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
 //            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
 //            std::shared_ptr<Account> account;
-//            manager->login(ioc, login, pwd, account);
+//            manager->login(login, pwd, account);
 //            std::shared_ptr<Account> acc = std::shared_ptr<Account>(new Account(body->account->login,
 //                                                                                body->account->password,
 //                                                                                body->account->role,
@@ -486,7 +613,7 @@ public:
 //            acc->setID(account->getID());
 //            std::shared_ptr<ReaderAccount> racc = std::shared_ptr<ReaderAccount>(new ReaderAccount(acc,
 //                                                                                                   body->phone));
-//            manager->exec(ioc, std::shared_ptr<Command>(new UpdateReaderAccountCommand(ioc->getReaderAccountRepository(), racc)), "admin", "admin");
+//            manager->exec(std::shared_ptr<Command>(new UpdateReaderAccountCommand(ioc->getReaderAccountRepository(), racc)), "admin", "admin");
 //            return _return(controller->createResponse(Status::CODE_200));
 //        }
 //
@@ -502,7 +629,7 @@ public:
 //
 //            std::shared_ptr<Account> account;
 //            try {
-//                manager->login(ioc, login, pwd, account);
+//                manager->login(login, pwd, account);
 //            }
 //            catch (LogicException)
 //            {
@@ -511,17 +638,17 @@ public:
 //
 //            if (account->getRole() == "librarian")
 //            {
-//                manager->exec(ioc, std::shared_ptr<Command>(new DeleteLibrarianAccountCommand(ioc->getLibrarianAccountRepository(),account->getID())), "admin", "admin");
+//                manager->exec(std::shared_ptr<Command>(new DeleteLibrarianAccountCommand(ioc->getLibrarianAccountRepository(),account->getID())), "admin", "admin");
 //                return _return(controller->createResponse(Status::CODE_200));
 //            }
 //            if (account->getRole() == "admin")
 //            {
-//                manager->exec(ioc, std::shared_ptr<Command>(new DeleteAdminAccountCommand(ioc->getAdminAccountRepository(), account->getID())), "admin", "admin");
+//                manager->exec(std::shared_ptr<Command>(new DeleteAdminAccountCommand(ioc->getAdminAccountRepository(), account->getID())), "admin", "admin");
 //                return _return(controller->createResponse(Status::CODE_200));
 //            }
 //            if (account->getRole() == "reader")
 //            {
-//                manager->exec(ioc, std::shared_ptr<Command>(new DeleteReaderAccountCommand(ioc->getReaderAccountRepository(), account->getID())), "admin", "admin");
+//                manager->exec(std::shared_ptr<Command>(new DeleteReaderAccountCommand(ioc->getReaderAccountRepository(), account->getID())), "admin", "admin");
 //                return _return(controller->createResponse(Status::CODE_200));
 //            }
 //            return _return(controller->createResponse(Status::CODE_500));
@@ -562,7 +689,7 @@ public:
                 int id = std::atoi(queryParams.get("id")->c_str());
                 filters.push_back(std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(id)));
             }
-            manager->exec(ioc, std::shared_ptr<Command> (new GetlibrariesCommand(ioc->getLibraryRepository(), libs, filters)), login, pwd);
+            manager->exec(std::shared_ptr<Command> (new GetlibrariesCommand(ioc->getLibraryRepository(), libs, filters)), login, pwd);
 
             auto librariesDto = LibrariesDto::createShared();
             oatpp::Vector<oatpp::Object<LibraryDto>> libsVector ({});
@@ -602,7 +729,7 @@ public:
             std::shared_ptr<Library> lib = std::shared_ptr<Library>(new Library(body->name, body->address));
             lib->setID(body->id);
 
-            manager->exec(ioc, std::shared_ptr<Command> (new UpdateLibrariesCommand(ioc->getLibraryRepository(), lib)), login, pwd);
+            manager->exec(std::shared_ptr<Command> (new UpdateLibrariesCommand(ioc->getLibraryRepository(), lib)), login, pwd);
 
             return _return(controller->createResponse(Status::CODE_200));
         }
@@ -627,7 +754,7 @@ public:
 
             std::shared_ptr<Library> lib = std::shared_ptr<Library>(new Library(body->name, body->address));
 
-            manager->exec(ioc, std::shared_ptr<Command> (new PostLibrariesCommand(ioc->getLibraryRepository(), lib)), login, pwd);
+            manager->exec(std::shared_ptr<Command> (new PostLibrariesCommand(ioc->getLibraryRepository(), lib)), login, pwd);
 
             return _return(controller->createResponse(Status::CODE_200));
         }
@@ -648,7 +775,7 @@ public:
             int id;
             if (queryParams.get("id") != nullptr) {
                 id = atoi(queryParams.get("id")->c_str());
-                manager->exec(ioc, std::shared_ptr<Command>(new DeleteLibrariesCommand(ioc->getLibraryRepository(), id)), login, pwd);
+                manager->exec(std::shared_ptr<Command>(new DeleteLibrariesCommand(ioc->getLibraryRepository(), id)), login, pwd);
                 return _return(controller->createResponse(Status::CODE_200));
             }
             return _return(controller->createResponse(Status::CODE_500));

@@ -7,14 +7,23 @@
 
 
 #include "Commands/Command.h"
-#include "../../Logic/Entities/Account/Account.h"
-
+#include "DataAccessFacade.h"
+#include "../Connection/IConnectionPool.h"
+#include "Commands/AuthCommand/AuthCommand.h"
+#include "Commands/CreateDatabaseCommand/CreateDatabaseCommand.h"
+#include "../../Logic/LogicException.h"
 class DataAccessFacade {
 public:
-    virtual void connectDB(const std::vector<std::string> &roles = std::vector<std::string>()) = 0;
-    virtual void createDatabase() = 0;
-    virtual void execute(Command &command, std::string role = "admin") = 0;
-    virtual void disconnectDB() = 0;
+    DataAccessFacade(const std::shared_ptr<IConnectionPool> &cp)
+    {
+        this->conn = cp;
+    }
+    void connectDB();
+    void execute(Command &command, std::string role = "admin");
+    void disconnectDB();
+
+private:
+    std::shared_ptr<IConnectionPool> conn;
 };
 
 

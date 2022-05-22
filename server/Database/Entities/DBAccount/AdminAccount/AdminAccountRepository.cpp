@@ -24,8 +24,8 @@ void AdminAccountRepository::addAccount(const std::shared_ptr<Session> &session,
     int acc_id = ar.addAccount(session, account->getAccount());
     AdminAccountConverter aac;
     DBAdminAccount dbacc = aac.convert(acc_id);
-    session->exec_using("insert into public.AdminAccount "
-                        "values(default, :acc_id)", dbacc);
+    session->exec_using("insert into AdminAccount (acc_id) "
+                        "values(:acc_id)", dbacc);
 }
 void AdminAccountRepository::updateAccount(const std::shared_ptr<Session> &session, std::shared_ptr<AdminAccount> account)
 {

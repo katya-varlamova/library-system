@@ -35,7 +35,7 @@ add_executable(${PROJECT_NAME} main.cpp
         GUI/Registration/Librarian/RegistrationLibrarianView.ui
         GUI/Registration/RegistrationView.ui
         GUI/Login/LoginView.ui
-        ConsoleUI/ConsolePresenter.cpp ConsoleUI/ConsolePresenter.h ConsoleUI/ConsoleView.cpp ConsoleUI/ConsoleView.h)
+        ConsoleUI/ConsolePresenter.cpp ConsoleUI/ConsolePresenter.h ConsoleUI/ConsoleView.cpp ConsoleUI/ConsoleView.h Model/Entities/EBook/EBook.cpp Model/Entities/EBook/EBook.h)
 
 find_package(Qt${QT_VERSION} COMPONENTS ${REQUIRED_LIBS} REQUIRED)
 target_link_libraries(${PROJECT_NAME} ${REQUIRED_LIBS_QUALIFIED} oatpp::oatpp oatpp::oatpp-curl)

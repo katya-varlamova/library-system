@@ -27,6 +27,19 @@ class BooksDto : public oatpp::DTO {
 
     DTO_FIELD(Vector<Object<BookDto>>, books);
 };
+class EBookDto : public oatpp::DTO {
+    DTO_INIT(EBookDto, DTO)
+    DTO_FIELD(Int64, id);
+    DTO_FIELD(String, name);
+    DTO_FIELD(String, author);
+    DTO_FIELD(String, link);
+};
+
+class EBooksDto : public oatpp::DTO {
+    DTO_INIT(EBooksDto, DTO)
+
+    DTO_FIELD(Vector<Object<EBookDto>>, books);
+};
 class LibrarianAccountDTO : public oatpp::DTO {
     DTO_INIT(LibrarianAccountDTO, DTO)
     DTO_FIELD(Int64, lib_id);

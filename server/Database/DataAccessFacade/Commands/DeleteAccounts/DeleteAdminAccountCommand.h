@@ -8,6 +8,8 @@
 
 #include "../Command.h"
 #include "../../../Entities/DBAccount/AdminAccount/AdminAccountRepository.h"
+#include "../../../../Logger/Logger.h"
+
 class DeleteAdminAccountCommand: public Command{
 public:
     DeleteAdminAccountCommand(std::shared_ptr<IAdminAccountRepository> repository, int id){
@@ -19,6 +21,7 @@ public:
         session->begin_transaction();
         repository->removeAccount(session, id);
         session->commit_transaction();
+        Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"admin account deleted!");
     }
 
 private:

@@ -16,6 +16,7 @@ public:
         session->begin_transaction();
         repository->updateAccount(session, acc);
         session->commit_transaction();
+        Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"librarian account was updated!");
     }
 
 private:

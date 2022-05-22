@@ -42,6 +42,13 @@ API_CLIENT_INIT(Client)
       API_CALL("GET", "/api/v1/book", getBooksByNameLogin,  HEADER(String, login), HEADER(String, password), QUERY(String, name), QUERY(String, login_filter))
       API_CALL("GET", "/api/v1/book", getBooksByAuthorLogin,  HEADER(String, login), HEADER(String, password), QUERY(String, author), QUERY(String, login_filter))
       API_CALL("GET", "/api/v1/book", getBooksByNameAuthorLogin,  HEADER(String, login), HEADER(String, password), QUERY(String, name),  QUERY(String, author), QUERY(String, login_filter))
+
+      API_CALL("POST", "/api/v1/ebook", addEBook,  HEADER(String, login), HEADER(String, password), BODY_STRING(String, body))
+      API_CALL("GET", "/api/v1/ebook", getEBooks,  HEADER(String, login), HEADER(String, password))
+      API_CALL("GET", "/api/v1/ebook", getEBooksByName,  HEADER(String, login), HEADER(String, password), QUERY(String, name))
+      API_CALL("GET", "/api/v1/ebook", getEBooksByAuthor,  HEADER(String, login), HEADER(String, password), QUERY(String, author))
+      API_CALL("DELETE", "/api/v1/ebook", deleteEBook,  HEADER(String, login), HEADER(String, password), QUERY(Int64, id))
+      API_CALL("PUT", "/api/v1/ebook", updateEBook,  HEADER(String, login), HEADER(String, password), BODY_STRING(String, body))
 #include OATPP_CODEGEN_END(ApiClient)
 };
 

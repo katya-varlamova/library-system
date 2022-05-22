@@ -8,6 +8,8 @@
 #include "../../../Entities/DBAccount/LibrarianAccount/LibrarianAccountSpecifications/GetLibrarianAccount.h"
 #include "../../../Entities/DBAccount/LibrarianAccount/LibrarianAccountSpecifications/LibrarianAccountSpecification.h"
 #include "../../../Entities/DBAccount/LibrarianAccount/LibrarianAccountRepository.h"
+#include "../../../../Logger/Logger.h"
+
 class GetLibrarianAccountCommand: public Command{
 public:
     GetLibrarianAccountCommand(std::shared_ptr<ILibrarianAccountRepository> repository, std::shared_ptr<LibrarianAccount> &acc, const std::vector<std::shared_ptr<AccountFilter>> &filters)
@@ -19,8 +21,13 @@ public:
     {
         session->begin_transaction();
         std::vector<std::shared_ptr<LibrarianAccount>> accs = repository->query(session, std::shared_ptr<LibrarianAccountSpecification>(new GetLibrarianAccount(filters)));
-        if (accs.size() == 1)
+        if (accs.size() == 1) {
             acc = accs[0];
+            Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"librarian account found!");
+        } else
+        {
+            Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"librarian account wasn't found!");
+        }
         session->commit_transaction();
     }
 

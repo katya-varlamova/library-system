@@ -13,7 +13,7 @@
 #include "Entities/Account/LibrarianAccount.h"
 #include "Entities/Account/ReaderAccount.h"
 #include "Entities/Book/Book.h"
-
+#include "Entities/EBook/EBook.h"
 class Model {
 public:
     Model()
@@ -43,6 +43,10 @@ public:
     int giveBook(const std::string &login, const std::string &pass, const std::string &login_user, int book_id);
     int returnBook(const std::string &login, const std::string &pass, const std::string &login_user, int book_id);
 
+    int addEBook(const std::string &login, const std::string &pass, const std::shared_ptr<EBook> &book);
+    int updateEBook(const std::string &login, const std::string &pass, const std::shared_ptr<EBook> &book);
+    int deleteEBook(const std::string &login, const std::string &pass, int id);
+    std::vector<std::shared_ptr<EBook>> getEBooks(const std::string &login, const std::string &pass, std::string name = "", std::string author = "");
 private:
     std::shared_ptr<Client> client;
 };

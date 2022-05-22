@@ -7,6 +7,7 @@
 #include "../DBAccount/AccountFilters/AccountFilter.h"
 #include "../DBAccount/AccountFilters/ByAccountIDFilter.h"
 #include "../DBAccount/AccountSpecifications/GetAccount.h"
+#include "../../../Logger/Logger.h"
 
 std::vector<std::shared_ptr<Book>> BookRepository::query(std::shared_ptr<Session> session, std::shared_ptr<BookSpecification> specification)
 {
@@ -36,27 +37,29 @@ void BookRepository::addBook(std::shared_ptr<Session> session, std::shared_ptr<B
     std::vector<std::shared_ptr<LibraryFilter>> lfs = {std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(book->getLibraryID()))};
     LibraryRepository lib_rep;
     auto res = lib_rep.query(session, std::shared_ptr<LibarySpecification>(new GetLibrary(lfs)));
-    if (res.empty())
+    if (res.empty()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"no such library!");
         throw DatabaseException(__FILE__, __LINE__, __TIME__,
                                 "no such library!");
+    }
     BookConverter converter;
     DBBook dbBook = converter.convert(book);
     int id;
-    if (session->exec("select id from public.Book "
+    if (session->exec("select id from Book "
                       "where name = :name and author = '" + dbBook.get_author() + "'",
                       dbBook.get_name(),
                       id) != 0)
     {
-        session->exec("insert into public.Book "
-                      "values(default, '" + dbBook.get_name() + "', '" +
+        session->exec("insert into Book (name, author) "
+                      "values('" + dbBook.get_name() + "', '" +
                       dbBook.get_author() + "')");
 
         session->exec_into("select max(id) "
-                      "from public.Book;", id);
+                      "from Book;", id);
     }
     dbBook.set_book_id(id);
-    session->exec_using("insert into public.BookItem "
-                "values(default, :book_id, :lib_id, NULL)",
+    session->exec_using("insert into BookItem (book_id, lib_id, acc_id) "
+                "values(:book_id, :lib_id, NULL)",
                 dbBook.get_mapped_book_item());
 }
 void BookRepository::updateBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book)
@@ -64,9 +67,11 @@ void BookRepository::updateBook(std::shared_ptr<Session> session, std::shared_pt
     std::vector<std::shared_ptr<LibraryFilter>> lfs = {std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(book->getLibraryID()))};
     LibraryRepository lib_rep;
     auto res = lib_rep.query(session, std::shared_ptr<LibarySpecification>(new GetLibrary(lfs)));
-    if (res.empty())
+    if (res.empty()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"no such library!");
         throw DatabaseException(__FILE__, __LINE__, __TIME__,
                                 "no such library!");
+    }
 
     BookConverter converter;
     DBBook dbbook = converter.convert(book);

@@ -15,11 +15,11 @@ std::vector<DBLibrary> GetLibrary::exec(std::shared_ptr<Session> session) {
     std::string q_str;
     if (!filters.empty()) {
         q_str = "select * "
-                            "from public.Library "
+                            "from Library "
                             "where " + fil_str;
     } else {
         q_str = "select * "
-                "from public.Library ";
+                "from Library ";
     }
 
     session->exec_into(q_str, v_lib);

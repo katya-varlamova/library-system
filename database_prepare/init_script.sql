@@ -29,6 +29,10 @@ create table if not exists BookItem (
     lib_id int references Library(id),
     acc_id int references Account(id) );
 
+create table if not exists EBook (
+                                        id serial primary key,
+                                        book_id int references Book(id),
+    link varchar(40));
 create user librarian WITH PASSWORD 'librarian';
 grant select on book, bookitem, account, librarianaccount, library to librarian;
 grant update on bookitem to librarian;

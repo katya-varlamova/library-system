@@ -281,3 +281,67 @@ int Model::returnBook(const std::string &login, const std::string &pass, const s
         return 0;
     return 1;
 }
+
+int Model::addEBook(const std::string &login, const std::string &pass, const std::shared_ptr<EBook> &book) {
+    auto objectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
+    auto bookDto = EBookDto::createShared();
+
+    bookDto->name = book->getName();
+    bookDto->author = book->getAuthor();
+    bookDto->id = -1;
+    bookDto->link = book->getLink();
+
+    auto r = client->addBook(login, pass, objectMapper->writeToString(bookDto));
+    if (r->getStatusCode() == 200)
+        return 0;
+    return 1;
+}
+int Model::updateEBook(const std::string &login, const std::string &pass, const std::shared_ptr<EBook> &book)
+{
+    auto objectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
+    auto bookDto = EBookDto::createShared();
+    bookDto->name = book->getName();
+    bookDto->author = book->getAuthor();
+    bookDto->id = book->getID();
+    bookDto->link = book->getLink();
+
+    auto r = client->updateBook(login, pass, objectMapper->writeToString(bookDto));
+    if (r->getStatusCode() == 200)
+        return 0;
+    return 1;
+}
+int Model::deleteEBook(const std::string &login, const std::string &pass, int id)
+{
+    auto r = client->deleteEBook(login, pass, id);
+    if (r->getStatusCode() == 200)
+        return 0;
+    return 1;
+}
+std::vector<std::shared_ptr<EBook>> Model::getEBooks(const std::string &login, const std::string &pass, std::string name, std::string author)
+{
+    std::vector<std::shared_ptr<EBook>> books;
+    auto objectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
+    auto r = client->getBooks(login, pass);
+    if (name != "") {
+        if (author != "")
+            r = client->getBooksByNameAuthor(login, pass, name, author);
+        else
+            r = client->getBooksByName(login, pass, name);
+    } else {
+        if (author != "")
+            r = client->getBooksByAuthor(login, pass, author);
+    }
+    if (r->getStatusCode() == 200){
+        auto res = r->readBodyToDto<oatpp::Object<EBooksDto>>(objectMapper);
+
+        for (int i = 0; i < res->books->size(); i++)
+        {
+            std::shared_ptr<EBook> b = std::shared_ptr<EBook>(new EBook(res->books[i]->name,
+                                                                     res->books[i]->author,
+                                                                     res->books[i]->link));
+            b->setID(res->books[i]->id);
+            books.push_back(b);
+        }
+    }
+    return books;
+}

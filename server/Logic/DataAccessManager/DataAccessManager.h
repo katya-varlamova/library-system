@@ -11,7 +11,6 @@
 #include "../../Database/DataAccessFacade/Commands/AuthCommand/AuthCommand.h"
 #include "../../Database/DataAccessFacade/Commands/RegisterCommand/RegisterAdminCommand.h"
 #include "../LogicException.h"
-#include "../../Database/DataAccessFacade/PostgresDataAccessFacade.h"
 #include "../../Database/DataAccessFacade/Commands/Filters/Filter.h"
 #include "../Entities/Account/ReaderAccount.h"
 #include "../Entities/Account/LibrarianAccount.h"
@@ -22,21 +21,21 @@
 
 class DataAccessManager {
 public:
-    DataAccessManager()
+    explicit DataAccessManager(const std::shared_ptr<IIocRepository> &ioc)
     {
-        facade = std::shared_ptr<DataAccessFacade>(new PostgresDataAccessFacade());
+        this->ioc = ioc;
+        facade = std::shared_ptr<DataAccessFacade>(new DataAccessFacade(ioc->getConnectionPool()));
     }
-    void create();
     void connect();
-    void login(std::shared_ptr<IIocRepository> ioc, const std::string &login, const std::string &password, std::shared_ptr<Account> &account);
-    void registration(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<ReaderAccount> &acc);
-    void registration(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<AdminAccount> &acc);
-    void registration(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<LibrarianAccount> &acc);
-    void exec(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<Command> &com, const std::string &login, const std::string &password);
+    void login(const std::string &login, const std::string &password, std::shared_ptr<Account> &account);
+    void registration(const std::shared_ptr<ReaderAccount> &acc);
+    void registration( const std::shared_ptr<AdminAccount> &acc);
+    void registration( const std::shared_ptr<LibrarianAccount> &acc);
+    void exec(const std::shared_ptr<Command> &com, const std::string &login, const std::string &password);
     void disconnect();
-    void del();
 protected:
     std::shared_ptr<DataAccessFacade> facade;
+    std::shared_ptr<IIocRepository> ioc;
 };
 
 
