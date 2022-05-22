@@ -22,12 +22,18 @@
 
 ## Use-Case - диаграмма
 
-![use-case drawio](https://user-images.githubusercontent.com/55718346/162726609-a464c58a-830e-4ae6-a5a7-23e424ee4e4b.png)
+![use-case](https://user-images.githubusercontent.com/55718346/168496539-8baaf1b5-1bca-49fb-8ba5-fdf77c162c46.jpg)
 
 
-## ER-диаграмма сущностей
+## ER-диаграмма сущностей (база данных)
 
-![er drawio](https://user-images.githubusercontent.com/55718346/162729403-afc7b148-92f1-413f-96cb-96677646f932.png)
+![er_db](https://user-images.githubusercontent.com/55718346/168496516-f038b9a1-ad3f-49ff-8c5c-05d7e3002478.jpg)
+
+
+## ER-диаграмма сущностей 
+
+![er drawio-3](https://user-images.githubusercontent.com/55718346/165080019-56efd73e-6c26-46a6-88c6-8a812f2d4a09.png)
+
 
 ## Архитектурные характеристики, важные для проекта
 
@@ -53,12 +59,20 @@
 - компонент бизнес-логики;
 - компонент реализации UI. 
 
-## UML диаграммы классов для двух отдельных компонентов.
+## UML диаграммы классов для трёх отдельных компонентов.
 
 ### Доступ к данным
 
-![DBAccess drawio](https://user-images.githubusercontent.com/55718346/162639533-66dba828-ea98-4ef3-9917-298d147f49cb.png)
+![DBAccess](https://user-images.githubusercontent.com/55718346/168496490-57286a56-6185-4d32-a5d8-a107b1caf2ab.jpg)
+
 
 ### Компонент с бизнес-логикой
+
+
+![Logic](https://user-images.githubusercontent.com/55718346/168496482-8abefa9e-2b8c-453c-af5f-53f118d5c7a2.jpg)
+
+### Компонент с GUI / Console UI
+
+![ui](https://user-images.githubusercontent.com/55718346/169689198-1c8fb221-659f-411d-9a3e-012d1cc0f689.jpg)
 
 
