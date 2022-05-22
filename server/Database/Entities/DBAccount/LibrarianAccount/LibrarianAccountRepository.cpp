@@ -4,6 +4,7 @@
 
 #include "LibrarianAccountRepository.h"
 #include "../../../DatabseException.h"
+#include "../../../../Logger/Logger.h"
 
 std::vector<std::shared_ptr<LibrarianAccount>> LibrarianAccountRepository::query(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccountSpecification> specification)
 {
@@ -16,9 +17,11 @@ std::vector<std::shared_ptr<LibrarianAccount>> LibrarianAccountRepository::query
         std::vector<std::shared_ptr<Account>> accs = ar.query(session, std::shared_ptr<AccountSpecification>(new GetAccount({std::shared_ptr<AccountFilter>(new ByAccountIDFilter(i.acc_id))})));
         if (accs.size() == 1)
             vec.push_back(converter.convert(accs[0], i.lib_id));
-        else
+        else {
+            Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"account doesn't exist!");
             throw DatabaseException(__FILE__, __LINE__, __TIME__,
-                                    "library or account don't exist!");
+                                    "account doesn't exist!");
+        }
     }
     return vec;
 }
@@ -31,8 +34,8 @@ void LibrarianAccountRepository::addAccount(std::shared_ptr<Session> session, st
     LibrarianAccountConverter lac;
     DBLibrarianAccount dblacc = lac.convert(account->getLibraryID(), acc_id);
 
-    session->exec_using("insert into public.LibrarianAccount "
-                        "values(default, :acc_id, :lib_id)", dblacc);
+    session->exec_using("insert into LibrarianAccount (acc_id, lib_id) "
+                        "values(:acc_id, :lib_id)", dblacc);
 
 }
 void LibrarianAccountRepository::updateAccount(std::shared_ptr<Session> session,

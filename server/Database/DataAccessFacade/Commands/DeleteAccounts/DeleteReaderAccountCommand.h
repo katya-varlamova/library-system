@@ -19,6 +19,7 @@ public:
         session->begin_transaction();
         repository->removeAccount(session, id);
         session->commit_transaction();
+        Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"reader account deleted!");
     }
 
 private:

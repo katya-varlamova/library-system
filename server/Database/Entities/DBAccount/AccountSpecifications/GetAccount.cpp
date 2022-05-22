@@ -15,11 +15,11 @@ std::vector<DBAccount> GetAccount::exec(std::shared_ptr<Session> session)
     }
     std::string q_str;
     if (!filters.empty()) {
-        q_str = "select * from public.Account "
+        q_str = "select * from Account "
                 "where " + fil_str;
     } else
     {
-        q_str = "select * from public.Account ";
+        q_str = "select * from Account ";
     }
     session->exec_into(q_str, v_acc);
     return v_acc;

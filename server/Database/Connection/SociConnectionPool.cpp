@@ -1,9 +1,18 @@
 //
-// Created by Екатерина on 29.03.2022.
+// Created by Екатерина on 22.05.2022.
 //
 
-#include "Connection.h"
-bool Connection::registerRoleConnection(const std::string &role_name, unsigned int max_role_connections, const std::string &conn_str)
+#include "SociConnectionPool.h"
+void SociConnectionPool::connect()
+{
+    for (int i = 0; i < conns.size(); i++)
+    {
+        registerRoleConnection(conns[i]->getRoleString(),
+                               conns[i]->getMaxConnection(),
+                               conns[i]->getConnectionString());
+    }
+}
+bool SociConnectionPool::registerRoleConnection(const std::string &role_name, unsigned int max_role_connections, const std::string &conn_str)
 {
     if (pools.find(role_name) != pools.end())
         return false;
@@ -17,17 +26,17 @@ bool Connection::registerRoleConnection(const std::string &role_name, unsigned i
     }
     return true;
 }
-std::shared_ptr<Session> Connection::getConnectionByRole(const std::string &role, int &pos)
+std::shared_ptr<Session> SociConnectionPool::getConnectionByRole(const std::string &role, int &pos)
 {
     auto it = pools.find(role);
     pos = pools[role]->lease();
     return std::shared_ptr<Session>(new Session(pools[role]->at(pos)));
 }
-void Connection::putConnectionByRole(const std::string &role, int pos)
+void SociConnectionPool::putConnectionByRole(const std::string &role, int pos)
 {
     pools[role]->give_back(pos);
 }
-void Connection::disconnect()
+void SociConnectionPool::disconnect()
 {
     auto size = pool_sizes.begin();
     for (auto pool = pools.begin(); pool != pools.end(); pool++, size++) {

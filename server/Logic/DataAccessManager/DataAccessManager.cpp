@@ -3,96 +3,95 @@
 //
 
 #include "DataAccessManager.h"
-static struct
-{
-    std::string admin = "admin";
-    std::string librarian = "librarian";
-    std::string reader = "reader";
-} roles;
-void DataAccessManager::registration(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<AdminAccount> &account)
+#include "../../Logger/Logger.h"
+
+void DataAccessManager::registration(const std::shared_ptr<AdminAccount> &account)
 {
     int pos;
     std::vector<std::shared_ptr<Account>> acc;
     AuthCommand authCommand(ioc->getAccountRepository(), account->getAccount()->getLogin(), acc);
-    facade->execute(authCommand, roles.reader);
+    facade->execute(authCommand, ioc->getReaderConnection()->getRoleString());
     if (!acc.empty()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"user exists!");
         throw LogicException(__FILE__, __LINE__, __TIME__,
                              "user exists!");
     }
     RegisterAdminCommand rc(ioc->getAdminAccountRepository(), account);
-    facade->execute(rc, roles.admin);
+    facade->execute(rc, ioc->getAdminConnection()->getRoleString());
 }
-void DataAccessManager::registration( std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<LibrarianAccount> &account)
+void DataAccessManager::registration(const std::shared_ptr<LibrarianAccount> &account)
 {
     int pos;
     std::vector<std::shared_ptr<Account>> acc;
     AuthCommand authCommand(ioc->getAccountRepository(), account->getAccount()->getLogin(), acc);
-    facade->execute(authCommand, roles.reader);
+    facade->execute(authCommand, ioc->getReaderConnection()->getRoleString());
     if (!acc.empty()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"user exists!");
         throw LogicException(__FILE__, __LINE__, __TIME__,
                              "user exists!");
     }
     RegisterLibrarianCommand rc(ioc->getLibrarianAccountRepository(), account);
-    facade->execute(rc, roles.admin);
+    facade->execute(rc, ioc->getAdminConnection()->getRoleString());
 }
-void DataAccessManager::registration(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<ReaderAccount> &account)
+void DataAccessManager::registration( const std::shared_ptr<ReaderAccount> &account)
 {
-    int pos;
     std::vector<std::shared_ptr<Account>> acc;
     AuthCommand authCommand(ioc->getAccountRepository(), account->getAccount()->getLogin(), acc);
-    facade->execute(authCommand, roles.reader);
+    facade->execute(authCommand, ioc->getReaderConnection()->getRoleString());
     if (!acc.empty()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"user exists!");
         throw LogicException(__FILE__, __LINE__, __TIME__,
                              "user exists!");
     }
     RegisterReaderCommand rc(ioc->getReaderAccountRepository(), account);
-    facade->execute(rc, roles.admin);
+    facade->execute(rc, ioc->getAdminConnection()->getRoleString());
 }
-void DataAccessManager::login(std::shared_ptr<IIocRepository> ioc, const std::string &login, const std::string &password, std::shared_ptr<Account> &account)
+void DataAccessManager::login(const std::string &login, const std::string &password, std::shared_ptr<Account> &account)
 {
     std::vector<std::shared_ptr<Account>> acc;
     AuthCommand authCommand(ioc->getAccountRepository(), login, acc);
-    facade->execute(authCommand, roles.reader);
-    if (acc.empty())
+    facade->execute(authCommand, ioc->getReaderConnection()->getRoleString());
+    if (acc.empty()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"no such user: registration is required");
         throw LogicException(__FILE__, __LINE__, __TIME__,
                              "no such user: registration is required");
+    }
 
-    if (password != acc[0]->getPassword())
+    if (password != acc[0]->getPassword()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"login failed");
         throw LogicException(__FILE__, __LINE__, __TIME__,
                              "login failed");
+    }
     account = acc[0];
+    Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"logged in successfully!");
 
 }
-void DataAccessManager::exec(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<Command> &command, const std::string &login, const std::string &password)
+void DataAccessManager::exec( const std::shared_ptr<Command> &command, const std::string &login, const std::string &password)
 {
     int pos;
     std::vector<std::shared_ptr<Account>> acc;
     AuthCommand authCommand(ioc->getAccountRepository(), login, acc);
-    facade->execute(authCommand, roles.reader);
-    if (acc.empty())
+    facade->execute(authCommand, ioc->getReaderConnection()->getRoleString());
+    if (acc.empty()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"no such user: registration is required");
         throw LogicException(__FILE__, __LINE__, __TIME__,
                              "no such user: registration is required");
+    }
 
-    if (password != acc[0]->getPassword())
+    if (password != acc[0]->getPassword()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"login failed");
         throw LogicException(__FILE__, __LINE__, __TIME__,
-                                "login failed");
+                             "login failed");
+    }
     facade->execute(*command, acc[0]->getRole());
-}
-void DataAccessManager::create()
-{
-    facade->createDatabase();
 }
 void DataAccessManager::connect()
 {
-    std::vector<std::string> r = {roles.librarian, roles.reader};
-    facade->connectDB(r);
+    facade->connectDB();
+    Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"connected to database!");
 }
 void DataAccessManager::disconnect()
 {
     facade->disconnectDB();
-}
-void DataAccessManager::del()
-{
-    DeleteDatabaseCommand dd;
-    facade->execute(dd, roles.admin);
+    Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"disconnected from database!");
 }

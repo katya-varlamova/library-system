@@ -76,19 +76,6 @@ else:
     print("get libraries failed")
 
 par = {"id" : 1}
-headers = {"login" : "katya_varlamova", "password": "12345", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.delete("http://127.0.0.1:8000/api/v1/library",
-                    headers=headers,
-                    params = par)
-headers = {'login': 'katya_varlamova', 'password': '12345', 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/library",
-                 headers=headers)
-
-if r.json() == {'libraries': [{'id': 1, 'name': 'ln1', 'address': 'molodogvardeyskaya 5'},
-                              {'id': 2, 'name': 'ln2', 'address': 'ivana franko'}]}:
-    print("wrong delete libraries passed")
-else:
-    print("wtong delete libraries failed")
 
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
 r = requests.delete("http://127.0.0.1:8000/api/v1/library",
@@ -107,19 +94,6 @@ else:
 body = json.dumps({"id": 2,
                    "name" : "lib_name2",
                    "address" : "ivana franko, 6"})
-headers = {"login" : "katya_varlamova", "password": "12345", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.put("http://127.0.0.1:8000/api/v1/library",
-                 params=par,
-                 headers=headers,
-                 data = body)
-
-headers = {'login': 'katya_varlamova', 'password': '12345', 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/library",
-                 headers=headers)
-if r.json() == {'libraries': [{'id': 2, 'name': 'ln2', 'address': 'ivana franko'}]}:
-    print("wrong put libraries passed")
-else:
-    print("wtong put libraries failed")
 
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
 r = requests.put("http://127.0.0.1:8000/api/v1/library",
@@ -186,63 +160,10 @@ else:
     print("get books failed")
     
 
-
-par = {"book_id" : 1, "login_user" : "katya_varlamova"}
-headers = {"login" : "katya_librarian", "password": "12345", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.put("http://127.0.0.1:8000/api/v1/book/give",
-                 params=par,
-                 headers=headers)
-
-par = {"login_filter" : "katya_varlamova"}
-headers = {"login": "katya_varlamova", "password" : "12345", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/book",
-                 params=par,
-                 headers=headers)
-
-
-if r.json() != {'books': [{'id': 1, 'name': 'vechera na hutore', 'author': 'gogol',
-                           'lib_id': 2, 'login': 'katya_varlamova'}
-                         ]}:
-    print("update1 books error")
-else:
-    print("update1 books passed")
-
-par = {"book_id" : 1, "login_user" : "katya_varlamova"}
-headers = {"login" : "katya_librarian", "password": "12345", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.put("http://127.0.0.1:8000/api/v1/book/return",
-                 params=par,
-                 headers=headers)
-
-par = {"login_filter" : "katya_varlamova"}
-headers = {"login": "katya_varlamova", "password" : "12345", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/book",
-                 params=par,
-                 headers=headers)
-if r.json() != {'books': []}:
-    print("update2 books error")
-else:
-    print("update2 books passed")
-
-
 body = json.dumps({"author" : "gogol-mogol",
                    "id" : 1, 
                    "name" : "vechera na hutore bliz dikanki",
                    "lib_id" : 2})
-headers = {"login" : "katya_varlamova", "password": "12345", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.put("http://127.0.0.1:8000/api/v1/book",
-                 headers=headers,
-                 data = body)
-headers = {'login': 'katya_varlamova', 'password': '12345', 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/book",
-                 headers=headers)
-
-if r.json() =={'books': [{'id': 2, 'name': 'mertvie dushi', 'author': 'gogol', 'lib_id': 2, 'login': ''},
-                         {'id': 3, 'name': 'mertvie dushi', 'author': 'gogol', 'lib_id': 2, 'login': ''},
-                         {'id': 4, 'name': 'vechera na hutore', 'author': 'gogol', 'lib_id': 2, 'login': ''},
-                         {'id': 1, 'name': 'vechera na hutore', 'author': 'gogol', 'lib_id': 2, 'login': ''}]}:
-    print("wrong put books passed")
-else:
-    print("wtong put books failed")
 
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
 r = requests.put("http://127.0.0.1:8000/api/v1/book",
@@ -265,17 +186,6 @@ headers = {"login" : "katya_varlamova", "password": "12345", 'Content-type': 'ap
 r = requests.delete("http://127.0.0.1:8000/api/v1/book",
                     headers=headers,
                     params = par)
-headers = {'login': 'katya_varlamova', 'password': '12345', 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/book",
-                 headers=headers)
-
-if r.json() =={'books': [{'id': 2, 'name': 'mertvie dushi', 'author': 'gogol', 'lib_id': 2, 'login': ''},
-                         {'id': 3, 'name': 'mertvie dushi', 'author': 'gogol', 'lib_id': 2, 'login': ''},
-                         {'id': 4, 'name': 'vechera na hutore bliz dikanki', 'author': 'gogol-mogol', 'lib_id': 2, 'login': ''},
-                         {'id': 1, 'name': 'vechera na hutore bliz dikanki', 'author': 'gogol-mogol', 'lib_id': 2, 'login': ''}]}:
-    print("wrong delete books passed")
-else:
-    print("wtong delete books failed")
 
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
 r = requests.delete("http://127.0.0.1:8000/api/v1/book",

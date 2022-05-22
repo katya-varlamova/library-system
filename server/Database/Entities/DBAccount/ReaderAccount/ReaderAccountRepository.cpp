@@ -3,6 +3,7 @@
 //
 
 #include "ReaderAccountRepository.h"
+#include "../../../../Logger/Logger.h"
 
 std::vector<std::shared_ptr<ReaderAccount>> ReaderAccountRepository::query(std::shared_ptr<Session> session, std::shared_ptr<ReaderAccountSpecification> specification)
 {
@@ -14,9 +15,11 @@ std::vector<std::shared_ptr<ReaderAccount>> ReaderAccountRepository::query(std::
         std::vector<std::shared_ptr<Account>> accs = ar.query(session, std::shared_ptr<AccountSpecification>(new GetAccount({std::shared_ptr<AccountFilter>(new ByAccountIDFilter(i.acc_id))})));
         if (accs.size() == 1)
             vec.push_back(converter.convert(accs[0], i));
-        else
+        else {
+            Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"account doesn't exist!");
             throw DatabaseException(__FILE__, __LINE__, __TIME__,
                                     "library or account don't exist!");
+        }
     }
     return vec;
 }
@@ -28,8 +31,8 @@ void ReaderAccountRepository::addAccount(std::shared_ptr<Session> session, std::
     ReaderAccountConverter rac;
     DBReaderAccount dbracc = rac.convert(account, acc_id);
 
-    session->exec_using("insert into public.ReaderAccount "
-                        "values(default, :acc_id, :phone)", dbracc);
+    session->exec_using("insert into ReaderAccount (acc_id, phone) "
+                        "values(:acc_id, :phone)", dbracc);
 }
 void ReaderAccountRepository::updateAccount(std::shared_ptr<Session> session, std::shared_ptr<ReaderAccount> account)
 {

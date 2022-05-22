@@ -27,11 +27,11 @@ int LibraryRepository::addLibrary(std::shared_ptr<Session> session, const std::s
 
     if (libs.empty()) {
         int id;
-        session->exec_using("insert into public.Library "
-                   "values(default, :name, :address);",
+        session->exec_using("insert into Library (name, address) "
+                   "values(:name, :address);",
                    dbLibrary);
         session->exec_into("select max(id) "
-                   "from public.Library;", id);
+                   "from Library;", id);
         library->setID(id);
     }
     else

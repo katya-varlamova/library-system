@@ -8,6 +8,8 @@
 
 #include "../Command.h"
 #include "../../../Entities/DBAccount/LibrarianAccount/LibrarianAccountRepository.h"
+#include "../../../../Logger/Logger.h"
+
 class DeleteLibrarianAccountCommand: public Command{
 public:
     DeleteLibrarianAccountCommand(const std::shared_ptr<ILibrarianAccountRepository> &repository, int id)
@@ -20,6 +22,7 @@ public:
         session->begin_transaction();
         repository->removeAccount(session, id);
         session->commit_transaction();
+        Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"librarian account deleted!");
     }
 private:
     int id;

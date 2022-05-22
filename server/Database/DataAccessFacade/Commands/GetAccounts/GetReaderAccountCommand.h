@@ -19,8 +19,14 @@ public:
     {
         session->begin_transaction();
         std::vector<std::shared_ptr<ReaderAccount>> accs = repository->query(session, std::shared_ptr<ReaderAccountSpecification>(new GetReaderAccount(filters)));
-        if (accs.size() == 1)
+        if (accs.size() == 1) {
             acc = accs[0];
+            Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"reader account found!");
+        }
+        else
+        {
+            Logger::getInstance()->log(4, __FILE__, __LINE__, __TIME__,"reader account wasn't found!");
+        }
         session->commit_transaction();
     }
 
