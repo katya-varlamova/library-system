@@ -18,6 +18,7 @@
 #include "../../Database/DataAccessFacade/Commands/DeleteDatabaseCommand/DeleteDatabaseCommand.h"
 #include "../../Database/DataAccessFacade/Commands/RegisterCommand/RegisterLibrarianCommand.h"
 #include "../../Database/DataAccessFacade/Commands/RegisterCommand/RegisterReaderCommand.h"
+#include "../Server/ServerSettings/IocRepositories.h"
 
 class DataAccessManager {
 public:
@@ -27,11 +28,11 @@ public:
     }
     void create();
     void connect();
-    void login(const std::string &login, const std::string &password, std::shared_ptr<Account> &account);
-    void registration(const std::shared_ptr<ReaderAccount> &acc);
-    void registration(const std::shared_ptr<AdminAccount> &acc);
-    void registration(const std::shared_ptr<LibrarianAccount> &acc);
-    void exec(const std::shared_ptr<Command> &com, const std::string &login, const std::string &password);
+    void login(std::shared_ptr<IIocRepository> ioc, const std::string &login, const std::string &password, std::shared_ptr<Account> &account);
+    void registration(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<ReaderAccount> &acc);
+    void registration(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<AdminAccount> &acc);
+    void registration(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<LibrarianAccount> &acc);
+    void exec(std::shared_ptr<IIocRepository> ioc, const std::shared_ptr<Command> &com, const std::string &login, const std::string &password);
     void disconnect();
     void del();
 protected:

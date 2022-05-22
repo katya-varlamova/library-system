@@ -16,13 +16,13 @@ std::vector<DBBook> GetBooks::exec(std::shared_ptr<Session> session) {
     std::string q_str;
     if (!filters.empty()) {
         q_str = "select BookItem.id, book_id, lib_id, acc_id "
-                "from BookItem join Book on book_id = Book.id join Library on Library.id = lib_id join Account on acc_id = Account.id "
+                "from BookItem join Book on book_id = Book.id join Library on Library.id = lib_id left join Account on acc_id = Account.id "
                 "where " + fil_str;
     }
     else
     {
         q_str = "select BookItem.id, book_id, lib_id, acc_id "
-                "from BookItem join Book on book_id = Book.id join Library on Library.id = lib_id join Account on acc_id = Account.id ";
+                "from BookItem join Book on book_id = Book.id join Library on Library.id = lib_id left join Account on acc_id = Account.id ";
     }
     session->exec_into(q_str, bi);
     for (auto &book_item : bi) {

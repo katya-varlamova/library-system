@@ -10,17 +10,20 @@
 #include "../../../Entities/DBAccount/AdminAccount/AdminAccountRepository.h"
 class DeleteAdminAccountCommand: public Command{
 public:
-    DeleteAdminAccountCommand(int id){ this->id = id;}
+    DeleteAdminAccountCommand(std::shared_ptr<IAdminAccountRepository> repository, int id){
+        this->repository = repository;
+        this->id = id;
+    }
     void execute(std::shared_ptr<Session> session) override
     {
-        AdminAccountRepository repository;
         session->begin_transaction();
-        repository.removeAccount(session, id);
+        repository->removeAccount(session, id);
         session->commit_transaction();
     }
 
 private:
     int id;
+    std::shared_ptr<IAdminAccountRepository> repository;
 };
 
 #endif //SRC_DELETEADMINACCOUNTCOMMAND_H

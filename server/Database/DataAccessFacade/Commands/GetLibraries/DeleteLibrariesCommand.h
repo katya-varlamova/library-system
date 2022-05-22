@@ -11,12 +11,14 @@
 #include "../../../Entities/DBLibrary/LibraryRepository.h"
 class DeleteLibrariesCommand :public Command{
 public:
-    DeleteLibrariesCommand(int id)
-    { this->id = id;}
+    DeleteLibrariesCommand(std::shared_ptr<ILibraryRepository> repository, int id)
+    { this->repository = repository;
+        this->id = id;}
     void execute(std::shared_ptr<Session> session) override;
 
 private:
     int id;
+    std::shared_ptr<ILibraryRepository> repository;
 };
 
 

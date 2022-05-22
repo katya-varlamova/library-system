@@ -11,15 +11,16 @@
 class Book
 {
 public:
-    Book(const std::string &name, const std::string &author, std::shared_ptr<Library> l = std::shared_ptr<Library>())
+    Book(const std::string &name, const std::string &author, int lib_id = -1, const std::string &login = "")
     {
         this->name = name;
         this->author = author;
-        this->library = l;
+        this->lib_id = lib_id;
+        this->login = login;
     }
-    std::shared_ptr<Library> getLibrary()
+    int getLibraryID()
     {
-        return library;
+        return lib_id;
     }
     std::string  getAuthor()
     {
@@ -37,11 +38,16 @@ public:
     {
         this->id = id;
     }
+    std::string  getLogin()
+    {
+        return login;
+    }
 private:
     int id;
+    int lib_id;
+    std::string login;
     std::string name;
     std::string author;
-    std::shared_ptr<Library> library;
 };
 
 

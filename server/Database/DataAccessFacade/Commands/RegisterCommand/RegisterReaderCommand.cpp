@@ -5,8 +5,7 @@
 #include "RegisterReaderCommand.h"
 void RegisterReaderCommand::execute(std::shared_ptr<Session> session)
 {
-    ReaderAccountRepository repository;
     session->begin_transaction();
-    repository.addAccount(session, acc);
+    repository->addAccount(session, acc);
     session->commit_transaction();
 }

@@ -3,6 +3,10 @@
 //
 
 #include "BookRepository.h"
+#include "../DBAccount/AccountRepository.h"
+#include "../DBAccount/AccountFilters/AccountFilter.h"
+#include "../DBAccount/AccountFilters/ByAccountIDFilter.h"
+#include "../DBAccount/AccountSpecifications/GetAccount.h"
 
 std::vector<std::shared_ptr<Book>> BookRepository::query(std::shared_ptr<Session> session, std::shared_ptr<BookSpecification> specification)
 {
@@ -11,20 +15,31 @@ std::vector<std::shared_ptr<Book>> BookRepository::query(std::shared_ptr<Session
     BookConverter converter;
     LibraryRepository lib_rep;
     std::vector<std::shared_ptr<LibraryFilter>> lfs;
-
+    AccountRepository acc_rep;
+    std::vector<std::shared_ptr<AccountFilter>> afs;
     for (auto &i : dbb) {
         lfs = {std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(i.get_lib_id()))};
+        afs = {std::shared_ptr<AccountFilter>(new ByAccountIDFilter(i.get_acc_id()))};
         auto res = lib_rep.query(session, std::shared_ptr<LibarySpecification>(new GetLibrary(lfs)));
-        if (!res.empty())
-            vec.push_back(converter.convert(i, res[0]));
+        auto res2 = acc_rep.query(session, std::shared_ptr<AccountSpecification>(new GetAccount(afs)));
+        if (!res.empty()) {
+            if (!res2.empty())
+                vec.push_back(converter.convert(i, i.get_lib_id(), res2[0]->getLogin()));
+            else
+                vec.push_back(converter.convert(i, i.get_lib_id(), ""));
+        }
     }
     return vec;
 }
 void BookRepository::addBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book)
 {
-    BookConverter converter;
+    std::vector<std::shared_ptr<LibraryFilter>> lfs = {std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(book->getLibraryID()))};
     LibraryRepository lib_rep;
-    lib_rep.addLibrary(session, book->getLibrary());
+    auto res = lib_rep.query(session, std::shared_ptr<LibarySpecification>(new GetLibrary(lfs)));
+    if (res.empty())
+        throw DatabaseException(__FILE__, __LINE__, __TIME__,
+                                "no such library!");
+    BookConverter converter;
     DBBook dbBook = converter.convert(book);
     int id;
     if (session->exec("select id from public.Book "
@@ -46,6 +61,13 @@ void BookRepository::addBook(std::shared_ptr<Session> session, std::shared_ptr<B
 }
 void BookRepository::updateBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book)
 {
+    std::vector<std::shared_ptr<LibraryFilter>> lfs = {std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(book->getLibraryID()))};
+    LibraryRepository lib_rep;
+    auto res = lib_rep.query(session, std::shared_ptr<LibarySpecification>(new GetLibrary(lfs)));
+    if (res.empty())
+        throw DatabaseException(__FILE__, __LINE__, __TIME__,
+                                "no such library!");
+
     BookConverter converter;
     DBBook dbbook = converter.convert(book);
     std::string q = "update Book set name = :name, author = :author "
@@ -56,7 +78,7 @@ void BookRepository::updateBook(std::shared_ptr<Session> session, std::shared_pt
     q = "update BookItem set lib_id = :lib_id "
         "where id = " + std::to_string(book->getID());
     session->exec_using(q,
-                        book->getLibrary()->getID());
+                        book->getLibraryID());
 }
 void BookRepository::removeBook(std::shared_ptr<Session> session, int id)
 {

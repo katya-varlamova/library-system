@@ -8,8 +8,7 @@ std::vector<DBBook> TakeBookSpecification::exec(std::shared_ptr<Session> session
     int id;
     std::string q = "select take_book('" + login_user +
                    "', '" + login_lib +
-                   "', '" + book->getName() +
-                   "', '" + book->getAuthor() + "')";
+                   "', '" + std::to_string(book_id)  + "')";
     int ok = session->exec_into(q, id);
     if (ok != 0)
         throw DatabaseException(__FILE__, __LINE__, __TIME__,

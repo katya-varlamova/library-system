@@ -12,11 +12,12 @@
 #include "../../../Entities/DBLibrary/LibraryRepository.h"
 class UpdateLibrariesCommand : public Command{
 public:
-    UpdateLibrariesCommand(const std::shared_ptr<Library> &lib)
-    { this->lib = lib;}
+    UpdateLibrariesCommand(std::shared_ptr<ILibraryRepository> repository, const std::shared_ptr<Library> &lib)
+    { this->repository = repository; this->lib = lib;}
     void execute(std::shared_ptr<Session> session) override;
 
 private:
     std::shared_ptr<Library> lib;
+    std::shared_ptr<ILibraryRepository> repository;
 };
 #endif //SRC_UPDATELIBRARIES_H

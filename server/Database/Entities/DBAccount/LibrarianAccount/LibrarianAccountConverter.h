@@ -10,9 +10,9 @@
 
 class LibrarianAccountConverter {
 public:
-    std::shared_ptr<LibrarianAccount> convert(std::shared_ptr<Account> account, std::shared_ptr<Library> library)
+    std::shared_ptr<LibrarianAccount> convert(std::shared_ptr<Account> account, int lib_id)
     {
-        return std::shared_ptr<LibrarianAccount>(new LibrarianAccount(account, library));
+        return std::shared_ptr<LibrarianAccount>(new LibrarianAccount(account, lib_id));
     }
     DBLibrarianAccount convert(int lib_id, int acc_id)
     {

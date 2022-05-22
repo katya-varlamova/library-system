@@ -1,11 +1,9 @@
 //
-// Created by Екатерина on 10.05.2022.
+// Created by Екатерина on 16.05.2022.
 //
 
-#ifndef SRC_LIBRARIANACCOUNTREPOSITORY_H
-#define SRC_LIBRARIANACCOUNTREPOSITORY_H
-
-
+#ifndef SRC_ILIBRARIANACCOUNTREPOSITORY_H
+#define SRC_ILIBRARIANACCOUNTREPOSITORY_H
 #include "../../../Connection/Session.h"
 #include "../../../../Logic/Entities/Account/LibrarianAccount.h"
 #include "DBLibrarianAccount.h"
@@ -20,14 +18,12 @@
 #include "../../DBLibrary/LibraryRepository.h"
 #include "../AccountRepository.h"
 #include "LibrarianAccountSpecifications/LibrarianAccountSpecification.h"
-#include "ILibrarianAccountRepository.h"
-class LibrarianAccountRepository : public ILibrarianAccountRepository{
+class ILibrarianAccountRepository {
 public:
-    void addAccount(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccount> account) override;
-    void removeAccount(std::shared_ptr<Session> session, int id) override;
-    void updateAccount(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccount> account) override;
+    virtual void addAccount(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccount> account) = 0;
+    virtual void removeAccount(std::shared_ptr<Session> session, int id) = 0;
+    virtual void updateAccount(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccount> account) = 0;
 
-    std::vector<std::shared_ptr<LibrarianAccount>> query(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccountSpecification> specification) override;
+    virtual std::vector<std::shared_ptr<LibrarianAccount>> query(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccountSpecification> specification) = 0;
 };
-
-#endif //SRC_LIBRARIANACCOUNTREPOSITORY_H
+#endif //SRC_ILIBRARIANACCOUNTREPOSITORY_H

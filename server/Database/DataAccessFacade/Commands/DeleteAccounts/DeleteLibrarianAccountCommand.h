@@ -10,15 +10,19 @@
 #include "../../../Entities/DBAccount/LibrarianAccount/LibrarianAccountRepository.h"
 class DeleteLibrarianAccountCommand: public Command{
 public:
-    DeleteLibrarianAccountCommand(int id){ this->id = id;}
+    DeleteLibrarianAccountCommand(const std::shared_ptr<ILibrarianAccountRepository> &repository, int id)
+    {
+        this->id = id;
+        this->repository = repository;
+    }
     void execute(std::shared_ptr<Session> session) override
     {
-        LibrarianAccountRepository repository;
         session->begin_transaction();
-        repository.removeAccount(session, id);
+        repository->removeAccount(session, id);
         session->commit_transaction();
     }
 private:
     int id;
+    std::shared_ptr<ILibrarianAccountRepository> repository;
 };
 #endif //SRC_DELETELIBRARIANACCOUNTCOMMAND_H

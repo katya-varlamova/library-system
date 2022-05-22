@@ -8,8 +8,7 @@ std::vector<DBBook> ReturnBookSpecification::exec(std::shared_ptr<Session> sessi
     int id;
     int ok = session->exec_into("select return_book('" + login_user +
                                    "', '" + login_lib +
-                                   "', '" + book->getName() +
-                                   "', '" + book->getAuthor() + "')", id);
+                                   "', '" + std::to_string(book_id) + "')", id);
     if (ok != 0)
         throw DatabaseException(__FILE__, __LINE__, __TIME__,
                                 "impossible to return book!");

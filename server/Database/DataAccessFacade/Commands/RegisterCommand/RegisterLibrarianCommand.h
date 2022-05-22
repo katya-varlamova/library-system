@@ -14,10 +14,13 @@
 
 class RegisterLibrarianCommand : public Command {
 public:
-    RegisterLibrarianCommand(const std::shared_ptr<LibrarianAccount> &acc) { this->acc = acc;}
+    RegisterLibrarianCommand(std::shared_ptr<ILibrarianAccountRepository> repository, const std::shared_ptr<LibrarianAccount> &acc) {
+        this->repository = repository;
+        this->acc = acc;}
     virtual void execute(std::shared_ptr<Session>  session) override;
 
 private:
     std::shared_ptr<LibrarianAccount> acc;
+    std::shared_ptr<ILibrarianAccountRepository> repository;
 };
 #endif //SRC_REGISTERLIBRARIANCOMMAND_H

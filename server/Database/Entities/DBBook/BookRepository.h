@@ -13,7 +13,8 @@
 #include "../DBLibrary/LibraryFilters/ByLibraryIDFilter.h"
 #include "BookConverter.h"
 #include <soci/error.h>
-class BookRepository {
+#include "IBookRepository.h"
+class BookRepository : public IBookRepository{
 public:
     void addBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book);
     void removeBook(std::shared_ptr<Session> session, int id);

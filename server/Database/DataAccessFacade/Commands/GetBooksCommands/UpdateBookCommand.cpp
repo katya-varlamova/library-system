@@ -4,8 +4,7 @@
 
 #include "UpdateBookCommand.h"
 void UpdateBookCommand::execute(std::shared_ptr<Session> session) {
-    BookRepository repository;
     session->begin_transaction();
-    repository.updateBook(session, book);
+    repository->updateBook(session, book);
     session->commit_transaction();
 }

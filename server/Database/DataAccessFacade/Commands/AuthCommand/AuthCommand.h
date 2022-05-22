@@ -10,18 +10,21 @@
 #include <soci/session.h>
 #include "../../../Entities/DBAccount/AccountFilters/ByLoginFilter.h"
 #include "../../../../Logic/Entities/Account/Account.h"
-#include "../../../Entities/DBAccount/AccountRepository.h"
+#include "../../../../Database/Entities/DBAccount/AccountSpecifications/AccountSpecification.h"
+#include "../../../Entities/DBAccount/IAccountRepository.h"
 #include "../../../Entities/DBAccount/AccountSpecifications/GetAccount.h"
 class AuthCommand : public Command {
 public:
-    AuthCommand(std::string login, std::vector<std::shared_ptr<Account>> &acc) : acc(acc) {
+    AuthCommand( const std::shared_ptr<IAccountRepository> &repository, std::string login, std::vector<std::shared_ptr<Account>> &acc) : acc(acc) {
         this->login = login;
+        this->repository = repository;
     }
     virtual void execute(std::shared_ptr<Session> session) override;
 
 private:
     std::string login;
     std::vector<std::shared_ptr<Account>> &acc;
+    std::shared_ptr<IAccountRepository> repository;
 };
 
 

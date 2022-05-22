@@ -5,8 +5,7 @@
 #include "RegisterLibrarianCommand.h"
 void RegisterLibrarianCommand::execute(std::shared_ptr<Session> session)
 {
-    LibrarianAccountRepository repository;
     session->begin_transaction();
-    repository.addAccount(session, acc);
+    repository->addAccount(session, acc);
     session->commit_transaction();
 }

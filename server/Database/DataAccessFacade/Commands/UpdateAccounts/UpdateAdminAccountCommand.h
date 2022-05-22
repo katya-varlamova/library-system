@@ -8,16 +8,17 @@
 #include "../../../Entities/DBAccount/AdminAccount/AdminAccountRepository.h"
 class UpdateAdminAccountCommand: public Command{
 public:
-    UpdateAdminAccountCommand(const std::shared_ptr<AdminAccount> &acc){ this->acc = acc;}
+    UpdateAdminAccountCommand(std::shared_ptr<IAdminAccountRepository> repository, const std::shared_ptr<AdminAccount> &acc){
+        this->repository = repository;this->acc = acc;}
     void execute(std::shared_ptr<Session> session) override
     {
-        AdminAccountRepository repository;
         session->begin_transaction();
-        repository.updateAccount(session, acc);
+        repository->updateAccount(session, acc);
         session->commit_transaction();
     }
 
 private:
+    std::shared_ptr<IAdminAccountRepository> repository;
     std::shared_ptr<AdminAccount> acc;
 };
 #endif //SRC_UPDATEADMINACCOUNTCOMMAND_H

@@ -7,7 +7,7 @@ std::shared_ptr<Account> LibrarianAccount::getAccount()
 {
     return acc;
 }
-std::shared_ptr<Library> LibrarianAccount::getLibrary()
+int LibrarianAccount::getLibraryID()
 {
-    return lib;
+    return lib_id;
 }

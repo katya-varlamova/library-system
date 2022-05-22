@@ -5,8 +5,7 @@
 #include "ReturnBookCommand.h"
 void ReturnBookCommand::execute(std::shared_ptr<Session> session)
 {
-    BookRepository repository;
     session->begin_transaction();
-    repository.query(session, std::shared_ptr<ReturnBookSpecification>(new ReturnBookSpecification(login_lib, login_user, book)));
+    repository->query(session, std::shared_ptr<ReturnBookSpecification>(new ReturnBookSpecification(login_lib, login_user, book_id)));
     session->commit_transaction();
 }

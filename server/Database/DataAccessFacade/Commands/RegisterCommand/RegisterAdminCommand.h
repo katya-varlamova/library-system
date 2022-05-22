@@ -15,11 +15,14 @@
 
 class RegisterAdminCommand : public Command {
 public:
-    RegisterAdminCommand(const std::shared_ptr<AdminAccount> &acc) { this->acc = acc;}
+    RegisterAdminCommand(std::shared_ptr<IAdminAccountRepository> repository, const std::shared_ptr<AdminAccount> &acc) {
+        this->repository = repository;
+        this->acc = acc;}
     virtual void execute(std::shared_ptr<Session>  session) override;
 
 private:
     std::shared_ptr<AdminAccount> acc;
+    std::shared_ptr<IAdminAccountRepository> repository;
 };
 
 

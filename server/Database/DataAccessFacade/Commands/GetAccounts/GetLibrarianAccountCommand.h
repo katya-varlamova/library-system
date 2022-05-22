@@ -10,13 +10,15 @@
 #include "../../../Entities/DBAccount/LibrarianAccount/LibrarianAccountRepository.h"
 class GetLibrarianAccountCommand: public Command{
 public:
-    GetLibrarianAccountCommand(std::shared_ptr<LibrarianAccount> &acc, const std::vector<std::shared_ptr<AccountFilter>> &filters)
-            : acc(acc) { this->filters = filters;}
+    GetLibrarianAccountCommand(std::shared_ptr<ILibrarianAccountRepository> repository, std::shared_ptr<LibrarianAccount> &acc, const std::vector<std::shared_ptr<AccountFilter>> &filters)
+            : acc(acc) {
+        this->filters = filters;
+        this->repository = repository;
+    }
     void execute(std::shared_ptr<Session> session) override
     {
-        LibrarianAccountRepository repository;
         session->begin_transaction();
-        std::vector<std::shared_ptr<LibrarianAccount>> accs = repository.query(session, std::shared_ptr<LibrarianAccountSpecification>(new GetLibrarianAccount(filters)));
+        std::vector<std::shared_ptr<LibrarianAccount>> accs = repository->query(session, std::shared_ptr<LibrarianAccountSpecification>(new GetLibrarianAccount(filters)));
         if (accs.size() == 1)
             acc = accs[0];
         session->commit_transaction();
@@ -25,5 +27,6 @@ public:
 private:
     std::shared_ptr<LibrarianAccount> &acc;
     std::vector<std::shared_ptr<AccountFilter>> filters;
+    std::shared_ptr<ILibrarianAccountRepository> repository;
 };
 #endif //SRC_GETLIBRARIANACCOUNTCOMMAND_H

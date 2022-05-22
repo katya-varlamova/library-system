@@ -12,13 +12,14 @@
 #include "../../../Entities/DBBook/BookFilters/ByAuthorFilter.h"
 class GetFreeBooksCommand : public Command{
 public:
-    GetFreeBooksCommand(std::vector<std::shared_ptr<Book>> &books, std::vector<std::shared_ptr<Filter>> &filters)
-    : books(books) { this->filters = filters;}
+    GetFreeBooksCommand(std::shared_ptr<IBookRepository> repository, std::vector<std::shared_ptr<Book>> &books, std::vector<std::shared_ptr<Filter>> &filters)
+    : books(books) { this->repository = repository; this->filters = filters;}
     void execute(std::shared_ptr<Session> session) override;
 
 private:
     std::vector<std::shared_ptr<Book>> &books;
     std::vector<std::shared_ptr<Filter>> filters;
+    std::shared_ptr<IBookRepository> repository;
 };
 
 

@@ -11,18 +11,20 @@
 #include "../../../Entities/DBBook/BookSpecifications/TakeBookSpecification.h"
 class TakeBookCommand : public Command{
 public:
-    TakeBookCommand(const std::string &login_user, const std::string &login_lib, std::shared_ptr<Book> book)
+    TakeBookCommand(std::shared_ptr<IBookRepository> repository, const std::string &login_user, const std::string &login_lib, int book_id)
     {
-        this->book = book;
+        this->book_id = book_id;
         this->login_user = login_user;
         this->login_lib = login_lib;
+        this->repository = repository;
     }
     void execute(std::shared_ptr<Session> session) override;
 
 private:
     std::string login_user;
     std::string login_lib;
-    std::shared_ptr<Book> book;
+    int book_id;
+    std::shared_ptr<IBookRepository> repository;
 };
 
 

@@ -6,8 +6,7 @@
 
 void GetBooksByLoginCommand::execute(std::shared_ptr<Session> session)
 {
-    BookRepository repository;
     session->begin_transaction();
-    books = repository.query(session, std::shared_ptr<BookSpecification>(new GetBooks(filters)));
+    books = repository->query(session, std::shared_ptr<BookSpecification>(new GetBooks(filters)));
     session->commit_transaction();
 }

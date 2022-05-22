@@ -13,7 +13,8 @@
 #include "../AccountRepository.h"
 #include "../AccountSpecifications/GetAccount.h"
 #include "../AccountFilters/ByAccountIDFilter.h"
-class AdminAccountRepository {
+#include "IAdminAccountRepository.h"
+class AdminAccountRepository : public IAdminAccountRepository{
 public:
     void addAccount(const std::shared_ptr<Session> &session, std::shared_ptr<AdminAccount> account);
     void removeAccount(const std::shared_ptr<Session> &session, int id);

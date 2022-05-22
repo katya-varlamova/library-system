@@ -5,8 +5,7 @@
 #include "DeleteLibrariesCommand.h"
 void DeleteLibrariesCommand::execute(std::shared_ptr<Session> session)
 {
-    LibraryRepository repository;
     session->begin_transaction();
-    repository.removeLibrary(session, id);
+    repository->removeLibrary(session, id);
     session->commit_transaction();
 }

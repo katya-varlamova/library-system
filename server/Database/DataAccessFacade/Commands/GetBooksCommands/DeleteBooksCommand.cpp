@@ -7,8 +7,7 @@
 
 void DeleteBooksCommand::execute(std::shared_ptr<Session> session)
 {
-    BookRepository repository;
     session->begin_transaction();
-    repository.removeBook(session, id);
+    repository->removeBook(session, id);
     session->commit_transaction();
 }

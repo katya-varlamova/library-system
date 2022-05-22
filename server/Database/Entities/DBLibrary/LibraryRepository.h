@@ -12,7 +12,8 @@
 #include "LibraryFilters/ByLibraryNameFilter.h"
 #include "LibraryFilters/ByAddressFilter.h"
 #include "LibraryConverter.h"
-class LibraryRepository {
+#include "ILibraryRepository.h"
+class LibraryRepository : public ILibraryRepository{
 public:
     int addLibrary(std::shared_ptr<Session> session, const std::shared_ptr<Library> &library);
     void removeLibrary(std::shared_ptr<Session> session, int id);

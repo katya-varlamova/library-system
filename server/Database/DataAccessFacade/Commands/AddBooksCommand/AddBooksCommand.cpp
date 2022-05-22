@@ -7,11 +7,9 @@
 
 void AddBooksCommand::execute(std::shared_ptr<Session> session)
 {
-    BookRepository repository;
-
     for (int i = 0; i < books.size(); i++) {
         session->begin_transaction();
-        repository.addBook(session, books[i]);
+        repository->addBook(session, books[i]);
         session->commit_transaction();
     }
 }

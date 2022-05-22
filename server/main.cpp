@@ -1,6 +1,7 @@
 //#include <iostream>
 //#include <libpq-fe.h>
 //#include <soci/soci.h>
+#include "Logic/Server/ServerSettings/IocRepositories.h"
 #include "Database/DataAccessFacade/PostgresDataAccessFacade.h"
 #include "Database/DataAccessFacade/Commands/RegisterCommand/RegisterAdminCommand.h"
 #include "Logic/DataAccessManager/DataAccessManager.h"
@@ -60,7 +61,6 @@
 void run() {
 
     ServerSettings components; // Create scope Environment components
-
     /* create ApiControllers and add endpoints to router */
     auto router = components.httpRouter.getObject();
 
@@ -82,6 +82,7 @@ void run() {
  *  main
  */
 //manager->create();
+std::shared_ptr<IIocRepository> ServerController::ioc = std::shared_ptr<IIocRepository>(new PGIocRepositories());
 std::shared_ptr<DataAccessManager> ServerController::manager = std::shared_ptr<DataAccessManager>(new DataAccessManager);
 int main(int argc, const char * argv[]) {
 
@@ -90,14 +91,11 @@ int main(int argc, const char * argv[]) {
     ServerController::manager->connect();
     ServerController::manager->del();
     ServerController::manager->create();
-//    ServerController::manager->registration(std::shared_ptr<AdminAccount>(new AdminAccount(std::shared_ptr<Account>(new Account("admin",
-//                                                              "admin",
-//                                                              "admin",
-//                                                              "admin")))));
-//    ServerController::manager->registration(std::shared_ptr<ReaderAccount>(new ReaderAccount(std::shared_ptr<Account>(new Account("katya_varlamova",
-//                                                                          "12345",
-//                                                                          "reader",
-//                                                                          "Ekaterina")), "89961008307")));
+    ServerController::manager->registration(ServerController::ioc, std::shared_ptr<AdminAccount>(new AdminAccount(std::shared_ptr<Account>(new Account("admin",
+                                                              "admin",
+                                                              "admin",
+                                                              "admin")))));
+
     run();
     ServerController::manager->disconnect();
 

@@ -11,9 +11,9 @@
 #include "../../../../Logic/Entities/Book/Book.h"
 class ReturnBookSpecification : public BookSpecification{
 public:
-    ReturnBookSpecification(const std::string &login_lib, const std::string &login_user, const std::shared_ptr<Book> &book)
+    ReturnBookSpecification(const std::string &login_lib, const std::string &login_user, int book_id)
     {
-        this->book = book;
+        this->book_id = book_id;
         this->login_user = login_user;
         this->login_lib = login_lib;
     }
@@ -21,7 +21,7 @@ public:
 private:
     std::string login_user;
     std::string login_lib;
-    std::shared_ptr<Book> book;
+    int book_id;
 };
 
 

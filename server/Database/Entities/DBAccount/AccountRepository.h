@@ -15,7 +15,8 @@
 #include "AccountSpecifications/AccountSpecification.h"
 #include "AccountConverter.h"
 #include "../DBBook/BookRepository.h"
-class AccountRepository {
+#include "IAccountRepository.h"
+class AccountRepository : public IAccountRepository{
 public:
     int addAccount(std::shared_ptr<Session> session, std::shared_ptr<Account> account);
     void removeAccount(std::shared_ptr<Session> session, int id);

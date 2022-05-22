@@ -11,13 +11,13 @@
 
 class LibrarianAccount {
 public:
-    LibrarianAccount(const std::shared_ptr<Account> &acc, const std::shared_ptr<Library>  &lib)
+    LibrarianAccount(const std::shared_ptr<Account> &acc, int lib_id)
     {
-        this->lib = lib;
+        this->lib_id = lib_id;
         this->acc = acc;
     }
     std::shared_ptr<Account> getAccount();
-    std::shared_ptr<Library> getLibrary();
+    int getLibraryID();
     int getID()
     {
         return id;
@@ -28,7 +28,7 @@ public:
     }
 private:
     int id;
-    std::shared_ptr<Library> lib;
+    int lib_id;
     std::shared_ptr<Account> acc;
 };
 

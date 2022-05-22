@@ -36,7 +36,7 @@ grant update on bookitem to librarian;
 create user reader WITH PASSWORD 'reader';
 grant select on book, bookitem, account, readeraccount, library to reader;
 
-create or replace function take_book(login_user varchar, login_lib varchar, bookname varchar, bookauthor varchar)
+create or replace function take_book(login_user varchar, login_lib varchar, bid_p int)
 returns int
 as $$
 declare
@@ -54,7 +54,7 @@ where login = login_user;
 
 select into biid min(bookitem.id)
 from bookitem join book on book_id = Book.id
-where name = bookname and author = bookauthor and lib_id = lid and acc_id is null;
+where bookitem.id = bid_p and lib_id = lid and acc_id is null;
 
 update bookitem
 set acc_id = aid
@@ -65,7 +65,7 @@ $$
 LANGUAGE PLPGSQL;
 
 
-create or replace function return_book(login_user varchar, login_lib varchar, bookname varchar, bookauthor varchar)
+create or replace function return_book(login_user varchar, login_lib varchar, bid_p int)
 returns int
 as $$
 declare
@@ -83,7 +83,7 @@ where login = login_user;
 
 select into biid min(bookitem.id)
 from bookitem join book on book_id = Book.id
-where name = bookname and author = bookauthor and lib_id = lid and acc_id = aid;
+where bookitem.id = bid_p and lib_id = lid and acc_id = aid;
 
 update bookitem
 set acc_id = null
