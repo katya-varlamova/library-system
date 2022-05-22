@@ -35,7 +35,10 @@
 #include "../../../Database/DataAccessFacade/Commands/DeleteAccounts/DeleteLibrarianAccountCommand.h"
 #include "../../../Database/DataAccessFacade/Commands/DeleteAccounts/DeleteAdminAccountCommand.h"
 #include "../../../Database/DataAccessFacade/Commands/DeleteAccounts/DeleteReaderAccountCommand.h"
-
+#include "../../../Database/DataAccessFacade/Commands/EBookCommands/GetEBooksCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/EBookCommands/UpdateEBookCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/EBookCommands/DeleteEBookCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/EBookCommands/AddEBooksCommand.h"
 std::string replaceAll(std::string str, const std::string& from, const std::string& to) {
     size_t start_pos = 0;
     while((start_pos = str.find(from, start_pos)) != std::string::npos) {
@@ -272,6 +275,130 @@ public:
         }
 
     };
+
+
+    ENDPOINT_ASYNC("GET", "/api/v1/ebook", EBooks ) {
+
+    ENDPOINT_ASYNC_INIT(EBooks)
+
+        Action act() override {
+
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            if (login.empty() || pwd.empty())
+                return _return(controller->createResponse(Status::CODE_300));
+
+            std::vector<std::shared_ptr<EBook>> books;
+            std::vector<std::shared_ptr<Filter>> filters;
+
+            String tail = request->getPathTail();
+            auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
+
+
+            if (queryParams.get("author") != nullptr) {
+                std::string s = queryParams.get("author");
+                filters.push_back(std::shared_ptr<Filter>(new ByAuthorFilter(replaceAll(s, "+", " "))));
+            }
+            if (queryParams.get("name") != nullptr)
+            {
+                std::string s = queryParams.get("name");
+                filters.push_back(std::shared_ptr<Filter>(new ByBookNameFilter(replaceAll(s, "+", " "))));
+            }
+
+            manager->exec(std::shared_ptr<GetEBooksCommand> (new GetEBooksCommand(ioc->getEBookRepository(), books, filters)), login, pwd);
+
+
+            auto booksDto = EBooksDto::createShared();
+            oatpp::Vector<oatpp::Object<EBookDto>> booksVector ({});
+
+            for (auto &book : books) {
+                auto bookDto = EBookDto::createShared();
+                bookDto->name = book->getName();
+                bookDto->author = book->getAuthor();
+                bookDto->id = book->getID();
+                bookDto->link = book->getLink();
+                booksVector->push_back(bookDto);
+            }
+
+            booksDto->books = booksVector;
+            /* return Action to start child coroutine to read body */
+            return _return(controller->createDtoResponse(Status::CODE_200, booksDto));
+        }
+
+
+    };
+
+    ENDPOINT_ASYNC("PUT", "/api/v1/ebook", EBookUpdate ) {
+
+    ENDPOINT_ASYNC_INIT(EBookUpdate)
+        Action act() override {
+            return request->readBodyToDtoAsync<oatpp::Object<EBookDto>>(
+                    controller->getDefaultObjectMapper()).callbackTo(&EBookUpdate::returnBookResponse);
+        }
+        Action returnBookResponse( const oatpp::Object<EBookDto>& body) {
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            if (login.empty() || pwd.empty())
+                return _return(controller->createResponse(Status::CODE_300));
+
+            std::shared_ptr<EBook> book = std::shared_ptr<EBook>(new EBook(body->name,
+                                                                        body->author,
+                                                                        body->link));
+            book->setID(body->id);
+
+            manager->exec(std::shared_ptr<Command> (new UpdateEBookCommand(ioc->getEBookRepository(), book)), login, pwd);
+
+            return _return(controller->createResponse(Status::CODE_200));
+        }
+
+
+    };
+
+    ENDPOINT_ASYNC("POST", "/api/v1/ebook", EBookPoint) {
+
+    ENDPOINT_ASYNC_INIT(EBookPoint)
+
+        Action act() override {
+            return request->readBodyToDtoAsync<oatpp::Object<EBookDto>>(controller->getDefaultObjectMapper()).callbackTo(&EBookPoint::returnResponse);
+        }
+
+        Action returnResponse(const oatpp::Object<EBookDto>& body){
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+            std::vector<std::shared_ptr<EBook>> books;
+            std::shared_ptr<EBook> book = std::shared_ptr<EBook>(new EBook(body->name, body->author, body->link));
+            books.push_back(book);
+            manager->exec(std::shared_ptr<Command>( new AddEBooksCommand(ioc->getEBookRepository(), books)), login, pwd);
+            return _return(controller->createResponse(Status::CODE_200));
+        }
+
+    };
+
+    ENDPOINT_ASYNC("DELETE", "/api/v1/ebook", EBookDeletePoint) {
+
+    ENDPOINT_ASYNC_INIT(EBookDeletePoint)
+
+        Action act() override {
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            String tail = request->getPathTail();
+            auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
+            int id;
+            if (queryParams.get("id") != nullptr) {
+                id = atoi(queryParams.get("id")->c_str());
+                manager->exec(std::shared_ptr<Command>(new DeleteEBooksCommand(ioc->getEBookRepository(), id)), login, pwd);
+                return _return(controller->createResponse(Status::CODE_200));
+            }
+            else
+                return _return(controller->createResponse(Status::CODE_500));
+
+        }
+
+    };
+
 
     ENDPOINT_ASYNC("GET", "/api/v1/login", LoginPoint) {
 

@@ -17,6 +17,8 @@
 #include "../../../Database/Entities/DBBook/BookRepository.h"
 #include "../../../Configuration/Configuration.h"
 #include "../../../Database/Connection/SociConnectionPool.h"
+#include "../../../Database/Entities/DBEBook/IEBookRepository.h"
+#include "../../../Database/Entities/DBEBook/EBookRepository.h"
 
 class IIocRepository
 {
@@ -31,6 +33,7 @@ public:
     virtual std::shared_ptr<AdminRoleConnection> getAdminConnection() = 0;
     virtual std::shared_ptr<ReaderRoleConnection> getReaderConnection() = 0;
     virtual std::shared_ptr<LibrarianRoleConnection> getLibrarianConnection() = 0;
+    virtual std::shared_ptr<IEBookRepository> getEBookRepository() = 0;
 };
 class PGIocRepositories : public IIocRepository
 {
@@ -56,6 +59,10 @@ public:
    {
        return std::shared_ptr<IBookRepository>(new BookRepository());
    }
+    std::shared_ptr<IEBookRepository> getEBookRepository() override
+    {
+        return std::shared_ptr<IEBookRepository>(new EBookRepository());
+    }
     std::shared_ptr<ILibraryRepository> getLibraryRepository() override
     {
         return std::shared_ptr<ILibraryRepository>(new LibraryRepository());

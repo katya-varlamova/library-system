@@ -28,3 +28,7 @@ create table if not exists BookItem (
                                         book_id int references Book(id),
     lib_id int references Library(id),
     acc_id int references Account(id) );
+create table if not exists EBook (
+                                     id integer primary key autoincrement,
+                                     book_id int references Book(id),
+    link varchar(40));

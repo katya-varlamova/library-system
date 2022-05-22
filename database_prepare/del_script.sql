@@ -15,6 +15,7 @@ drop function f_delete_lib_trigger;
 drop function take_book;
 drop function return_book;
 
+drop table ebook;
 drop table bookitem;
 drop table book;
 drop table librarianaccount;

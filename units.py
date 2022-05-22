@@ -15,6 +15,21 @@ books = [
                    "name" : "vechera na hutore",
                    "lib_id" : 2}),
          ]
+
+ebooks = [
+         json.dumps({"author" : "gogol",
+                   "name" : "vechera na hutore",
+                   "link" : "https"}),
+         json.dumps({"author" : "gogol",
+                   "name" : "mertvie dushi",
+                   "link" : "https"}),
+         json.dumps({"author" : "gogol",
+                   "name" : "mertvie dushi",
+                   "link" : "https"}),
+         json.dumps({"author" : "gogol",
+                   "name" : "vechera na hutore",
+                   "link" : "https"}),
+         ]
 libs = [
          json.dumps({"name" : "ln1",
                      "address" : "molodogvardeyskaya 5"}),
@@ -293,7 +308,27 @@ else:
     print("delete books failed")
 
 
-   
+
+
+for st in ebooks:
+    headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
+    r = requests.post("http://127.0.0.1:8000/api/v1/ebook",
+                      data=st,
+                      headers=headers)
+    if r.status_code == 200:
+        print("post ebook passed")
+    else:
+        print("post ebook failed")
+headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
+r = requests.get("http://127.0.0.1:8000/api/v1/ebook",
+                 headers = headers)
+if r.json() =={'books': [{'id': 1, 'name': 'vechera na hutore', 'author': 'gogol', 'link': 'https'},
+                         {'id': 2, 'name': 'mertvie dushi', 'author': 'gogol', 'link': 'https'},
+                         {'id': 3, 'name': 'mertvie dushi', 'author': 'gogol', 'link': 'https'},
+                         {'id': 4, 'name': 'vechera na hutore', 'author': 'gogol', 'link': 'https'}]}:
+    print("get books passed")
+else:
+    print("get books failed")   
 ##body = json.dumps({"account" : {"name" : "katya_varlamova_upd",
 ##                               "login" : "katya_varlamova_upd",
 ##                               "password": "123456",

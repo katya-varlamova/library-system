@@ -1,3 +1,4 @@
+drop table ebook;
 drop table bookitem;
 drop table book;
 drop table librarianaccount;
