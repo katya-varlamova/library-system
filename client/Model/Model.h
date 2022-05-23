@@ -40,8 +40,7 @@ public:
     int updateBook(const std::string &login, const std::string &pass, const std::shared_ptr<Book> &book);
     int deleteBook(const std::string &login, const std::string &pass, int id);
     std::vector<std::shared_ptr<Book>> getBooks(const std::string &login, const std::string &pass, std::string name = "", std::string author = "", bool l = false, bool f = false);
-    int giveBook(const std::string &login, const std::string &pass, const std::string &login_user, int book_id);
-    int returnBook(const std::string &login, const std::string &pass, const std::string &login_user, int book_id);
+    int giveReturnBook(const std::string &login, const std::string &pass, const std::string &login_user, int book_id, std::string action);
 
     int addEBook(const std::string &login, const std::string &pass, const std::shared_ptr<EBook> &book);
     int updateEBook(const std::string &login, const std::string &pass, const std::shared_ptr<EBook> &book);

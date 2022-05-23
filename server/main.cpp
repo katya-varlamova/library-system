@@ -42,7 +42,7 @@ void run() {
  */
 //manager->create();
 std::shared_ptr<Configuration> configuration = std::shared_ptr<Configuration>(new FileConfiguration("config.json"));
-std::shared_ptr<IIocRepository> ServerController::ioc = std::shared_ptr<IIocRepository>(new PGIocRepositories(configuration));
+std::shared_ptr<IIocRepository> ServerController::ioc = std::shared_ptr<IIocRepository>(new SqlIocRepositories(configuration));
 std::shared_ptr<DataAccessManager> ServerController::manager = std::shared_ptr<DataAccessManager>(new DataAccessManager(ioc));
 int main(int argc, const char * argv[]) {
     oatpp::base::Environment::init();

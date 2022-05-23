@@ -14,10 +14,10 @@
 int main(int argc, char *argv[])
 {
     std::shared_ptr<Model> model = std::shared_ptr<Model>(new Model());
-//    ConsolePresenter c(model);
-//    c.run();
-    QApplication a(argc, argv);
-    LoginViewController w(model);
-    w.show();
-    return a.exec();
+    ConsolePresenter c(model);
+    c.run();
+//    QApplication a(argc, argv);
+//    LoginViewController w(model);
+//    w.show();
+//    return a.exec();
 }

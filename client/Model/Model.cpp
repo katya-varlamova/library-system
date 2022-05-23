@@ -152,7 +152,7 @@ std::vector<std::shared_ptr<Library>> Model::getLibraries(const std::string &log
 }
 int Model::deleteLibrary(const std::string &login, const std::string &pass, int id)
 {
-    auto r = client->deleteLibrary(login, pass, id);
+    auto r = client->deleteLibrary(id, login, pass, id);
     if (r->getStatusCode() == 200)
         return 0;
     return 1;
@@ -165,7 +165,7 @@ int Model::updateLibrary(const std::string &login, const std::string &pass, cons
     libDto->address = library->getAddress();
     libDto->id = library->getID();
 
-    auto r = client->updateLibrary(login, pass, objectMapper->writeToString(libDto));
+    auto r = client->updateLibrary(library->getID(), login, pass, objectMapper->writeToString(libDto));
     if (r->getStatusCode() == 200)
         return 0;
     return 1;
@@ -193,14 +193,14 @@ int Model::updateBook(const std::string &login, const std::string &pass, const s
     bookDto->id = book->getID();
     bookDto->lib_id = book->getLibraryID();
 
-    auto r = client->updateBook(login, pass, objectMapper->writeToString(bookDto));
+    auto r = client->updateBook(book->getID(), login, pass, objectMapper->writeToString(bookDto));
     if (r->getStatusCode() == 200)
         return 0;
     return 1;
 }
 int Model::deleteBook(const std::string &login, const std::string &pass, int id)
 {
-    auto r = client->deleteBook(login, pass, id);
+    auto r = client->deleteBook(id, login, pass, id);
     if (r->getStatusCode() == 200)
         return 0;
     return 1;
@@ -267,16 +267,9 @@ std::vector<std::shared_ptr<Book>> Model::getBooks(const std::string &login, con
     }
     return books;
 }
-int Model::giveBook(const std::string &login, const std::string &pass, const std::string &login_user, int book_id)
+int Model::giveReturnBook(const std::string &login, const std::string &pass, const std::string &login_user, int book_id, std::string action)
 {
-    auto r = client->giveBook(login, pass, book_id, login_user);
-    if (r->getStatusCode() == 200)
-        return 0;
-    return 1;
-}
-int Model::returnBook(const std::string &login, const std::string &pass, const std::string &login_user, int book_id)
-{
-    auto r = client->returnBook(login, pass, book_id, login_user);
+    auto r = client->giveReturnBook(book_id, login, pass, book_id, login_user, action);
     if (r->getStatusCode() == 200)
         return 0;
     return 1;
@@ -305,14 +298,14 @@ int Model::updateEBook(const std::string &login, const std::string &pass, const 
     bookDto->id = book->getID();
     bookDto->link = book->getLink();
 
-    auto r = client->updateBook(login, pass, objectMapper->writeToString(bookDto));
+    auto r = client->updateBook(book->getID(), login, pass, objectMapper->writeToString(bookDto));
     if (r->getStatusCode() == 200)
         return 0;
     return 1;
 }
 int Model::deleteEBook(const std::string &login, const std::string &pass, int id)
 {
-    auto r = client->deleteEBook(login, pass, id);
+    auto r = client->deleteEBook(id, login, pass, id);
     if (r->getStatusCode() == 200)
         return 0;
     return 1;

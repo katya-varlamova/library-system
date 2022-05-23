@@ -35,10 +35,10 @@ public:
     virtual std::shared_ptr<LibrarianRoleConnection> getLibrarianConnection() = 0;
     virtual std::shared_ptr<IEBookRepository> getEBookRepository() = 0;
 };
-class PGIocRepositories : public IIocRepository
+class SqlIocRepositories : public IIocRepository
 {
 public:
-    PGIocRepositories(std::shared_ptr<Configuration> configuration)
+    SqlIocRepositories(std::shared_ptr<Configuration> configuration)
     {
         this->configuration = configuration;
         configuration->read();

@@ -58,7 +58,7 @@ public:
         return std::shared_ptr<ServerController>(new ServerController(objectMapper));
     }
 
-    ENDPOINT_ASYNC("GET", "/api/v1/book", Books ) {
+    ENDPOINT_ASYNC("GET", "/api/v1/books", Books) {
 
         ENDPOINT_ASYNC_INIT(Books)
 
@@ -132,46 +132,9 @@ public:
 
     };
 
-    ENDPOINT_ASYNC("PUT", "/api/v1/book/give", BookGiveUpdate ) {
+    ENDPOINT_ASYNC("PATCH", "/api/v1/books/{id}", BookReturnGiveUpdate ) {
 
-    ENDPOINT_ASYNC_INIT(BookGiveUpdate)
-
-        Action act() override {
-
-            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
-            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
-
-            if (login.empty() || pwd.empty())
-                return _return(controller->createResponse(Status::CODE_300));
-
-            String tail = request->getPathTail();
-            auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
-
-            std::string login_user;
-            int book_id;
-            if (queryParams.get("book_id") != nullptr && queryParams.get("login_user") != nullptr) {
-                book_id = std::atoi(replaceAll(queryParams.get("book_id"), "+", " ").c_str());
-                login_user = replaceAll(queryParams.get("login_user"), "+", " ");
-            } else
-                return _return(controller->createResponse(Status::CODE_500));
-
-            try {
-                manager->exec(std::shared_ptr<TakeBookCommand>(new TakeBookCommand(ioc->getBookRepository(), login_user, login, book_id)), login,
-                              pwd);
-            }
-            catch (LogicException)
-            {
-                return _return(controller->createResponse(Status::CODE_500));
-            }
-
-            /* return Action to start child coroutine to read body */
-            return _return(controller->createResponse(Status::CODE_200));
-        }
-    };
-
-    ENDPOINT_ASYNC("PUT", "/api/v1/book/return", BookReturnUpdate ) {
-
-    ENDPOINT_ASYNC_INIT(BookReturnUpdate)
+    ENDPOINT_ASYNC_INIT(BookReturnGiveUpdate)
 
         Action act() override {
 
@@ -185,28 +148,43 @@ public:
             auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
 
             std::string login_user;
+            std::string action;
             int book_id;
             if (queryParams.get("book_id") != nullptr && queryParams.get("login_user") != nullptr) {
                 book_id = std::atoi(replaceAll(queryParams.get("book_id"), "+", " ").c_str());
                 login_user = replaceAll(queryParams.get("login_user"), "+", " ");
+                action = replaceAll(queryParams.get("action"), "+", " ");
             } else
                 return _return(controller->createResponse(Status::CODE_500));
 
-            try {
-                manager->exec(std::shared_ptr<ReturnBookCommand>(new ReturnBookCommand(ioc->getBookRepository(), login_user, login, book_id)), login,
-                              pwd);
-            }
-            catch (LogicException)
+            if (action == "return") {
+                try {
+                    manager->exec(std::shared_ptr<ReturnBookCommand>(
+                            new ReturnBookCommand(ioc->getBookRepository(), login_user, login, book_id)), login,
+                                  pwd);
+                }
+                catch (LogicException) {
+                    return _return(controller->createResponse(Status::CODE_500));
+                }
+            } else if (action == "give")
             {
+                try {
+                    manager->exec(std::shared_ptr<TakeBookCommand>(
+                            new TakeBookCommand(ioc->getBookRepository(), login_user, login, book_id)), login,
+                                  pwd);
+                }
+                catch (LogicException) {
+                    return _return(controller->createResponse(Status::CODE_500));
+                }
+            } else
                 return _return(controller->createResponse(Status::CODE_500));
-            }
 
             /* return Action to start child coroutine to read body */
             return _return(controller->createResponse(Status::CODE_200));
         }
     };
 
-    ENDPOINT_ASYNC("PUT", "/api/v1/book", BookUpdate ) {
+    ENDPOINT_ASYNC("PUT", "/api/v1/books/{id}", BookUpdate ) {
 
     ENDPOINT_ASYNC_INIT(BookUpdate)
         Action act() override {
@@ -233,7 +211,7 @@ public:
 
     };
 
-    ENDPOINT_ASYNC("POST", "/api/v1/book", BookPoint) {
+    ENDPOINT_ASYNC("POST", "/api/v1/books", BookPoint) {
 
     ENDPOINT_ASYNC_INIT(BookPoint)
 
@@ -253,7 +231,7 @@ public:
 
     };
 
-    ENDPOINT_ASYNC("DELETE", "/api/v1/book", BookDeletePoint) {
+    ENDPOINT_ASYNC("DELETE", "/api/v1/books/{id}", BookDeletePoint) {
 
     ENDPOINT_ASYNC_INIT(BookDeletePoint)
 
@@ -264,8 +242,8 @@ public:
             String tail = request->getPathTail();
             auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
             int id;
-            if (queryParams.get("id") != nullptr) {
-                id = atoi(queryParams.get("id")->c_str());
+            if (queryParams.get("iid") != nullptr) {
+                id = atoi(queryParams.get("iid")->c_str());
                 manager->exec(std::shared_ptr<Command>(new DeleteBooksCommand(ioc->getBookRepository(), id)), login, pwd);
                 return _return(controller->createResponse(Status::CODE_200));
             }
@@ -277,7 +255,7 @@ public:
     };
 
 
-    ENDPOINT_ASYNC("GET", "/api/v1/ebook", EBooks ) {
+    ENDPOINT_ASYNC("GET", "/api/v1/ebooks", EBooks ) {
 
     ENDPOINT_ASYNC_INIT(EBooks)
 
@@ -329,7 +307,7 @@ public:
 
     };
 
-    ENDPOINT_ASYNC("PUT", "/api/v1/ebook", EBookUpdate ) {
+    ENDPOINT_ASYNC("PUT", "/api/v1/ebooks/{id}", EBookUpdate ) {
 
     ENDPOINT_ASYNC_INIT(EBookUpdate)
         Action act() override {
@@ -356,7 +334,7 @@ public:
 
     };
 
-    ENDPOINT_ASYNC("POST", "/api/v1/ebook", EBookPoint) {
+    ENDPOINT_ASYNC("POST", "/api/v1/ebooks", EBookPoint) {
 
     ENDPOINT_ASYNC_INIT(EBookPoint)
 
@@ -376,7 +354,7 @@ public:
 
     };
 
-    ENDPOINT_ASYNC("DELETE", "/api/v1/ebook", EBookDeletePoint) {
+    ENDPOINT_ASYNC("DELETE", "/api/v1/ebooks/{id}", EBookDeletePoint) {
 
     ENDPOINT_ASYNC_INIT(EBookDeletePoint)
 
@@ -387,8 +365,8 @@ public:
             String tail = request->getPathTail();
             auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
             int id;
-            if (queryParams.get("id") != nullptr) {
-                id = atoi(queryParams.get("id")->c_str());
+            if (queryParams.get("iid") != nullptr) {
+                id = atoi(queryParams.get("iid")->c_str());
                 manager->exec(std::shared_ptr<Command>(new DeleteEBooksCommand(ioc->getEBookRepository(), id)), login, pwd);
                 return _return(controller->createResponse(Status::CODE_200));
             }
@@ -550,6 +528,135 @@ public:
 //    };
     };
 
+
+    ENDPOINT_ASYNC("GET", "/api/v1/libraries", LibraryPoint ) {
+
+    ENDPOINT_ASYNC_INIT(LibraryPoint)
+
+        Action act() override {
+
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            if (login.empty() || pwd.empty())
+                return _return(controller->createResponse(Status::CODE_300));
+
+            std::vector<std::shared_ptr<Library>> libs;
+            std::vector<std::shared_ptr<LibraryFilter>> filters;
+
+            String tail = request->getPathTail();
+            auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
+
+
+            if (queryParams.get("address") != nullptr) {
+                std::string s = queryParams.get("address");
+                filters.push_back(std::shared_ptr<LibraryFilter>(new ByAddressFilter(replaceAll(s, "+", " "))));
+            }
+            if (queryParams.get("name") != nullptr)
+            {
+                std::string s = queryParams.get("name");
+                filters.push_back(std::shared_ptr<LibraryFilter>(new ByLibraryNameFilter(replaceAll(s, "+", " "))));
+            }
+            if (queryParams.get("id") != nullptr)
+            {
+                int id = std::atoi(queryParams.get("id")->c_str());
+                filters.push_back(std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(id)));
+            }
+            manager->exec(std::shared_ptr<Command> (new GetlibrariesCommand(ioc->getLibraryRepository(), libs, filters)), login, pwd);
+
+            auto librariesDto = LibrariesDto::createShared();
+            oatpp::Vector<oatpp::Object<LibraryDto>> libsVector ({});
+
+            for (auto &lib : libs) {
+                auto libDto = LibraryDto::createShared();
+                libDto->name = lib->getName();
+                libDto->address = lib->getAddress();
+                libDto->id = lib->getID();
+
+                libsVector->push_back(libDto);
+            }
+
+            librariesDto->libraries = libsVector;
+            /* return Action to start child coroutine to read body */
+            return _return(controller->createDtoResponse(Status::CODE_200, librariesDto));
+        }
+
+
+    };
+
+    ENDPOINT_ASYNC("PUT", "/api/v1/libraries/{id}", LibraryUpdatePoint ) {
+
+    ENDPOINT_ASYNC_INIT(LibraryUpdatePoint)
+
+        Action act() override {
+            return request->readBodyToDtoAsync<oatpp::Object<LibraryDto>>(
+                    controller->getDefaultObjectMapper()).callbackTo(&LibraryUpdatePoint::returnLibraryResponse);
+        }
+        Action returnLibraryResponse( const oatpp::Object<LibraryDto>& body) {
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            if (login.empty() || pwd.empty())
+                return _return(controller->createResponse(Status::CODE_300));
+
+            std::shared_ptr<Library> lib = std::shared_ptr<Library>(new Library(body->name, body->address));
+            lib->setID(body->id);
+
+            manager->exec(std::shared_ptr<Command> (new UpdateLibrariesCommand(ioc->getLibraryRepository(), lib)), login, pwd);
+
+            return _return(controller->createResponse(Status::CODE_200));
+        }
+
+
+    };
+
+    ENDPOINT_ASYNC("POST", "/api/v1/libraries", LibraryPostPoint ) {
+
+    ENDPOINT_ASYNC_INIT(LibraryPostPoint)
+
+        Action act() override {
+            return request->readBodyToDtoAsync<oatpp::Object<LibraryDto>>(
+                    controller->getDefaultObjectMapper()).callbackTo(&LibraryPostPoint::returnLibraryResponse);
+        }
+        Action returnLibraryResponse( const oatpp::Object<LibraryDto>& body) {
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            if (login.empty() || pwd.empty())
+                return _return(controller->createResponse(Status::CODE_300));
+
+            std::shared_ptr<Library> lib = std::shared_ptr<Library>(new Library(body->name, body->address));
+
+            manager->exec(std::shared_ptr<Command> (new PostLibrariesCommand(ioc->getLibraryRepository(), lib)), login, pwd);
+
+            return _return(controller->createResponse(Status::CODE_200));
+        }
+
+
+    };
+
+    ENDPOINT_ASYNC("DELETE", "/api/v1/libraries/{id}", LibraryDeletePoint ) {
+
+    ENDPOINT_ASYNC_INIT(LibraryDeletePoint)
+
+        Action act() override {
+            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
+            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+
+            String tail = request->getPathTail();
+            auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
+            int id;
+            if (queryParams.get("iid") != nullptr) {
+                id = atoi(queryParams.get("iid")->c_str());
+                manager->exec(std::shared_ptr<Command>(new DeleteLibrariesCommand(ioc->getLibraryRepository(), id)), login, pwd);
+                return _return(controller->createResponse(Status::CODE_200));
+            }
+            return _return(controller->createResponse(Status::CODE_500));
+
+        }
+
+    };
+
 //    ENDPOINT_ASYNC("PUT", "/api/v1/account", UpdateAccountPoint) {
 //
 //    ENDPOINT_ASYNC_INIT(UpdateAccountPoint)
@@ -655,135 +762,6 @@ public:
 //        }
 //
 //    };
-
-    ENDPOINT_ASYNC("GET", "/api/v1/library", LibraryPoint ) {
-
-    ENDPOINT_ASYNC_INIT(LibraryPoint)
-
-        Action act() override {
-
-            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
-            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
-
-            if (login.empty() || pwd.empty())
-                return _return(controller->createResponse(Status::CODE_300));
-
-            std::vector<std::shared_ptr<Library>> libs;
-            std::vector<std::shared_ptr<LibraryFilter>> filters;
-
-            String tail = request->getPathTail();
-            auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
-
-
-            if (queryParams.get("address") != nullptr) {
-                std::string s = queryParams.get("address");
-                filters.push_back(std::shared_ptr<LibraryFilter>(new ByAddressFilter(replaceAll(s, "+", " "))));
-            }
-            if (queryParams.get("name") != nullptr)
-            {
-                std::string s = queryParams.get("name");
-                filters.push_back(std::shared_ptr<LibraryFilter>(new ByLibraryNameFilter(replaceAll(s, "+", " "))));
-            }
-            if (queryParams.get("id") != nullptr)
-            {
-                int id = std::atoi(queryParams.get("id")->c_str());
-                filters.push_back(std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(id)));
-            }
-            manager->exec(std::shared_ptr<Command> (new GetlibrariesCommand(ioc->getLibraryRepository(), libs, filters)), login, pwd);
-
-            auto librariesDto = LibrariesDto::createShared();
-            oatpp::Vector<oatpp::Object<LibraryDto>> libsVector ({});
-
-            for (auto &lib : libs) {
-                auto libDto = LibraryDto::createShared();
-                libDto->name = lib->getName();
-                libDto->address = lib->getAddress();
-                libDto->id = lib->getID();
-
-                libsVector->push_back(libDto);
-            }
-
-            librariesDto->libraries = libsVector;
-            /* return Action to start child coroutine to read body */
-            return _return(controller->createDtoResponse(Status::CODE_200, librariesDto));
-        }
-
-
-    };
-
-    ENDPOINT_ASYNC("PUT", "/api/v1/library", LibraryUpdatePoint ) {
-
-    ENDPOINT_ASYNC_INIT(LibraryUpdatePoint)
-
-        Action act() override {
-            return request->readBodyToDtoAsync<oatpp::Object<LibraryDto>>(
-                    controller->getDefaultObjectMapper()).callbackTo(&LibraryUpdatePoint::returnLibraryResponse);
-        }
-        Action returnLibraryResponse( const oatpp::Object<LibraryDto>& body) {
-            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
-            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
-
-            if (login.empty() || pwd.empty())
-                return _return(controller->createResponse(Status::CODE_300));
-
-            std::shared_ptr<Library> lib = std::shared_ptr<Library>(new Library(body->name, body->address));
-            lib->setID(body->id);
-
-            manager->exec(std::shared_ptr<Command> (new UpdateLibrariesCommand(ioc->getLibraryRepository(), lib)), login, pwd);
-
-            return _return(controller->createResponse(Status::CODE_200));
-        }
-
-
-    };
-
-    ENDPOINT_ASYNC("POST", "/api/v1/library", LibraryPostPoint ) {
-
-    ENDPOINT_ASYNC_INIT(LibraryPostPoint)
-
-        Action act() override {
-            return request->readBodyToDtoAsync<oatpp::Object<LibraryDto>>(
-                    controller->getDefaultObjectMapper()).callbackTo(&LibraryPostPoint::returnLibraryResponse);
-        }
-        Action returnLibraryResponse( const oatpp::Object<LibraryDto>& body) {
-            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
-            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
-
-            if (login.empty() || pwd.empty())
-                return _return(controller->createResponse(Status::CODE_300));
-
-            std::shared_ptr<Library> lib = std::shared_ptr<Library>(new Library(body->name, body->address));
-
-            manager->exec(std::shared_ptr<Command> (new PostLibrariesCommand(ioc->getLibraryRepository(), lib)), login, pwd);
-
-            return _return(controller->createResponse(Status::CODE_200));
-        }
-
-
-    };
-
-    ENDPOINT_ASYNC("DELETE", "/api/v1/library", LibraryDeletePoint ) {
-
-    ENDPOINT_ASYNC_INIT(LibraryDeletePoint)
-
-        Action act() override {
-            std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
-            std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
-
-            String tail = request->getPathTail();
-            auto queryParams = oatpp::network::Url::Parser::parseQueryParams(tail);
-            int id;
-            if (queryParams.get("id") != nullptr) {
-                id = atoi(queryParams.get("id")->c_str());
-                manager->exec(std::shared_ptr<Command>(new DeleteLibrariesCommand(ioc->getLibraryRepository(), id)), login, pwd);
-                return _return(controller->createResponse(Status::CODE_200));
-            }
-            return _return(controller->createResponse(Status::CODE_500));
-
-        }
-
-    };
-
     /**
      *  Echo body endpoint Coroutine. Mapped to "/body/dto".
      *  Deserialize DTO reveived, and return same DTO
