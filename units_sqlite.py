@@ -73,7 +73,7 @@ else:
 
 for st in libs:
     headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-    r = requests.post("http://127.0.0.1:8000/api/v1/library",
+    r = requests.post("http://127.0.0.1:8000/api/v1/libraries",
                       data=st,
                       headers=headers)
     if r.status_code == 200:
@@ -81,7 +81,7 @@ for st in libs:
     else:
         print("post library failed")
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/library",
+r = requests.get("http://127.0.0.1:8000/api/v1/libraries",
                  headers = headers)
 if r.json() == {'libraries': [{'id': 1, 'name': 'ln1', 'address': 'molodogvardeyskaya 5'},
                               {'id': 2, 'name': 'ln2', 'address': 'ivana franko'}]}:
@@ -92,13 +92,13 @@ else:
 par = {"id" : 1}
 
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.delete("http://127.0.0.1:8000/api/v1/library",
+r = requests.delete("http://127.0.0.1:8000/api/v1/libraries/1",
                     headers=headers,
                     params = par)
 headers = {'login': 'admin', 'password': 'admin'}
-r = requests.get("http://127.0.0.1:8000/api/v1/library",
+r = requests.get("http://127.0.0.1:8000/api/v1/libraries",
                  headers=headers)
-
+print(r.json())
 if r.json() == {'libraries': [{'id': 2, 'name': 'ln2', 'address': 'ivana franko'}]}:
     print("delete libraries passed")
 else:
@@ -110,14 +110,15 @@ body = json.dumps({"id": 2,
                    "address" : "ivana franko, 6"})
 
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.put("http://127.0.0.1:8000/api/v1/library",
+r = requests.put("http://127.0.0.1:8000/api/v1/libraries/2",
                  params=par,
                  headers=headers,
                  data = body)
 headers = {'login': 'katya_varlamova', 'password': '12345', 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/library",
+r = requests.get("http://127.0.0.1:8000/api/v1/libraries",
                  headers=headers)
 
+print(r.json())
 if r.json() == {'libraries': [{"id": 2,
                                "name" : "lib_name2",
                                "address" : "ivana franko, 6"}]}:
@@ -155,15 +156,16 @@ else:
 
 for st in books:
     headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-    r = requests.post("http://127.0.0.1:8000/api/v1/book",
+    r = requests.post("http://127.0.0.1:8000/api/v1/books",
                       data=st,
                       headers=headers)
     if r.status_code == 200:
         print("post book passed")
     else:
         print("post book failed")
+
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/book",
+r = requests.get("http://127.0.0.1:8000/api/v1/books",
                  headers = headers)
 if r.json() =={'books': [{'id': 1, 'name': 'vechera na hutore', 'author': 'gogol', 'lib_id': 2, 'login': ''},
                          {'id': 2, 'name': 'mertvie dushi', 'author': 'gogol', 'lib_id': 2, 'login': ''},
@@ -180,13 +182,13 @@ body = json.dumps({"author" : "gogol-mogol",
                    "lib_id" : 2})
 
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.put("http://127.0.0.1:8000/api/v1/book",
+r = requests.put("http://127.0.0.1:8000/api/v1/books/1",
                  headers=headers,
                  data = body)
 headers = {'login': 'admin', 'password': 'admin', 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/book",
+r = requests.get("http://127.0.0.1:8000/api/v1/books",
                  headers=headers)
-
+print(r.json())
 if r.json() =={'books': [{'id': 2, 'name': 'mertvie dushi', 'author': 'gogol', 'lib_id': 2, 'login': ''},
                          {'id': 3, 'name': 'mertvie dushi', 'author': 'gogol', 'lib_id': 2, 'login': ''},
                          {'id': 4, 'name': 'vechera na hutore bliz dikanki', 'author': 'gogol-mogol', 'lib_id': 2, 'login': ''},
@@ -196,19 +198,15 @@ else:
     print("put books failed")
 
 par = {"id" : 1}
-headers = {"login" : "katya_varlamova", "password": "12345", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.delete("http://127.0.0.1:8000/api/v1/book",
-                    headers=headers,
-                    params = par)
 
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.delete("http://127.0.0.1:8000/api/v1/book",
+r = requests.delete("http://127.0.0.1:8000/api/v1/books/1",
                     headers=headers,
                     params = par)
 headers = {'login': 'admin', 'password': 'admin'}
-r = requests.get("http://127.0.0.1:8000/api/v1/book",
+r = requests.get("http://127.0.0.1:8000/api/v1/books",
                  headers=headers)
-
+print(r.json())
 if r.json() =={'books': [{'id': 2, 'name': 'mertvie dushi', 'author': 'gogol', 'lib_id': 2, 'login': ''},
                          {'id': 3, 'name': 'mertvie dushi', 'author': 'gogol', 'lib_id': 2, 'login': ''},
                          {'id': 4, 'name': 'vechera na hutore bliz dikanki', 'author': 'gogol-mogol', 'lib_id': 2, 'login': ''}]}:
@@ -219,7 +217,7 @@ else:
 
 for st in ebooks:
     headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-    r = requests.post("http://127.0.0.1:8000/api/v1/ebook",
+    r = requests.post("http://127.0.0.1:8000/api/v1/ebooks",
                       data=st,
                       headers=headers)
     if r.status_code == 200:
@@ -227,7 +225,7 @@ for st in ebooks:
     else:
         print("post ebook failed")
 headers = {"login" : "admin", "password": "admin", 'Content-type': 'application/json', 'Accept': 'text/'}
-r = requests.get("http://127.0.0.1:8000/api/v1/ebook",
+r = requests.get("http://127.0.0.1:8000/api/v1/ebooks",
                  headers = headers)
 if r.json() =={'books': [{'id': 1, 'name': 'vechera na hutore', 'author': 'gogol', 'link': 'https'},
                          {'id': 2, 'name': 'mertvie dushi', 'author': 'gogol', 'link': 'https'},

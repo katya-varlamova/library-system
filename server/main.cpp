@@ -1,4 +1,4 @@
-#include "Logic/Server/ServerSettings/IocRepositories.h"
+//#include "Logic/Server/ServerSettings/IocRepositories.h"
 #include "Database/DataAccessFacade/DataAccessFacade.h"
 #include "Database/DataAccessFacade/Commands/RegisterCommand/RegisterAdminCommand.h"
 #include "Logic/DataAccessManager/DataAccessManager.h"
@@ -6,7 +6,8 @@
 #include "./Logic/Server/Controller/ServerController.h"
 #include "./Logic/Server/ServerSettings/ServerSettings.h"
 #include "oatpp/network/Server.hpp"
-#include "Configuration/FileConfiguration.h"
+#include "Database/SqlIoc/SqlIoc.h"
+#include "Logic/Configuration/FileConfiguration.h"
 #include "Logger/Logger.h"
 #include <iostream>
 
@@ -42,15 +43,15 @@ void run() {
  */
 //manager->create();
 std::shared_ptr<Configuration> configuration = std::shared_ptr<Configuration>(new FileConfiguration("config.json"));
-std::shared_ptr<IIocRepository> ServerController::ioc = std::shared_ptr<IIocRepository>(new PGIocRepositories(configuration));
+std::shared_ptr<IIocRepository> ServerController::ioc = std::shared_ptr<IIocRepository>(new SqlIocRepositories(configuration));
 std::shared_ptr<DataAccessManager> ServerController::manager = std::shared_ptr<DataAccessManager>(new DataAccessManager(ioc));
 int main(int argc, const char * argv[]) {
     oatpp::base::Environment::init();
     ServerController::manager->connect();
-    ServerController::manager->registration(std::shared_ptr<AdminAccount>(new AdminAccount(std::shared_ptr<Account>(new Account("admin",
-                                                              "admin",
-                                                              "admin",
-                                                              "admin")))));
+//    ServerController::manager->registration(std::shared_ptr<AdminAccount>(new AdminAccount(std::shared_ptr<Account>(new Account("admin",
+//                                                              "admin",
+//                                                              "admin",
+//                                                              "admin")))));
 
     run();
     ServerController::manager->disconnect();

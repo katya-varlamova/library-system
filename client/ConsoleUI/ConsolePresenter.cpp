@@ -254,7 +254,7 @@ void ConsolePresenter::giveBook(const std::string &login, const std::string &pas
     int id;
     view.inputNum("book id: ", id);
     view.inputString("user login: ", log);
-    model->giveBook(login, pass, log, id);
+    model->giveReturnBook(login, pass, log, id, "give");
 }
 void ConsolePresenter::returnBook(const std::string &login, const std::string &pass)
 {
@@ -262,7 +262,7 @@ void ConsolePresenter::returnBook(const std::string &login, const std::string &p
     int id;
     view.inputNum("book id: ", id);
     view.inputString("user login: ", log);
-    model->returnBook(login, pass, log, id);
+    model->giveReturnBook(login, pass, log, id, "return");
 }
 void ConsolePresenter::workLibrarian(const std::string &login, const std::string &pass)
 {

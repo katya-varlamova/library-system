@@ -1,0 +1,12 @@
+explain (analyze) select * from Account where id = 1;
+create index id_idx on account using btree(id);
+drop index id_idx;
+
+
+explain (analyze) select id, login, password, name, role from account where name = 'Eric';
+create index name_idx on account using btree(name);
+drop index name_idx;
+
+create index ind_book_id on bookitem using btree(book_id);
+drop index ind_book_id;
+explain (analyze) select bookitem.id, name, author from bookitem join book on book.id = bookitem.book_id where bookitem.book_id = 5;

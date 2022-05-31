@@ -48,7 +48,7 @@ void LibrarianMainPresenter::on_GiveButton_clicked()
     int book_id;
     login_user = ui->ReaderLoginText->text().toStdString();
     book_id = std::atoi(ui->BookIDText->text().toStdString().c_str());
-    model->giveBook(login, pass, login_user, book_id);
+    model->giveReturnBook(login, pass, login_user, book_id, "give");
     updateTableBooks();
 }
 
@@ -58,7 +58,7 @@ void LibrarianMainPresenter::on_AcceptButton_clicked()
     int book_id;
     login_user = ui->ReaderLoginText->text().toStdString();
     book_id = std::atoi(ui->BookIDText->text().toStdString().c_str());
-    model->returnBook(login, pass, login_user, book_id);
+    model->giveReturnBook(login, pass, login_user, book_id, "return");
     updateTableBooks();
 }
 
