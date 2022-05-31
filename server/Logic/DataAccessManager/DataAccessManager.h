@@ -17,7 +17,7 @@
 #include "../../Database/DataAccessFacade/Commands/DeleteDatabaseCommand/DeleteDatabaseCommand.h"
 #include "../../Database/DataAccessFacade/Commands/RegisterCommand/RegisterLibrarianCommand.h"
 #include "../../Database/DataAccessFacade/Commands/RegisterCommand/RegisterReaderCommand.h"
-#include "../Server/ServerSettings/IocRepositories.h"
+#include "../../Database/SqlIoc/IocRepository.h"
 
 class DataAccessManager {
 public:

@@ -5,7 +5,7 @@
 #ifndef SRC_LOGGER_H
 #define SRC_LOGGER_H
 #include <string>
-#include "../Configuration/FileConfiguration.h"
+#include "../Logic/Configuration/FileConfiguration.h"
 
 class Logger {
 public:

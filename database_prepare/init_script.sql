@@ -1,38 +1,44 @@
 create table if not exists Account (
                                        id serial primary key,
-                                       login varchar(30) unique,
-    password varchar(30),
-    name varchar(30),
-    role varchar(30) );
+                                       login varchar(200) unique,
+    password varchar(200),
+    name varchar(200),
+    role varchar(200) );
+\copy Account(login, password, name, role) from '/Users/kate/Desktop/db_sd/src/database_prepare/data/account.csv' delimiter ';' csv;
 create table if not exists Library (
                                        id serial primary key,
-                                       name varchar(30),
-    address varchar(30) );
+                                       name varchar(200),
+    address varchar(200) );
+\copy Library(name, address) from '/Users/kate/Desktop/db_sd/src/database_prepare/data/library.csv' delimiter ';' csv;
 create table if not exists LibrarianAccount (
                                                 id serial primary key,
                                                 acc_id int references Account(id),
     lib_id int references Library(id) );
+\copy LibrarianAccount(acc_id, lib_id) from '/Users/kate/Desktop/db_sd/src/database_prepare/data/librarianaccount.csv' delimiter ';' csv;
 create table if not exists AdminAccount (
                                             id serial primary key,
                                             acc_id int references Account(id) );
+\copy AdminAccount(acc_id) from '/Users/kate/Desktop/db_sd/src/database_prepare/data/adminaccount.csv' delimiter ';' csv;
 create table if not exists ReaderAccount (
                                              id serial primary key,
                                              acc_id int references Account(id),
-    phone varchar(40) );
+    phone varchar(200) );
+\copy ReaderAccount(acc_id, phone) from '/Users/kate/Desktop/db_sd/src/database_prepare/data/readeraccount.csv' delimiter ';' csv;
 create table if not exists Book (
                                     id serial primary key,
-                                    name varchar(40),
-    author varchar(40) );
+                                    name varchar(200),
+    author varchar(200) );
+\copy Book(name, author) from '/Users/kate/Desktop/db_sd/src/database_prepare/data/book.csv' delimiter ';' csv;
 create table if not exists BookItem (
                                         id serial primary key,
                                         book_id int references Book(id),
     lib_id int references Library(id),
     acc_id int references Account(id) );
-
+\copy BookItem(book_id, lib_id, acc_id) from '/Users/kate/Desktop/db_sd/src/database_prepare/data/bookitem.csv' delimiter ';' csv;
 create table if not exists EBook (
                                         id serial primary key,
                                         book_id int references Book(id),
-    link varchar(40));
+    link varchar(200));
 create user librarian WITH PASSWORD 'librarian';
 grant select on book, bookitem, account, librarianaccount, library to librarian;
 grant update on bookitem to librarian;

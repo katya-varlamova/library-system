@@ -3,6 +3,14 @@
 //
 
 #include "Model.h"
+static std::string replaceAll(std::string str, const std::string& from, const std::string& to) {
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length();
+    }
+    return str;
+}
 int Model::registration(const std::shared_ptr<AdminAccount> &account)
 {
     auto objectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
@@ -115,6 +123,10 @@ int Model::addLibrary(const std::string &login, const std::string &pass, const s
 }
 std::vector<std::shared_ptr<Library>> Model::getLibraries(const std::string &login, const std::string &pass, int id,
                                                           std::string name, std::string address) {
+    if (id == -1) {
+        name = replaceAll(name, " ", "+");
+        address = replaceAll(address, " ", "+");
+    }
     std::vector<std::shared_ptr<Library>> libs;
     auto objectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
     auto r = client->getLibraries(login, pass);
@@ -125,7 +137,7 @@ std::vector<std::shared_ptr<Library>> Model::getLibraries(const std::string &log
             if (address != "")
                 r = client->getLibrariesByAddressName(login, pass, name, address);
             else
-                r = client->getBooksByName(login, pass, name);
+                r = client->getLibrariesByName(login, pass, name);
         } else {
             if (address != "")
                 r = client->getLibrariesByAddress(login, pass, address);
@@ -207,6 +219,8 @@ int Model::deleteBook(const std::string &login, const std::string &pass, int id)
 }
 std::vector<std::shared_ptr<Book>> Model::getBooks(const std::string &login, const std::string &pass, std::string name, std::string author, bool l, bool f)
 {
+    name = replaceAll(name, " ", "+");
+    author = replaceAll(author, " ", "+");
     std::vector<std::shared_ptr<Book>> books;
     auto objectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
     auto r = client->getBooks(login, pass);
