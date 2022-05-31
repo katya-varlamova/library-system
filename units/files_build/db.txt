@@ -1,0 +1,60 @@
+cmake_minimum_required(VERSION 3.19)
+set(CMAKE_CXX_STANDARD 17)
+project(bd)
+
+add_library(bd
+        Connection/Session.cpp
+        Connection/IConnectionPool.cpp
+        Connection/SociConnectionPool.cpp
+Entities/DBEBook/EBookRepository.cpp
+Entities/DBBook/DBBook.cpp
+Entities/DBBook/BookRepository.cpp
+Entities/DBAccount/AccountRepository.cpp
+DataAccessFacade/DataAccessFacade.cpp
+DataAccessFacade/DataAccessFacade.h
+Connection/IConnectionPool.cpp
+DataAccessFacade/Commands/Command.cpp
+DataAccessFacade/Commands/AuthCommand/AuthCommand.cpp
+Entities/DBLibrary/DBLibrary.cpp
+Entities/DBLibrary/LibraryRepository.cpp
+Entities/DBBook/BookSpecifications/BookSpecification.cpp
+DataAccessFacade/Commands/RegisterCommand/RegisterAdminCommand.cpp
+DataAccessFacade/Commands/CreateDatabaseCommand/CreateDatabaseCommand.cpp
+Entities/DBBook/BookConverter.cpp
+Entities/DBLibrary/LibraryConverter.cpp
+DataAccessFacade/Commands/AddBooksCommand/AddBooksCommand.cpp
+Entities/DBBook/BookSpecifications/TakeBookSpecification.cpp
+DatabseException.cpp
+DataAccessFacade/Commands/DeleteDatabaseCommand/DeleteDatabaseCommand.cpp
+Entities/DBBook/BookSpecifications/GetFreeBooks.cpp
+Entities/DBLibrary/LibrarySpecifications/GetLibrary.cpp
+Entities/DBAccount/AccountSpecifications/GetAccount.cpp
+DataAccessFacade/Commands/GetBooksCommands/GetFreeBooksCommand.cpp
+DataAccessFacade/Commands/GetBooksCommands/GetBooksByLoginCommand.cpp
+Entities/DBBook/BookSpecifications/GetBooks.cpp
+Entities/DBAccount/AdminAccount/AdminAccountRepository.cpp
+Entities/DBAccount/LibrarianAccount/LibrarianAccountRepository.cpp
+Entities/DBAccount/ReaderAccount/ReaderAccountRepository.cpp
+Entities/DBAccount/AdminAccount/AdminAccountSpecifications/GetAdminAccount.cpp
+Entities/DBAccount/LibrarianAccount/LibrarianAccountSpecifications/GetLibrarianAccount.cpp
+Entities/DBAccount/ReaderAccount/ReaderAccountSpecifications/GetReaderAccount.cpp
+DataAccessFacade/Commands/RegisterCommand/RegisterReaderCommand.cpp
+DataAccessFacade/Commands/RegisterCommand/RegisterLibrarianCommand.cpp
+Entities/DBBook/BookSpecifications/ReturnBookSpecification.cpp
+DataAccessFacade/Commands/TakeBookCommand/TakeBookCommand.cpp
+DataAccessFacade/Commands/ReturnBookCommand/ReturnBookCommand.cpp
+DataAccessFacade/Commands/GetLibraries/GetlibrariesCommand.cpp
+DataAccessFacade/Commands/GetLibraries/UpdateLibraries.cpp
+DataAccessFacade/Commands/GetLibraries/PostLibrariesCommand.cpp
+DataAccessFacade/Commands/GetBooksCommands/UpdateBookCommand.cpp
+DataAccessFacade/Commands/GetBooksCommands/DeleteBooksCommand.cpp
+Entities/DBBook/BookSpecifications/GetBooks.cpp
+DataAccessFacade/Commands/GetLibraries/DeleteLibrariesCommand.cpp
+Entities/DBEBook/EBookSpecifications/GetEBooksSpecification.cpp
+)
+
+target_include_directories(bd PUBLIC
+                           ${CMAKE_CURRENT_SOURCE_DIR}
+                           )
+
+target_link_libraries(bd SOCI::soci_core PostgreSQL::PostgreSQL oatpp::oatpp jsoncpp)

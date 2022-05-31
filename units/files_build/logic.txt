@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.12)
+set(CMAKE_CXX_STANDARD 17)
+project(bl)
+
+add_library(bl
+Entities/EBook/EBook.cpp
+Entities/Book/Book.cpp
+Entities/Library/Library.cpp
+Entities/Account/Account.cpp
+DataAccessManager/DataAccessManager.cpp
+Entities/Account/LibrarianAccount.cpp
+Entities/Account/ReaderAccount.cpp
+Entities/Account/AdminAccount.cpp
+Configuration/FileConfiguration.cpp
+)
+target_include_directories(bl PUBLIC {CMAKE_CURRENT_SOURCE_DIR})
+
+
+target_link_libraries(bl SOCI::soci_core PostgreSQL::PostgreSQL oatpp::oatpp jsoncpp)
