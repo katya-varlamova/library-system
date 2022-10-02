@@ -1,16 +1,17 @@
 //#include "Logic/Server/ServerSettings/IocRepositories.h"
 #include "Database/DataAccessFacade/DataAccessFacade.h"
 #include "Database/DataAccessFacade/Commands/RegisterCommand/RegisterAdminCommand.h"
-#include "Logic/DataAccessManager/DataAccessManager.h"
+#include "Logic/DataAccessManager/DataAccessManagerRest.h"
 #include "Database/DataAccessFacade/Commands/AddBooksCommand/AddBooksCommand.h"
-#include "./Logic/Server/Controller/ServerController.h"
+#include "./Logic/Server/Controller/ServerControllerRestApi.h"
 #include "./Logic/Server/ServerSettings/ServerSettings.h"
 #include "oatpp/network/Server.hpp"
 #include "Database/SqlIoc/SqlIoc.h"
 #include "Logic/Configuration/FileConfiguration.h"
 #include "Logger/Logger.h"
 #include <iostream>
-
+#include "oatpp-swagger/AsyncController.hpp"
+#include <soci/postgresql/soci-postgresql.h>
 /**
  *  run() method.
  *  1) set Environment components.
@@ -23,8 +24,9 @@ void run() {
     /* create ApiControllers and add endpoints to router */
     auto router = components.httpRouter.getObject();
 
+    router->addController(oatpp::swagger::AsyncController::createShared(ServerControllerRestApi::createShared()->getEndpoints()));
+    router->addController(ServerControllerRestApi::createShared());
 
-    router->addController(ServerController::createShared());
 
 
     /* create server */
@@ -35,7 +37,6 @@ void run() {
     Logger::getInstance()->log(0, __FILE__, __LINE__, __TIME__,"Server started!");
     server.run();
 
-
 }
 
 /**
@@ -43,18 +44,18 @@ void run() {
  */
 //manager->create();
 std::shared_ptr<Configuration> configuration = std::shared_ptr<Configuration>(new FileConfiguration("config.json"));
-std::shared_ptr<IIocRepository> ServerController::ioc = std::shared_ptr<IIocRepository>(new SqlIocRepositories(configuration));
-std::shared_ptr<DataAccessManager> ServerController::manager = std::shared_ptr<DataAccessManager>(new DataAccessManager(ioc));
+std::shared_ptr<IIocRepository> ServerControllerRestApi::ioc = std::shared_ptr<IIocRepository>(new SqlIocRepositories(configuration));
+std::shared_ptr<DataAccessManagerRest> ServerControllerRestApi::manager = std::shared_ptr<DataAccessManagerRest>(new DataAccessManagerRest(ioc));
 int main(int argc, const char * argv[]) {
     oatpp::base::Environment::init();
-    ServerController::manager->connect();
+    ServerControllerRestApi::manager->connect();
 //    ServerController::manager->registration(std::shared_ptr<AdminAccount>(new AdminAccount(std::shared_ptr<Account>(new Account("admin",
 //                                                              "admin",
 //                                                              "admin",
 //                                                              "admin")))));
 
     run();
-    ServerController::manager->disconnect();
+    ServerControllerRestApi::manager->disconnect();
     std::cout << "\nEnvironment:\n";
     std::cout << "objectsCount = " << oatpp::base::Environment::getObjectsCount() << "\n";
     std::cout << "objectsCreated = " << oatpp::base::Environment::getObjectsCreated() << "\n\n";

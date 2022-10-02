@@ -12,7 +12,7 @@ public:
     }
     std::string getEqualClause() override
     {
-        return "id = " + std::to_string(id);
+        return "Library.id = " + std::to_string(id);
     }
 private:
     int id;

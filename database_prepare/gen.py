@@ -3,7 +3,7 @@ from random import randint
 from random import uniform
 from random import choice
 import csv
-MAX_N = 1000
+MAX_N = 10
 
 role = ["admin", "librarian", "reader"]
 lib_names = []
@@ -28,13 +28,13 @@ def readBooks():
     global book_names
     global book_authors
     with open('books.csv', newline='', encoding = "ISO-8859-1") as csvfile:
-        reader = csv.DictReader(csvfile, delimiter=";")
+        reader = csv.DictReader(csvfile)
         counter = 0
         for row in reader:
             if counter == MAX_N:
                 break
-            book_names.append(row['Book-Title'].lower())
-            book_authors.append(row['Book-Author'].lower())
+            book_names.append(row['title'].lower())
+            book_authors.append(row['authors'].lower())
             counter += 1
 
 

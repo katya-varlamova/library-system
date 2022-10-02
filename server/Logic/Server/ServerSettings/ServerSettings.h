@@ -5,6 +5,9 @@
 #ifndef SRC_SERVERSETTINGS_H
 #define SRC_SERVERSETTINGS_H
 
+#include <oatpp-swagger/ControllerPaths.hpp>
+#include "oatpp-swagger/Model.hpp"
+#include "oatpp-swagger/Resources.hpp"
 
 #include "oatpp/web/server/AsyncHttpConnectionHandler.hpp"
 #include "oatpp/web/server/HttpRouter.hpp"
@@ -37,7 +40,7 @@ public:
      */
     OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, serverConnectionProvider)([] {
         /* non_blocking connections should be used with AsyncHttpConnectionHandler for AsyncIO */
-        return oatpp::network::tcp::server::ConnectionProvider::createShared({"0.0.0.0", 8000, oatpp::network::Address::IP_4});
+        return oatpp::network::tcp::server::ConnectionProvider::createShared({"0.0.0.0", 8002, oatpp::network::Address::IP_4});
     }());
 
     /**
@@ -66,6 +69,44 @@ public:
         auto objectMapper = oatpp::parser::json::mapping::ObjectMapper::createShared(serializerConfig, deserializerConfig);
         return objectMapper;
     }());
+
+/**
+ *  General API docs info
+ */
+    OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::swagger::DocumentInfo>, swaggerDocumentInfo)([] {
+
+        oatpp::swagger::DocumentInfo::Builder builder;
+
+        builder
+                .setTitle("Library system API")
+                .setDescription("CRUD API")
+                .setVersion("1.0")
+                .setContactName("Ekaterina Varlamova")
+                .setContactUrl("https://t.me/katya_varlamova")
+
+                .addServer("http://localhost:80", "server on localhost");
+
+        return builder.build();
+
+    }());
+
+
+/**
+ *  Swagger-Ui Resources (<oatpp-examples>/lib/oatpp-swagger/res)
+ */
+    OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::swagger::Resources>, swaggerResources)([] {
+        // Make sure to specify correct full path to oatpp-swagger/res folder !!!
+        return oatpp::swagger::Resources::loadResources(OATPP_SWAGGER_RES_PATH);
+    }());
+
+    OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::swagger::ControllerPaths>, controllerPaths)([] {
+        auto paths = std::make_shared<oatpp::swagger::ControllerPaths>();
+        paths->ui = "api/v2/swagger";
+        paths->uiResources = "api/v2/swagger/{filename}";
+        paths->apiJson = "api/v2/api-docs/oas-3.0.0.json";
+        return paths;
+    }());
+
 
 };
 #endif //SRC_SERVERSETTINGS_H
