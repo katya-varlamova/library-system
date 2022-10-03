@@ -12,6 +12,8 @@
 #include <iostream>
 #include "oatpp-swagger/AsyncController.hpp"
 #include <soci/postgresql/soci-postgresql.h>
+#include "oatpp-libressl/Callbacks.hpp"
+#include <csignal>
 /**
  *  run() method.
  *  1) set Environment components.
@@ -19,6 +21,13 @@
  *  3) run server
  */
 void run() {
+    /* set lockingCallback for libressl */
+    oatpp::libressl::Callbacks::setDefaultCallbacks();
+
+    /* ignore SIGPIPE */
+#if !(defined(WIN32) || defined(_WIN32))
+    std::signal(SIGPIPE, SIG_IGN);
+#endif
 
     ServerSettings components; // Create scope Environment components
     /* create ApiControllers and add endpoints to router */
