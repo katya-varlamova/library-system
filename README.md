@@ -85,3 +85,9 @@ WEB-приложение библиотечной системы должно п
 
 
 ### Экраны WEB-приложения на уровне черновых эскизов.
+
+![screens-login](https://user-images.githubusercontent.com/55718346/193654641-371a837a-1fc5-4c9d-96a7-cc319f1814b9.jpg)
+
+![screens- registration](https://user-images.githubusercontent.com/55718346/193654670-8fdfad96-bd8a-4d5e-9c74-937952f0e70c.jpg)
+
+![screens-main](https://user-images.githubusercontent.com/55718346/193654705-c1ad9d32-b2c7-4399-84a0-e0d0461a3488.jpg)
