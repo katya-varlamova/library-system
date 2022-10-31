@@ -1,0 +1,14 @@
+//
+// Created by Екатерина on 24.10.2022.
+//
+
+#ifndef SERVERCONTROLLER_H_BYBOOKIDFILTER_H
+#define SERVERCONTROLLER_H_BYBOOKIDFILTER_H
+
+
+class ByBookIDFilter {
+
+};
+
+
+#endif //SERVERCONTROLLER_H_BYBOOKIDFILTER_H

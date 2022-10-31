@@ -1,0 +1,97 @@
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+.card-container.card {
+  max-width: 350px !important;
+  padding: 40px 40px;
+}
+
+.card {
+  background-color: #f7f7f7;
+  padding: 20px 25px 30px;
+  margin: 0 auto 25px;
+  margin-top: 50px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.profile-img-card {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 10px;
+  display: block;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+fieldset {
+  overflow: hidden
+}
+
+.container {
+  position: relative;
+  height: 100px;
+}
+.scrollable {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+
+.containerr{
+  padding: 1rem;
+  margin: 1rem;
+}
+.table-scroll{
+  /*width:100%; */
+  display: block;
+  empty-cells: show;
+
+  /* Decoration */
+  border-spacing: 0;
+  border: 1px solid;
+}
+
+.table-scroll thead{
+  background-color: #f1f1f1;
+  position:relative;
+  display: block;
+  width:100%;
+  overflow-y: scroll;
+}
+
+.table-scroll tbody{
+  /* Position */
+  display: block; position:relative;
+  width:100%; overflow-y:scroll;
+  /* Decoration */
+  border-top: 1px solid rgba(0,0,0,0.2);
+}
+
+.table-scroll tr{
+  width: 100%;
+  display:flex;
+}
+
+.table-scroll td,.table-scroll th{
+  flex-basis:100%;
+  flex-grow:2;
+  display: block;
+  padding: 1rem;
+  text-align:left;
+}
+
+
+.table-scroll tbody tr:nth-child(2n){
+  background-color: rgba(130,130,170,0.1);
+}
+
+.body-half-screen{
+  max-height: 50vh;
+}
