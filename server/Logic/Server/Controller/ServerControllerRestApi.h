@@ -41,11 +41,13 @@
 #include "JWTAuth.h"
 #include "../../DataAccessManager/DataAccessManagerRest.h"
 
-std::string replaceAll(std::string str, const std::string& from, const std::string& to) {
-    size_t start_pos = 0;
-    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
-        str.replace(start_pos, from.length(), to);
-        start_pos += to.length();
+std::string replaceAll(std::string str, const std::vector<std::string>& froms, const std::vector<std::string>& tos) {
+    for (int i = 0; i < froms.size(); i++) {
+        size_t start_pos = 0;
+        while ((start_pos = str.find(froms[i], start_pos)) != std::string::npos) {
+            str.replace(start_pos, froms[i].length(), tos[i]);
+            start_pos += tos[i].length();
+        }
     }
     return str;
 }
@@ -115,20 +117,21 @@ public:
 
             if (queryParams.get("author") != nullptr) {
                 std::string s = queryParams.get("author");
-                filters.push_back(std::shared_ptr<Filter>(new ByAuthorFilter(replaceAll(s, "+", " "))));
+                filters.push_back(std::shared_ptr<Filter>(new ByAuthorFilter(replaceAll(s, {"+"}, {" "}))));
             }
             if (queryParams.get("name") != nullptr)
             {
                 std::string s = queryParams.get("name");
-                filters.push_back(std::shared_ptr<Filter>(new ByBookNameFilter(replaceAll(s, "+", " "))));
+                filters.push_back(std::shared_ptr<Filter>(new ByBookNameFilter(replaceAll(s, {"+", "%23","%40"}, {" ","#","@"}) )));
             }
             if (queryParams.get("lib_id") != nullptr) {
-                int lib_id = std::atoi(replaceAll(queryParams.get("lib_id"), "+", " ").c_str());
+                int lib_id = std::atoi(replaceAll(queryParams.get("lib_id"), {"+", "%23","%40"}, {" ","#","@"}).c_str());
                 filters.push_back(std::shared_ptr<Filter>(new ByLibraryIDFilter(lib_id)));
             }
             if (queryParams.get("login_filter") != nullptr) {
                 std::string s = queryParams.get("login_filter");
-                filters.push_back(std::shared_ptr<Filter>(new ByLoginFilter(replaceAll(s, "+", " "))));
+                s = replaceAll(s, {"+", "%23","%40"}, {" ","#","@"} );
+                filters.push_back(std::shared_ptr<Filter>(new ByLoginFilter(s)));
                 if (s == login) {
                     try {
                         manager->exec(std::shared_ptr<GetBooksByLoginCommand>(
@@ -235,15 +238,15 @@ public:
             int book_id;
             if (request->getPathVariable("id") != nullptr && queryParams.get("login_user") != nullptr) {
                 book_id = atoi(request->getPathVariable("id")->c_str());
-                login_user = replaceAll(queryParams.get("login_user"), "+", " ");
-                action = replaceAll(queryParams.get("action"), "+", " ");
+                login_user = replaceAll(queryParams.get("login_user"), {"+", "%23","%40"}, {" ","#","@"}) ;
+                action = replaceAll(queryParams.get("action"), {"+", "%23","%40"}, {" ","#","@"}) ;
             } else
                 return _return(controller->createResponse(Status::CODE_400));
 
             if (action == "return") {
                 try {
                     manager->exec(std::shared_ptr<ReturnBookCommand>(
-                            new ReturnBookCommand(ioc->getBookRepository(), login_user, login, book_id)), role);
+                            new ReturnBookCommand(ioc->getAccountRepository(), ioc->getBookRepository(), login_user, login, book_id)), role);
                 }
                 catch (LogicException) {
                     return _return(controller->createResponse(Status::CODE_500));
@@ -252,7 +255,7 @@ public:
             {
                 try {
                     manager->exec(std::shared_ptr<TakeBookCommand>(
-                            new TakeBookCommand(ioc->getBookRepository(), login_user, login, book_id)), role);
+                            new TakeBookCommand(ioc->getAccountRepository(), ioc->getBookRepository(), login_user, login, book_id)), role);
                 }
                 catch (LogicException) {
                     return _return(controller->createResponse(Status::CODE_500));
@@ -467,12 +470,12 @@ public:
 
             if (queryParams.get("address") != nullptr) {
                 std::string s = queryParams.get("address");
-                filters.push_back(std::shared_ptr<LibraryFilter>(new ByAddressFilter(replaceAll(s, "+", " "))));
+                filters.push_back(std::shared_ptr<LibraryFilter>(new ByAddressFilter(replaceAll(s, {"+", "%23","%40"}, {" ","#","@"}) )));
             }
             if (queryParams.get("name") != nullptr)
             {
                 std::string s = queryParams.get("name");
-                filters.push_back(std::shared_ptr<LibraryFilter>(new ByLibraryNameFilter(replaceAll(s, "+", " "))));
+                filters.push_back(std::shared_ptr<LibraryFilter>(new ByLibraryNameFilter(replaceAll(s, {"+", "%23","%40"}, {" ","#","@"}) )));
             }
             if (queryParams.get("id") != nullptr)
             {
@@ -788,6 +791,7 @@ public:
             std::string role = request->getHeader("role") == nullptr ? "" : request->getHeader("role");
             std::string login = request->getHeader("login") == nullptr ? "" : request->getHeader("login");
             std::string pwd = request->getHeader("password") == nullptr ? "" : request->getHeader("password");
+            printf("%s", (role + " " + login + " " + pwd).c_str());
             if (login.empty() || pwd.empty() || role.empty())
                 return _return(controller->createResponse(Status::CODE_401));
 

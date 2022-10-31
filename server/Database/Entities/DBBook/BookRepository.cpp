@@ -8,6 +8,8 @@
 #include "../DBAccount/AccountFilters/ByAccountIDFilter.h"
 #include "../DBAccount/AccountSpecifications/GetAccount.h"
 #include "../../../Logger/Logger.h"
+#include "BookSpecifications/GetBooks.h"
+#include "BookFilters/ByBookIDFilter.h"
 
 std::vector<std::shared_ptr<Book>> BookRepository::query(std::shared_ptr<Session> session, std::shared_ptr<BookSpecification> specification)
 {
@@ -29,6 +31,10 @@ std::vector<std::shared_ptr<Book>> BookRepository::query(std::shared_ptr<Session
             else
                 vec.push_back(converter.convert(i, i.get_lib_id(), ""));
         }
+//        } else{
+//            throw DatabaseException(__FILE__, __LINE__, __TIME__,
+//                    "no such library!");
+//        }
     }
     return vec;
 }
@@ -72,7 +78,19 @@ void BookRepository::updateBook(std::shared_ptr<Session> session, std::shared_pt
         throw DatabaseException(__FILE__, __LINE__, __TIME__,
                                 "no such library!");
     }
-
+    std::vector<std::shared_ptr<Filter>> fs = {std::shared_ptr<BookFilter>(new ByBookIDFilter(book->getID()))};
+    auto b = query(session, std::shared_ptr<BookSpecification>(new GetBooks(fs)));
+    if (b.empty())
+    {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"no such library!");
+        throw DatabaseException(__FILE__, __LINE__, __TIME__,
+                                "no such book!");
+    }
+    if (res.empty()) {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"no such library!");
+        throw DatabaseException(__FILE__, __LINE__, __TIME__,
+                                "no such library!");
+    }
     BookConverter converter;
     DBBook dbbook = converter.convert(book);
     std::string q = "update Book set name = :name, author = :author "
@@ -87,6 +105,14 @@ void BookRepository::updateBook(std::shared_ptr<Session> session, std::shared_pt
 }
 void BookRepository::removeBook(std::shared_ptr<Session> session, int id)
 {
+    std::vector<std::shared_ptr<Filter>> fs = {std::shared_ptr<BookFilter>(new ByBookIDFilter(id))};
+    auto b = query(session, std::shared_ptr<BookSpecification>(new GetBooks(fs)));
+    if (b.empty())
+    {
+        Logger::getInstance()->log(1, __FILE__, __LINE__, __TIME__,"no such library!");
+        throw DatabaseException(__FILE__, __LINE__, __TIME__,
+                                "no such book!");
+    }
     std::string q = "delete from BookItem "
         "where id = " + std::to_string(id);
     session->exec(q);

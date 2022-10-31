@@ -11,7 +11,7 @@
 
 class GetLibrary : public LibarySpecification{
 public:
-    GetLibrary(const std::vector<std::shared_ptr<LibraryFilter>> &filters)
+    GetLibrary(std::vector<std::shared_ptr<LibraryFilter>> filters)
     {
         this->filters = filters;
     }

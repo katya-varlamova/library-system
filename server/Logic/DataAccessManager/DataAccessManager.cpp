@@ -83,7 +83,13 @@ void DataAccessManager::exec( const std::shared_ptr<Command> &command, const std
         throw LogicException(__FILE__, __LINE__, __TIME__,
                              "login failed");
     }
-    facade->execute(*command, acc[0]->getRole());
+    try {
+        facade->execute(*command, acc[0]->getRole());
+    } catch(DatabaseException)
+    {
+        throw LogicException(__FILE__, __LINE__, __TIME__,
+                             "failed!");
+    }
 }
 void DataAccessManager::connect()
 {

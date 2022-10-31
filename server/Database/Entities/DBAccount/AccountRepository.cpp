@@ -5,6 +5,7 @@
 #include "AccountRepository.h"
 #include "AccountFilters/ByAccountIDFilter.h"
 #include "../DBBook/BookSpecifications/GetBooks.h"
+#include "AccountSpecifications/GetAccount.h"
 
 std::vector<std::shared_ptr<Account>> AccountRepository::query(std::shared_ptr<Session> session, std::shared_ptr<AccountSpecification> specification)
 {
@@ -27,6 +28,12 @@ int AccountRepository::addAccount(std::shared_ptr<Session> session, std::shared_
 }
 void AccountRepository::updateAccount(std::shared_ptr<Session> session, std::shared_ptr<Account> account)
 {
+    std::vector<std::shared_ptr<AccountFilter>> fs = {std::shared_ptr<AccountFilter>(new ByAccountIDFilter(account->getID()))};
+    auto res = query(session, std::shared_ptr<AccountSpecification>(new GetAccount(fs)));
+    if (res.empty()) {
+        throw DatabaseException(__FILE__, __LINE__, __TIME__,
+                                "no such account!");
+    }
     std::string q = "update Account set login = '" + account->getLogin() + "', " +
                     "password = '" + account->getPassword() + "'," +
                     "name = '" + account->getName() + "' "
@@ -35,6 +42,12 @@ void AccountRepository::updateAccount(std::shared_ptr<Session> session, std::sha
 }
 void AccountRepository::removeAccount(std::shared_ptr<Session> session, int id)
 {
+    std::vector<std::shared_ptr<AccountFilter>> fs = {std::shared_ptr<AccountFilter>(new ByAccountIDFilter(id))};
+    auto res = query(session, std::shared_ptr<AccountSpecification>(new GetAccount(fs)));
+    if (res.empty()) {
+        throw DatabaseException(__FILE__, __LINE__, __TIME__,
+                                "no such account!");
+    }
     std::string q = "delete from Account "
                     "where id = " + std::to_string(id);
     session->exec(q);

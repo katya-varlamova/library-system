@@ -9,7 +9,7 @@
 #include "BookSpecification.h"
 class GetBooks :  public BookSpecification{
 public:
-    GetBooks(const std::vector<std::shared_ptr<Filter>> &filters)
+    GetBooks( std::vector<std::shared_ptr<Filter>> filters)
     {
         this->filters = filters;
     }
