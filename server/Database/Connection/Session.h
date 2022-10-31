@@ -8,7 +8,7 @@
 #include <soci/session.h>
 #include <libpq-fe.h>
 #include <soci/soci.h>
-
+#include <soci/postgresql/soci-postgresql.h>
 class Session {
 public:
     Session(soci::session &session) : session(session) {}

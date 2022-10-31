@@ -42,6 +42,13 @@ void LibraryRepository::updateLibrary(std::shared_ptr<Session> session, std::sha
 {
     LibraryConverter converter;
     DBLibrary dblib = converter.convert(library);
+
+    std::vector<std::shared_ptr<LibraryFilter>> lfs = {std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(library->getID()))};
+    auto res = query(session, std::shared_ptr<LibarySpecification>(new GetLibrary(lfs)));
+    if (res.empty()) {
+        throw DatabaseException(__FILE__, __LINE__, __TIME__,
+                                "no such library!");
+    }
     std::string q = "update Library set name = :name, address = :address "
                     "where id = " + std::to_string(library->getID());
     session->exec_using(q,
@@ -49,6 +56,12 @@ void LibraryRepository::updateLibrary(std::shared_ptr<Session> session, std::sha
 }
 void LibraryRepository::removeLibrary(std::shared_ptr<Session> session, int id)
 {
+    std::vector<std::shared_ptr<LibraryFilter>> lfs = {std::shared_ptr<LibraryFilter>(new ByLibraryIDFilter(id))};
+    auto res = query(session, std::shared_ptr<LibarySpecification>(new GetLibrary(lfs)));
+    if (res.empty()) {
+        throw DatabaseException(__FILE__, __LINE__, __TIME__,
+                                "no such library!");
+    }
     std::string q = "delete from Library "
                     "where id = " + std::to_string(id);
     session->exec(q);
