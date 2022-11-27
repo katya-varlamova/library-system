@@ -5,7 +5,7 @@
 #include "TakeBookSpecification.h"
 #include "../../../../Logger/Logger.h"
 
-std::vector<DBBook> TakeBookSpecification::exec(std::shared_ptr<Session> session)
+std::vector<DBBook> TakeBookSpecification::exec(std::shared_ptr<Session<>> session)
 {
     int id;
     std::string q = "select take_book('" + login_user +

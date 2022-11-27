@@ -14,14 +14,19 @@ public:
     {
         this->acc = acc;
     }
-    std::shared_ptr<Account> getAccount();
-    int getID()
+    std::shared_ptr<Account> getAccount() const;
+    int getID() const
     {
         return id;
     }
     void setID(int id)
     {
         this->id = id;
+    }
+    bool operator == (const AdminAccount &l) const
+    {
+        return l.getID() == this->getID() &&
+               *l.getAccount() == *this->getAccount();
     }
 private:
     int id;

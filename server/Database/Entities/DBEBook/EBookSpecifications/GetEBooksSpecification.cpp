@@ -3,7 +3,7 @@
 //
 
 #include "GetEBooksSpecification.h"
-std::vector<DBEBook> GetEBooksSpecification::exec(std::shared_ptr<Session> session) {
+std::vector<DBEBook> GetEBooksSpecification::exec(std::shared_ptr<Session<>> session) {
     std::vector<DBEBook> v_b;
     std::vector<MappedEBook> eb;
     std::string fil_str;

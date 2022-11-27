@@ -16,15 +16,21 @@ public:
         this->lib_id = lib_id;
         this->acc = acc;
     }
-    std::shared_ptr<Account> getAccount();
-    int getLibraryID();
-    int getID()
+    std::shared_ptr<Account> getAccount() const;
+    int getLibraryID() const ;
+    int getID() const
     {
         return id;
     }
     void setID(int id)
     {
         this->id = id;
+    }
+    bool operator == (const LibrarianAccount &l) const
+    {
+        return l.getID() == this->getID() &&
+                *l.getAccount() == *this->getAccount() &&
+               l.getLibraryID() == this->getLibraryID();
     }
 private:
     int id;

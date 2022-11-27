@@ -3,7 +3,7 @@
 //
 
 #include "GetLibrary.h"
-std::vector<DBLibrary> GetLibrary::exec(std::shared_ptr<Session> session) {
+std::vector<DBLibrary> GetLibrary::exec(std::shared_ptr<Session<>> session) {
     std::vector<DBLibrary> v_lib;
     std::string fil_str;
     for (int i = 0; i < filters.size(); i++){

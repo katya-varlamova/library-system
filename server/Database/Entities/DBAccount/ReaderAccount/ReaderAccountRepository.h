@@ -19,11 +19,11 @@
 
 class ReaderAccountRepository : public IReaderAccountRepository{
 public:
-    void addAccount(std::shared_ptr<Session> session, std::shared_ptr<ReaderAccount> account) override;
-    void removeAccount(std::shared_ptr<Session> session, int id) override;
-    void updateAccount(std::shared_ptr<Session> session, std::shared_ptr<ReaderAccount> account) override;
+    void addAccount(std::shared_ptr<Session<>> session, std::shared_ptr<ReaderAccount> account) override;
+    void removeAccount(std::shared_ptr<Session<>> session, int id) override;
+    void updateAccount(std::shared_ptr<Session<>> session, std::shared_ptr<ReaderAccount> account) override;
 
-    std::vector<std::shared_ptr<ReaderAccount>> query(std::shared_ptr<Session> session, std::shared_ptr<ReaderAccountSpecification> specification) override;
+    std::vector<std::shared_ptr<ReaderAccount>> query(std::shared_ptr<Session<>> session, std::shared_ptr<ReaderAccountSpecification> specification) override;
 };
 
 #endif //SRC_READERACCOUNTREPOSITORY_H

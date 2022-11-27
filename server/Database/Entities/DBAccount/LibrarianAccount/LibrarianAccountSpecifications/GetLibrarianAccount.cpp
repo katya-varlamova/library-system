@@ -3,7 +3,7 @@
 //
 
 #include "GetLibrarianAccount.h"
-std::vector<DBLibrarianAccount> GetLibrarianAccount::exec(std::shared_ptr<Session> session) {
+std::vector<DBLibrarianAccount> GetLibrarianAccount::exec(std::shared_ptr<Session<>> session) {
     std::vector<DBLibrarianAccount> v_acc;
     std::string fil_str;
     for (int i = 0; i < filters.size(); i++){

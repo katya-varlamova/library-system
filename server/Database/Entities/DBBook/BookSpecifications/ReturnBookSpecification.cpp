@@ -5,7 +5,7 @@
 #include "ReturnBookSpecification.h"
 #include "../../../../Logger/Logger.h"
 
-std::vector<DBBook> ReturnBookSpecification::exec(std::shared_ptr<Session> session)
+std::vector<DBBook> ReturnBookSpecification::exec(std::shared_ptr<Session<>> session)
 {
     int id;
     int ok = session->exec_into("select return_book('" + login_user +

@@ -26,11 +26,16 @@ bool SociConnectionPool::registerRoleConnection(const std::string &role_name, un
     }
     return true;
 }
-std::shared_ptr<Session> SociConnectionPool::getConnectionByRole(const std::string &role, int &pos)
+std::shared_ptr<Session<>> SociConnectionPool::getConnectionByRole(const std::string &role, int &pos)
 {
     auto it = pools.find(role);
     pos = pools[role]->lease();
-    return std::shared_ptr<Session>(new Session(pools[role]->at(pos)));
+#if TEST_CONFIGURATION==1
+    return std::shared_ptr<Session<>>();
+#endif
+#if TEST_CONFIGURATION==0
+    return std::shared_ptr<Session<>>(new Session<soci::session>(pools[role]->at(pos)));
+#endif
 }
 void SociConnectionPool::putConnectionByRole(const std::string &role, int pos)
 {

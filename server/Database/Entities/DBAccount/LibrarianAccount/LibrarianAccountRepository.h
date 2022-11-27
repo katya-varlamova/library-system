@@ -23,11 +23,11 @@
 #include "ILibrarianAccountRepository.h"
 class LibrarianAccountRepository : public ILibrarianAccountRepository{
 public:
-    void addAccount(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccount> account) override;
-    void removeAccount(std::shared_ptr<Session> session, int id) override;
-    void updateAccount(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccount> account) override;
+    void addAccount(std::shared_ptr<Session<>> session, std::shared_ptr<LibrarianAccount> account) override;
+    void removeAccount(std::shared_ptr<Session<>> session, int id) override;
+    void updateAccount(std::shared_ptr<Session<>> session, std::shared_ptr<LibrarianAccount> account) override;
 
-    std::vector<std::shared_ptr<LibrarianAccount>> query(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccountSpecification> specification) override;
+    std::vector<std::shared_ptr<LibrarianAccount>> query(std::shared_ptr<Session<>> session, std::shared_ptr<LibrarianAccountSpecification> specification) override;
 };
 
 #endif //SRC_LIBRARIANACCOUNTREPOSITORY_H

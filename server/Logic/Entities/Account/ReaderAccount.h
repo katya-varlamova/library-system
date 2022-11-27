@@ -16,15 +16,21 @@ public:
         this->acc = acc;
         this->phone = phone;
     }
-    std::shared_ptr<Account> getAccount();
-    std::string getPhone();
-    int getID()
+    std::shared_ptr<Account> getAccount() const;
+    std::string getPhone() const ;
+    int getID() const
     {
         return id;
     }
     void setID(int id)
     {
         this->id = id;
+    }
+    bool operator == (const ReaderAccount &l) const
+    {
+        return l.getID() == this->getID() &&
+               *l.getAccount() == *this->getAccount() &&
+               l.getPhone() == this->getPhone();
     }
 private:
     int id;

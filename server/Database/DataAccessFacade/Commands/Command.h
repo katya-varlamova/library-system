@@ -9,7 +9,7 @@
 
 class Command {
 public:
-    virtual void execute(std::shared_ptr<Session> session) = 0 ;
+    virtual void execute(std::shared_ptr<Session<>> session) = 0 ;
 };
 
 

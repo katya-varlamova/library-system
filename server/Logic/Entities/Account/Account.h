@@ -9,17 +9,25 @@
 class Account {
 public:
     Account(const std::string &login, const std::string &password, const std::string &role, const std::string &name);
-    std::string getLogin();
-    std::string getPassword();
-    std::string getRole();
-    std::string getName();
-    int getID()
+    std::string getLogin() const;
+    std::string getPassword() const;
+    std::string getRole() const ;
+    std::string getName() const;
+    int getID() const
     {
         return id;
     }
     void setID(int id)
     {
         this->id = id;
+    }
+    bool operator == (const Account &l) const
+    {
+        return l.getID() == this->getID() &&
+               l.getName() == this->getName() &&
+               l.getPassword() == this->getPassword() &&
+               l.getLogin() == this->getLogin() &&
+               l.getRole() == this->getRole();
     }
 private:
     int id;

@@ -9,7 +9,7 @@
 #include "../../../../Connection/Session.h"
 class ReaderAccountSpecification {
 public:
-    virtual std::vector<DBReaderAccount> exec(std::shared_ptr<Session> session) = 0;
+    virtual std::vector<DBReaderAccount> exec(std::shared_ptr<Session<>> session) = 0;
 };
 
 #endif //SRC_READERACCOUNTSPECIFICATION_H

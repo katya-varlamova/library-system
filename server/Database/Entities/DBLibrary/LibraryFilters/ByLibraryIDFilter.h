@@ -4,6 +4,7 @@
 
 #ifndef SRC_BYLIBRARYIDFILTER_H
 #define SRC_BYLIBRARYIDFILTER_H
+#include "LibraryFilter.h"
 class ByLibraryIDFilter : public LibraryFilter{
 public:
     ByLibraryIDFilter(int id)

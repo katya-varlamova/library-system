@@ -3,7 +3,7 @@
 //
 
 #include "GetBooks.h"
-std::vector<DBBook> GetBooks::exec(std::shared_ptr<Session> session) {
+std::vector<DBBook> GetBooks::exec(std::shared_ptr<Session<>> session) {
     std::vector<DBBook> v_b;
     std::vector<MappedBookItem> bi;
     std::string fil_str;

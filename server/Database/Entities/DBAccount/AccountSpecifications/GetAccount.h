@@ -18,7 +18,7 @@ public:
     {
         this->filters = filters;
     }
-    virtual std::vector<DBAccount> exec(std::shared_ptr<Session> session) override;
+    virtual std::vector<DBAccount> exec(std::shared_ptr<Session<>> session) override;
 
 protected:
     std::vector<std::shared_ptr<AccountFilter>> filters;

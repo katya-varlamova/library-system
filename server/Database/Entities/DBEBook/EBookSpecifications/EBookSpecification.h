@@ -13,7 +13,7 @@ class EBookSpecification
 {
 public:
     EBookSpecification() = default;
-    virtual std::vector<DBEBook> exec(std::shared_ptr<Session> session) = 0;
+    virtual std::vector<DBEBook> exec(std::shared_ptr<Session<>> session) = 0;
 };
 
 #endif //SRC_EBOOKSPECIFICATION_H

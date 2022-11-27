@@ -13,7 +13,7 @@ public:
         this->conns = conns;
     }
     virtual void connect() = 0;
-    virtual std::shared_ptr<Session> getConnectionByRole(const std::string &role, int &pos) = 0;
+    virtual std::shared_ptr<Session<>> getConnectionByRole(const std::string &role, int &pos) = 0;
     virtual void disconnect() = 0;
     virtual void putConnectionByRole(const std::string &role, int pos) = 0;
 

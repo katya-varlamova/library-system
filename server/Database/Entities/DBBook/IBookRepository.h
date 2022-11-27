@@ -14,10 +14,10 @@
 #include <soci/error.h>
 class IBookRepository {
 public:
-    virtual void addBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book) = 0;
-    virtual void removeBook(std::shared_ptr<Session> session, int id) = 0;
-    virtual void updateBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book) = 0;
+    virtual void addBook(std::shared_ptr<Session<>> session, std::shared_ptr<Book> book) = 0;
+    virtual void removeBook(std::shared_ptr<Session<>> session, int id) = 0;
+    virtual void updateBook(std::shared_ptr<Session<>> session, std::shared_ptr<Book> book) = 0;
 
-    virtual std::vector<std::shared_ptr<Book>> query(std::shared_ptr<Session> session, std::shared_ptr<BookSpecification> specification) = 0;
+    virtual std::vector<std::shared_ptr<Book>> query(std::shared_ptr<Session<>> session, std::shared_ptr<BookSpecification> specification) = 0;
 };
 #endif //SRC_IBOOKREPOSITORY_H

@@ -3,11 +3,11 @@
 //
 
 #include "LibrarianAccount.h"
-std::shared_ptr<Account> LibrarianAccount::getAccount()
+std::shared_ptr<Account> LibrarianAccount::getAccount() const
 {
     return acc;
 }
-int LibrarianAccount::getLibraryID()
+int LibrarianAccount::getLibraryID() const
 {
     return lib_id;
 }

@@ -18,19 +18,19 @@ public:
         this->lib_id = lib_id;
         this->login = login;
     }
-    int getLibraryID()
+    int getLibraryID() const
     {
         return lib_id;
     }
-    std::string  getAuthor()
+    std::string  getAuthor() const
     {
         return author;
     }
-    std::string  getName()
+    std::string  getName() const
     {
         return name;
     }
-    int getID()
+    int getID() const
     {
         return id;
     }
@@ -38,9 +38,17 @@ public:
     {
         this->id = id;
     }
-    std::string  getLogin()
+    std::string  getLogin() const
     {
         return login;
+    }
+    bool operator == (const Book &l) const
+    {
+        return l.getID() == this->getID() &&
+        l.getName() == this->getName() &&
+        l.getAuthor() == this->getAuthor() &&
+        l.getLogin() == this->getLogin() &&
+        l.getLibraryID() == this->getLibraryID();
     }
 private:
     int id;

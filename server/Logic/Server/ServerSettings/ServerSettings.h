@@ -22,8 +22,7 @@
 #include "oatpp/parser/json/mapping/ObjectMapper.hpp"
 
 #include "oatpp/core/macro/component.hpp"
- #define CERT_CRT_PATH "/Users/kate/Desktop/web/db/WebClient/https/localhost.crt"
- #define CERT_PEM_PATH "/Users/kate/Desktop/web/db/WebClient/https/localhost.key"
+
 /**
  *  Class which creates and holds Application components and registers components in oatpp::base::Environment
  *  Order of components initialization is from top to bottom

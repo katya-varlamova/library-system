@@ -8,15 +8,14 @@
 #include <memory>
 #include "../Entities/Account/Account.h"
 #include "../../Database/DataAccessFacade/DataAccessFacade.h"
-#include "../../Database/DataAccessFacade/Commands/AuthCommand/AuthCommand.h"
-#include "../../Database/DataAccessFacade/Commands/RegisterCommand/RegisterAdminCommand.h"
+#include "../../Database/DataAccessFacade/Commands/AccountCommands/AuthCommand/AuthCommand.h"
+#include "../../Database/DataAccessFacade/Commands/AccountCommands/RegisterCommand/RegisterAdminCommand.h"
 #include "../LogicException.h"
 #include "../../Database/DataAccessFacade/Commands/Filters/Filter.h"
 #include "../Entities/Account/ReaderAccount.h"
 #include "../Entities/Account/LibrarianAccount.h"
-#include "../../Database/DataAccessFacade/Commands/DeleteDatabaseCommand/DeleteDatabaseCommand.h"
-#include "../../Database/DataAccessFacade/Commands/RegisterCommand/RegisterLibrarianCommand.h"
-#include "../../Database/DataAccessFacade/Commands/RegisterCommand/RegisterReaderCommand.h"
+#include "../../Database/DataAccessFacade/Commands/AccountCommands/RegisterCommand/RegisterLibrarianCommand.h"
+#include "../../Database/DataAccessFacade/Commands/AccountCommands/RegisterCommand/RegisterReaderCommand.h"
 #include "../../Database/SqlIoc/IocRepository.h"
 
 class DataAccessManager {

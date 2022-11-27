@@ -13,7 +13,7 @@ public:
         this->name = name;
         this->address = address;
     }
-    int getID()
+    int getID() const
     {
         return id;
     }
@@ -21,13 +21,17 @@ public:
     {
         this->id = id;
     }
-    std::string getName()
+    std::string getName() const
     {
         return name;
     }
-    std::string getAddress()
+    std::string getAddress() const
     {
         return address;
+    }
+    bool operator == (const Library &l) const
+    {
+        return l.getID() == this->getID() && l.getName() == this->getName() && l.getAddress() == this->getAddress();
     }
 
 private:

@@ -14,7 +14,7 @@
 class LibarySpecification {
 public:
     LibarySpecification() = default;
-    virtual std::vector<DBLibrary> exec(std::shared_ptr<Session> session) = 0;
+    virtual std::vector<DBLibrary> exec(std::shared_ptr<Session<>> session) = 0;
 };
 
 

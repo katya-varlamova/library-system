@@ -20,10 +20,10 @@
 #include "LibrarianAccountSpecifications/LibrarianAccountSpecification.h"
 class ILibrarianAccountRepository {
 public:
-    virtual void addAccount(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccount> account) = 0;
-    virtual void removeAccount(std::shared_ptr<Session> session, int id) = 0;
-    virtual void updateAccount(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccount> account) = 0;
+    virtual void addAccount(std::shared_ptr<Session<>> session, std::shared_ptr<LibrarianAccount> account) = 0;
+    virtual void removeAccount(std::shared_ptr<Session<>> session, int id) = 0;
+    virtual void updateAccount(std::shared_ptr<Session<>> session, std::shared_ptr<LibrarianAccount> account) = 0;
 
-    virtual std::vector<std::shared_ptr<LibrarianAccount>> query(std::shared_ptr<Session> session, std::shared_ptr<LibrarianAccountSpecification> specification) = 0;
+    virtual std::vector<std::shared_ptr<LibrarianAccount>> query(std::shared_ptr<Session<>> session, std::shared_ptr<LibrarianAccountSpecification> specification) = 0;
 };
 #endif //SRC_ILIBRARIANACCOUNTREPOSITORY_H

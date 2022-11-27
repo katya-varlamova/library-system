@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.19)
+set(CMAKE_CXX_STANDARD 17)
+project(logger)
+
+add_library(logger Logger.cpp)
+
+target_link_libraries(logger SOCI::soci_core PostgreSQL::PostgreSQL oatpp::oatpp jsoncpp)
