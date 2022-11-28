@@ -5,7 +5,7 @@
 #ifndef SRC_ACCOUNT_H
 #define SRC_ACCOUNT_H
 #include <string>
-
+#include <memory>
 class Account {
 public:
     Account(const std::string &login, const std::string &password, const std::string &role, const std::string &name);

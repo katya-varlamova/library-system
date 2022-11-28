@@ -8,7 +8,7 @@
 #include <string>
 #include "Account.h"
 #include "../Library/Library.h"
-
+#include <memory>
 class LibrarianAccount {
 public:
     LibrarianAccount(const std::shared_ptr<Account> &acc, int lib_id)

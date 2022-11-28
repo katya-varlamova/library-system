@@ -8,7 +8,7 @@
 
 #include <string>
 #include "Account.h"
-
+#include <memory>
 class ReaderAccount {
 public:
     ReaderAccount(const std::shared_ptr<Account> &acc, const std::string &phone)

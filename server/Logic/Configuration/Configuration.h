@@ -5,6 +5,7 @@
 #ifndef SRC_CONFIGURATION_H
 #define SRC_CONFIGURATION_H
 #include <string>
+#include <memory>
 #include "../../Database/Connection/RoleConnection.h"
 
 class Configuration {

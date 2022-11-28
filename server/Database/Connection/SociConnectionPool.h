@@ -8,7 +8,6 @@
 #include "IConnectionPool.h"
 #include <string>
 #include <soci/connection-pool.h>
-#include <sqlite3.h>
 #include <map>
 #include <soci/session.h>
 class SociConnectionPool : public IConnectionPool{

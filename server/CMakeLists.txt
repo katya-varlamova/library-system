@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.16.3)
 set(CMAKE_CXX_STANDARD 17)
 project(src)
 
 find_package(SOCI REQUIRED)
 find_package(PostgreSQL REQUIRED)
-find_package(MySQL REQUIRED)
+# find_package(MySQL REQUIRED)
 
 find_package(oatpp REQUIRED)
 find_package(oatpp-swagger REQUIRED)
@@ -18,11 +18,12 @@ set (Boost_USE_STATIC_LIBS OFF)
 find_package (Boost REQUIRED COMPONENTS unit_test_framework)
 include_directories (${Boost_INCLUDE_DIRS})
 
-add_library(jsoncpp SHARED IMPORTED)
-set_target_properties(jsoncpp PROPERTIES
-        IMPORTED_LOCATION "/usr/local/Cellar/jsoncpp/1.9.4_1/lib/libjsoncpp.24.dylib"
-        INTERFACE_INCLUDE_DIRECTORIES "/usr/local/Cellar/jsoncpp/1.9.4_1/include/json"
-        )
+find_package(jsoncpp REQUIRED)
+#add_library(jsoncpp SHARED IMPORTED)
+#set_target_properties(jsoncpp PROPERTIES
+#        IMPORTED_LOCATION "/usr/local/Cellar/jsoncpp/1.9.4_1/lib/libjsoncpp.24.dylib"
+#        INTERFACE_INCLUDE_DIRECTORIES "/usr/local/Cellar/jsoncpp/1.9.4_1/include/json"
+#        )
 add_subdirectory(Database)
 add_subdirectory(Logger)
 add_subdirectory(Logic)

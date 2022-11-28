@@ -7,6 +7,9 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN  // in only one cpp file
 
+#define BOOST_TEST_MODULE test_module
+#include <boost/test/included/unit_test.hpp>
+
 #include "TestDirections/TestLibraries.h"
 #include "TestDirections/TestBooks.h"
 #include "TestDirections/TestAccounts.h"

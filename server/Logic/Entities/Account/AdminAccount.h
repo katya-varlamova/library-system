@@ -5,7 +5,7 @@
 #ifndef SRC_ADMINACCOUNT_H
 #define SRC_ADMINACCOUNT_H
 
-
+#include <memory>
 #include "Account.h"
 
 class AdminAccount {
