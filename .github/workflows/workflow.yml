@@ -13,7 +13,7 @@ jobs:
     - name: build
       run: |
         mkdir build && cd build
-        cmake ../server ../server/CMakeLists.txt
+        cmake ../server
         make -j12
     - uses: actions/upload-artifact@master
       with:
