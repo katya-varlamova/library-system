@@ -1,0 +1,40 @@
+name: ci build
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    container: katyavarlamova/library-system-image
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: build
+      run: |
+        mkdir build && cd build
+        cmake ../server CMakeLists.txt
+        make -j12
+    - uses: actions/upload-artifact@master
+      with:
+        name: build-artifact
+        path: ./build
+  
+  unit_tests:
+    needs: build
+    runs-on: ubuntu-latest
+    container: maxermu/stock_build_env
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@master
+      with:
+        name: build-artifact
+        path: ./build
+
+    - name: run_unit_tests
+      run: |
+        cd build 
+        cd test
+        chmod +x test
+        ./test
