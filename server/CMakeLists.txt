@@ -18,7 +18,6 @@ set (Boost_USE_STATIC_LIBS OFF)
 find_package (Boost REQUIRED COMPONENTS unit_test_framework)
 include_directories (${Boost_INCLUDE_DIRS})
 
-find_package(jsoncpp CONFIG REQUIRED)
 add_library(jsoncpp SHARED IMPORTED)
 set_target_properties(jsoncpp PROPERTIES
         IMPORTED_LOCATION "/usr/local/lib/libjsoncpp.so.1.9.5"
