@@ -19,6 +19,10 @@ find_package (Boost REQUIRED COMPONENTS unit_test_framework)
 include_directories (${Boost_INCLUDE_DIRS})
 
 find_package(jsoncpp REQUIRED)
+set_target_properties(jsoncpp PROPERTIES
+        IMPORTED_LOCATION "/usr/local/lib/libjsoncpp.so"
+        INTERFACE_INCLUDE_DIRECTORIES "/usr/local/include/json"
+        )
 #add_library(jsoncpp SHARED IMPORTED)
 #set_target_properties(jsoncpp PROPERTIES
 #        IMPORTED_LOCATION "/usr/local/Cellar/jsoncpp/1.9.4_1/lib/libjsoncpp.24.dylib"
