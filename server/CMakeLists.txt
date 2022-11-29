@@ -20,7 +20,7 @@ include_directories (${Boost_INCLUDE_DIRS})
 
 add_library(jsoncpp SHARED IMPORTED)
 set_target_properties(jsoncpp PROPERTIES
-        IMPORTED_LOCATION "/usr/local/lib/libjsoncpp.so.25"
+        IMPORTED_LOCATION "/usr/local/lib/libjsoncpp.so"
         INTERFACE_INCLUDE_DIRECTORIES "/usr/local/include/json"
         )
 #add_library(jsoncpp SHARED IMPORTED)
