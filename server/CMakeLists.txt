@@ -21,7 +21,7 @@ include_directories (${Boost_INCLUDE_DIRS})
 find_package(jsoncpp CONFIG REQUIRED)
 add_library(jsoncpp SHARED IMPORTED)
 set_target_properties(jsoncpp PROPERTIES
-        IMPORTED_LOCATION "/usr/local/lib/libjsoncpp.so"
+        IMPORTED_LOCATION "/usr/local/lib/libjsoncpp.so.1.9.5"
         INTERFACE_INCLUDE_DIRECTORIES "/usr/local/include/json"
         )
 #add_library(jsoncpp SHARED IMPORTED)
