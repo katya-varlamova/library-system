@@ -18,15 +18,17 @@ set (Boost_USE_STATIC_LIBS OFF)
 find_package (Boost REQUIRED COMPONENTS unit_test_framework)
 include_directories (${Boost_INCLUDE_DIRS})
 
-find_package(jsoncpp CONFIG REQUIRED)
-get_target_property(JSON_INC_PATH jsoncpp_lib INTERFACE_INCLUDE_DIRECTORIES)
-include_directories(${JSON_INC_PATH})
-
-#add_library(jsoncpp SHARED IMPORTED)
-#set_target_properties(jsoncpp PROPERTIES
-#        IMPORTED_LOCATION "/usr/local/lib/libjsoncpp.so"
-#        INTERFACE_INCLUDE_DIRECTORIES "/usr/local/include/json"
-#        )
+if(APPLE)
+add_library(jsoncpp SHARED IMPORTED)
+set_target_properties(jsoncpp PROPERTIES
+               IMPORTED_LOCATION "/usr/local/Cellar/jsoncpp/1.9.4_1/lib/libjsoncpp.24.dylib"
+               INTERFACE_INCLUDE_DIRECTORIES "/usr/local/Cellar/jsoncpp/1.9.4_1/include/json"
+               )
+else()
+    find_package(jsoncpp CONFIG REQUIRED)
+    get_target_property(JSON_INC_PATH jsoncpp_lib INTERFACE_INCLUDE_DIRECTORIES)
+    include_directories(${JSON_INC_PATH})
+endif()
 #add_library(jsoncpp SHARED IMPORTED)
 #set_target_properties(jsoncpp PROPERTIES
 #        IMPORTED_LOCATION "/usr/local/Cellar/jsoncpp/1.9.4_1/lib/libjsoncpp.24.dylib"
