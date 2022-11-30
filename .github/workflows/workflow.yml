@@ -39,10 +39,10 @@ jobs:
         cd test
         chmod +x test
         ./test
-integration_tests:
+  integration_tests:
     needs: build
     runs-on: ubuntu-latest
-    container:katyavarlamova/library-system-image
+    container: katyavarlamova/library-system-image
 
     services:
       postgres:
