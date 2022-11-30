@@ -6,8 +6,8 @@
 #define SRC_FILECONFIGURATION_H
 
 #include "Configuration.h"
-#include <json/value.h>
-#include <json/json.h>
+#include <jsoncpp/json/value.h>
+#include <jsoncpp/json/json.h>
 #include <fstream>
 #include <string>
 class FileConfiguration : public Configuration{

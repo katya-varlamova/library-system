@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.19)
 set(CMAKE_CXX_STANDARD 17)
 project(src)
 
@@ -18,11 +18,15 @@ set (Boost_USE_STATIC_LIBS OFF)
 find_package (Boost REQUIRED COMPONENTS unit_test_framework)
 include_directories (${Boost_INCLUDE_DIRS})
 
-add_library(jsoncpp SHARED IMPORTED)
-set_target_properties(jsoncpp PROPERTIES
-        IMPORTED_LOCATION "/usr/local/lib/libjsoncpp.so"
-        INTERFACE_INCLUDE_DIRECTORIES "/usr/local/include/json"
-        )
+find_package(jsoncpp CONFIG REQUIRED)
+get_target_property(JSON_INC_PATH jsoncpp_lib INTERFACE_INCLUDE_DIRECTORIES)
+include_directories(${JSON_INC_PATH})
+
+#add_library(jsoncpp SHARED IMPORTED)
+#set_target_properties(jsoncpp PROPERTIES
+#        IMPORTED_LOCATION "/usr/local/lib/libjsoncpp.so"
+#        INTERFACE_INCLUDE_DIRECTORIES "/usr/local/include/json"
+#        )
 #add_library(jsoncpp SHARED IMPORTED)
 #set_target_properties(jsoncpp PROPERTIES
 #        IMPORTED_LOCATION "/usr/local/Cellar/jsoncpp/1.9.4_1/lib/libjsoncpp.24.dylib"
