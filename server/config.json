@@ -1,14 +1,14 @@
 {
   "reader": {
-    "conn_str" : "postgresql://host='localhost' port='5433' dbname='postgres' user='reader' password='reader'",
+    "conn_str" : "postgresql://host='localhost' port='5432' dbname='postgres' user='reader' password='reader'",
     "max_conn": 10
   },
   "admin": {
-    "conn_str" : "postgresql://host='localhost' port='5433' dbname='postgres' user='postgres' password='rfktdf17'",
+    "conn_str" : "postgresql://host='localhost' port='5432' dbname='postgres' user='postgres' password='rfktdf17'",
     "max_conn": 10
   },
   "librarian": {
-    "conn_str" : "postgresql://host='localhost' port='5433' dbname='postgres' user='librarian' password='librarian'",
+    "conn_str" : "postgresql://host='localhost' port='5432' dbname='postgres' user='librarian' password='librarian'",
     "max_conn": 10
   },
   "logger": {

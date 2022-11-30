@@ -52,7 +52,7 @@ jobs:
           POSTGRES_PASSWORD: rfktdf17
 
         ports:
-          - 5433:5433
+          - 5432:5432
 
         # set health checks to wait until postgres has started
         options: >-
@@ -70,7 +70,7 @@ jobs:
     - name: install psql
       run: apt install -y postgresql postgresql-contrib
     - name: test psql
-      run: psql -h postgres "sslmode=disable user=postgres port=5433 password=rfktdf17"
+      run: psql -h postgres "sslmode=disable user=postgres port=5432 password=rfktdf17"
     - name: init_database
       run: |
         cd deploy_database
