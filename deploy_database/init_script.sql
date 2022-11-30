@@ -7,37 +7,37 @@ create table if not exists Account (
     password varchar(200),
     name varchar(200),
     role varchar(200) );
-\copy Account(login, password, name, role) from 'data/account.csv' delimiter ';' csv;
+\copy Account(login, password, name, role) from './data/account.csv' delimiter ';' csv;
 create table if not exists Library (
                                        id serial primary key,
                                        name varchar(200),
     address varchar(200) );
-\copy Library(name, address) from 'data/library.csv' delimiter ';' csv;
+\copy Library(name, address) from './data/library.csv' delimiter ';' csv;
 create table if not exists LibrarianAccount (
                                                 id serial primary key,
                                                 acc_id int references Account(id),
     lib_id int references Library(id) );
-\copy LibrarianAccount(acc_id, lib_id) from 'data/librarianaccount.csv' delimiter ';' csv;
+\copy LibrarianAccount(acc_id, lib_id) from './data/librarianaccount.csv' delimiter ';' csv;
 create table if not exists AdminAccount (
                                             id serial primary key,
                                             acc_id int references Account(id) );
-\copy AdminAccount(acc_id) from 'data/adminaccount.csv' delimiter ';' csv;
+\copy AdminAccount(acc_id) from './data/adminaccount.csv' delimiter ';' csv;
 create table if not exists ReaderAccount (
                                              id serial primary key,
                                              acc_id int references Account(id),
     phone varchar(200) );
-\copy ReaderAccount(acc_id, phone) from 'data/readeraccount.csv' delimiter ';' csv;
+\copy ReaderAccount(acc_id, phone) from './data/readeraccount.csv' delimiter ';' csv;
 create table if not exists Book (
                                     id serial primary key,
                                     name varchar(200),
     author varchar(200) );
-\copy Book(name, author) from 'data/book.csv' delimiter ';' csv;
+\copy Book(name, author) from './data/book.csv' delimiter ';' csv;
 create table if not exists BookItem (
                                         id serial primary key,
                                         book_id int references Book(id),
     lib_id int references Library(id),
     acc_id int references Account(id) );
-\copy BookItem(book_id, lib_id, acc_id) from 'data/bookitem.csv' delimiter ';' csv;
+\copy BookItem(book_id, lib_id, acc_id) from './data/bookitem.csv' delimiter ';' csv;
 create table if not exists EBook (
                                         id serial primary key,
                                         book_id int references Book(id),
