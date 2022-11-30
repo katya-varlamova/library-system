@@ -16,8 +16,14 @@ public:
         this->lib_id = lib_id;
         this->acc = acc;
     }
-    std::shared_ptr<Account> getAccount() const;
-    int getLibraryID() const ;
+    std::shared_ptr<Account> getAccount() const
+    {
+        return acc;
+    }
+    int getLibraryID() const
+    {
+        return lib_id;
+    }
     int getID() const
     {
         return id;

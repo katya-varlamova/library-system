@@ -14,7 +14,9 @@ public:
     {
         this->acc = acc;
     }
-    std::shared_ptr<Account> getAccount() const;
+    std::shared_ptr<Account> getAccount() const{
+        return acc;
+    }
     int getID() const
     {
         return id;

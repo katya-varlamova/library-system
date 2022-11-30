@@ -3,12 +3,3 @@
 //
 
 #include "ReaderAccount.h"
-
-std::shared_ptr<Account> ReaderAccount::getAccount() const
-{
-    return acc;
-}
-std::string ReaderAccount::getPhone() const
-{
-    return phone;
-}

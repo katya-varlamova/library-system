@@ -3,7 +3,3 @@
 //
 
 #include "AdminAccount.h"
-std::shared_ptr<Account> AdminAccount::getAccount() const
-{
-    return acc;
-}

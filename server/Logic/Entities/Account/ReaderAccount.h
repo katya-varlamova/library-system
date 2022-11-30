@@ -16,8 +16,14 @@ public:
         this->acc = acc;
         this->phone = phone;
     }
-    std::shared_ptr<Account> getAccount() const;
-    std::string getPhone() const ;
+    std::shared_ptr<Account> getAccount() const
+    {
+        return acc;
+    }
+    std::string getPhone() const
+    {
+        return phone;
+    }
     int getID() const
     {
         return id;
