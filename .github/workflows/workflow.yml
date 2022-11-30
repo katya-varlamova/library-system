@@ -23,7 +23,7 @@ jobs:
   unit_tests:
     needs: build
     runs-on: ubuntu-latest
-    container: maxermu/stock_build_env
+    container: katyavarlamova/library-system-image
 
     steps:
     - uses: actions/checkout@v2
@@ -39,3 +39,46 @@ jobs:
         cd test
         chmod +x test
         ./test
+integration_tests:
+    needs: build
+    runs-on: ubuntu-latest
+    container:katyavarlamova/library-system-image
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: rfktdf17
+
+        ports:
+          - 5433:5433
+
+        # set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@master
+      with:
+        name: build-artifact
+        path: ./build
+
+    - name: install psql
+      run: apt install -y postgresql postgresql-contrib
+    - name: test psql
+      run: psql -h postgres "sslmode=disable user=postgres port=5433 password=rfktdf17"
+    - name: init_database
+      run: |
+        cd deploy_database
+        bash init.sh
+    - name: run_integration_tests
+      run: |
+        mv server/itest_config.json build/integration_test/itest_config.json
+        cd build 
+        cd integration_test
+        chmod +x itest
+        ./itest
