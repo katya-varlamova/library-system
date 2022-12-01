@@ -18,11 +18,11 @@
 #include "IAccountRepository.h"
 class AccountRepository : public IAccountRepository{
 public:
-    int addAccount(std::shared_ptr<Session> session, std::shared_ptr<Account> account);
-    void removeAccount(std::shared_ptr<Session> session, int id);
-    void updateAccount(std::shared_ptr<Session> session, std::shared_ptr<Account> account);
+    int addAccount(std::shared_ptr<Session<>> session, std::shared_ptr<Account> account);
+    void removeAccount(std::shared_ptr<Session<>> session, int id);
+    void updateAccount(std::shared_ptr<Session<>> session, std::shared_ptr<Account> account);
 
-    std::vector<std::shared_ptr<Account>> query(std::shared_ptr<Session> session, std::shared_ptr<AccountSpecification> specification);
+    std::vector<std::shared_ptr<Account>> query(std::shared_ptr<Session<>> session, std::shared_ptr<AccountSpecification> specification);
 };
 
 

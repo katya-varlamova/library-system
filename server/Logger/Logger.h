@@ -6,7 +6,7 @@
 #define SRC_LOGGER_H
 #include <string>
 #include "../Logic/Configuration/FileConfiguration.h"
-
+#include <cstring>
 class Logger {
 public:
     static std::shared_ptr<Logger> getInstance()

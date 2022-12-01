@@ -13,11 +13,11 @@
 
 class IEBookRepository {
 public:
-    virtual void addBook(std::shared_ptr<Session> session, std::shared_ptr<EBook> book) = 0;
-    virtual void removeBook(std::shared_ptr<Session> session, int id) = 0;
-    virtual void updateBook(std::shared_ptr<Session> session, std::shared_ptr<EBook> book) = 0;
+    virtual void addBook(std::shared_ptr<Session<>> session, std::shared_ptr<EBook> book) = 0;
+    virtual void removeBook(std::shared_ptr<Session<>> session, int id) = 0;
+    virtual void updateBook(std::shared_ptr<Session<>> session, std::shared_ptr<EBook> book) = 0;
 
-    virtual std::vector<std::shared_ptr<EBook>> query(std::shared_ptr<Session> session, std::shared_ptr<EBookSpecification> specification) = 0;
+    virtual std::vector<std::shared_ptr<EBook>> query(std::shared_ptr<Session<>> session, std::shared_ptr<EBookSpecification> specification) = 0;
 };
 
 #endif //SRC_IEBOOKREPOSITORY_H

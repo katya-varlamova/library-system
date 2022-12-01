@@ -16,11 +16,11 @@
 #include "IAdminAccountRepository.h"
 class AdminAccountRepository : public IAdminAccountRepository{
 public:
-    void addAccount(const std::shared_ptr<Session> &session, std::shared_ptr<AdminAccount> account);
-    void removeAccount(const std::shared_ptr<Session> &session, int id);
-    void updateAccount(const std::shared_ptr<Session> &session, std::shared_ptr<AdminAccount> account);
+    void addAccount(const std::shared_ptr<Session<>> &session, std::shared_ptr<AdminAccount> account);
+    void removeAccount(const std::shared_ptr<Session<>> &session, int id);
+    void updateAccount(const std::shared_ptr<Session<>> &session, std::shared_ptr<AdminAccount> account);
 
-    std::vector<std::shared_ptr<AdminAccount>> query(const std::shared_ptr<Session> &session, std::shared_ptr<AdminAccountSpecification> specification);
+    std::vector<std::shared_ptr<AdminAccount>> query(const std::shared_ptr<Session<>> &session, std::shared_ptr<AdminAccountSpecification> specification);
 };
 
 

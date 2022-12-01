@@ -3,7 +3,7 @@
 //
 
 #include "GetAccount.h"
-std::vector<DBAccount> GetAccount::exec(std::shared_ptr<Session> session)
+std::vector<DBAccount> GetAccount::exec(std::shared_ptr<Session<>> session)
 {
     std::vector<DBAccount> v_acc;
     std::string fil_str;

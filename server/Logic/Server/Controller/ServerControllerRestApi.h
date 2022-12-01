@@ -16,28 +16,28 @@
 #include OATPP_CODEGEN_BEGIN(ApiController) //<-- Begin codegen
 #include "../../../Database/Entities/DBBook/BookFilters/ByAuthorFilter.h"
 #include "../../../Database/Entities/DBBook/BookFilters/ByBookNameFilter.h"
-#include "../../../Database/DataAccessFacade/Commands/GetBooksCommands/GetFreeBooksCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/GetBooksCommands/GetBooksByLoginCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/TakeBookCommand/TakeBookCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/ReturnBookCommand/ReturnBookCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/GetAccounts/GetLibrarianAccountCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/GetAccounts/GetReaderAccountCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/UpdateAccounts/UpdateLibrarianAccountCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/UpdateAccounts/UpdateAdminAccountCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/UpdateAccounts/UpdateReaderAccountCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/GetLibraries/GetlibrariesCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/GetLibraries/UpdateLibraries.h"
-#include "../../../Database/DataAccessFacade/Commands/GetLibraries/PostLibrariesCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/GetBooksCommands/UpdateBookCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/GetBooksCommands/DeleteBooksCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/GetLibraries/DeleteLibrariesCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/DeleteAccounts/DeleteLibrarianAccountCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/DeleteAccounts/DeleteAdminAccountCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/DeleteAccounts/DeleteReaderAccountCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/EBookCommands/GetEBooksCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/EBookCommands/UpdateEBookCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/EBookCommands/DeleteEBookCommand.h"
-#include "../../../Database/DataAccessFacade/Commands/EBookCommands/AddEBooksCommand.h"
+#include "DataAccessFacade/Commands/BookCommands/GetFreeBooksCommand.h"
+#include "DataAccessFacade/Commands/BookCommands/GetBooksByLoginCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/BookCommands/TakeBookCommand/TakeBookCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/BookCommands/ReturnBookCommand/ReturnBookCommand.h"
+#include "DataAccessFacade/Commands/AccountCommands/GetLibrarianAccountCommand.h"
+#include "DataAccessFacade/Commands/AccountCommands/GetReaderAccountCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/AccountCommands/UpdateAccounts/UpdateLibrarianAccountCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/AccountCommands/UpdateAccounts/UpdateAdminAccountCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/AccountCommands/UpdateAccounts/UpdateReaderAccountCommand.h"
+#include "DataAccessFacade/Commands/LibraryCommands/GetlibrariesCommand.h"
+#include "DataAccessFacade/Commands/LibraryCommands/UpdateLibraries.h"
+#include "DataAccessFacade/Commands/LibraryCommands/PostLibrariesCommand.h"
+#include "DataAccessFacade/Commands/BookCommands/UpdateBookCommand.h"
+#include "DataAccessFacade/Commands/BookCommands/DeleteBooksCommand.h"
+#include "DataAccessFacade/Commands/LibraryCommands/DeleteLibrariesCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/AccountCommands/DeleteAccounts/DeleteLibrarianAccountCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/AccountCommands/DeleteAccounts/DeleteAdminAccountCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/AccountCommands/DeleteAccounts/DeleteReaderAccountCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/unused/EBookCommands/GetEBooksCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/unused/EBookCommands/UpdateEBookCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/unused/EBookCommands/DeleteEBookCommand.h"
+#include "../../../Database/DataAccessFacade/Commands/unused/EBookCommands/AddEBooksCommand.h"
 #include "JWTAuth.h"
 #include "../../DataAccessManager/DataAccessManagerRest.h"
 
@@ -313,7 +313,7 @@ public:
             book->setID(atoi(request->getPathVariable("id")->c_str()));
 
             try {
-                manager->exec(std::shared_ptr<Command> (new UpdateBookCommand(ioc->getBookRepository(), book)), role);
+                manager->exec(std::shared_ptr<Command> (new UpdateBookCommand(ioc->getBookRepository(), ioc->getLibraryRepository(), book)), role);
             }
             catch (LogicException) {
                 return _return(controller->createResponse(Status::CODE_500));
@@ -363,7 +363,7 @@ public:
             std::shared_ptr<Book> book = std::shared_ptr<Book>(new Book(body->name, body->author, body->lib_id));
             books.push_back(book);
             try{
-                manager->exec(std::shared_ptr<Command>( new AddBooksCommand(ioc->getBookRepository(), books)), role);
+                manager->exec(std::shared_ptr<Command>( new AddBooksCommand(ioc->getBookRepository(), ioc->getLibraryRepository(), books)), role);
             }
             catch (LogicException) {
                 return _return(controller->createResponse(Status::CODE_500));

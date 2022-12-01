@@ -5,7 +5,7 @@
 #ifndef SRC_ADMINACCOUNT_H
 #define SRC_ADMINACCOUNT_H
 
-
+#include <memory>
 #include "Account.h"
 
 class AdminAccount {
@@ -14,14 +14,21 @@ public:
     {
         this->acc = acc;
     }
-    std::shared_ptr<Account> getAccount();
-    int getID()
+    std::shared_ptr<Account> getAccount() const{
+        return acc;
+    }
+    int getID() const
     {
         return id;
     }
     void setID(int id)
     {
         this->id = id;
+    }
+    bool operator == (const AdminAccount &l) const
+    {
+        return l.getID() == this->getID() &&
+               *l.getAccount() == *this->getAccount();
     }
 private:
     int id;

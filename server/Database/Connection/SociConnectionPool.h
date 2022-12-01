@@ -8,14 +8,13 @@
 #include "IConnectionPool.h"
 #include <string>
 #include <soci/connection-pool.h>
-#include <sqlite3.h>
 #include <map>
 #include <soci/session.h>
 class SociConnectionPool : public IConnectionPool{
 public:
     explicit SociConnectionPool(const std::vector<std::shared_ptr<IRoleConnection>> &conns): IConnectionPool(conns){}
     void connect() override;
-    std::shared_ptr<Session> getConnectionByRole(const std::string &role, int &pos) override;
+    std::shared_ptr<Session<>> getConnectionByRole(const std::string &role, int &pos) override;
     void disconnect() override;
     void putConnectionByRole(const std::string &role, int pos) override;
 private:

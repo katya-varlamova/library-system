@@ -4,6 +4,7 @@
 
 #ifndef SRC_LIBRARYFILTER_H
 #define SRC_LIBRARYFILTER_H
+#include <string>
 #include "../../../DataAccessFacade/Commands/Filters/Filter.h"
 class LibraryFilter : public Filter
 {

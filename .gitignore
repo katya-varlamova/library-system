@@ -33,5 +33,4 @@
 .DS_Store
 .idea/
 cmake-build-debug/
-*.csv
 

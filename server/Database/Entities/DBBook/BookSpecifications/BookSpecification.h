@@ -17,7 +17,7 @@ class BookSpecification
 {
 public:
     BookSpecification() = default;
-    virtual std::vector<DBBook> exec(std::shared_ptr<Session> session) = 0;
+    virtual std::vector<DBBook> exec(std::shared_ptr<Session<>> session) = 0;
 };
 
 

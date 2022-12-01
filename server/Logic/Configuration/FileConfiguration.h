@@ -6,8 +6,13 @@
 #define SRC_FILECONFIGURATION_H
 
 #include "Configuration.h"
+#ifdef __APPLE__
 #include <json/value.h>
 #include <json/json.h>
+#else
+#include <jsoncpp/json/value.h>
+#include <jsoncpp/json/json.h>
+#endif
 #include <fstream>
 #include <string>
 class FileConfiguration : public Configuration{

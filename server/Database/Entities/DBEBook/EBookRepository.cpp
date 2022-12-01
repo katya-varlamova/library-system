@@ -5,7 +5,7 @@
 #include "EBookRepository.h"
 #include "../../../Logger/Logger.h"
 
-std::vector<std::shared_ptr<EBook>> EBookRepository::query(std::shared_ptr<Session> session, std::shared_ptr<EBookSpecification> specification)
+std::vector<std::shared_ptr<EBook>> EBookRepository::query(std::shared_ptr<Session<>> session, std::shared_ptr<EBookSpecification> specification)
 {
     std::vector<DBEBook> dbb = specification->exec(session);
     std::vector<std::shared_ptr<EBook>> vec;
@@ -15,14 +15,13 @@ std::vector<std::shared_ptr<EBook>> EBookRepository::query(std::shared_ptr<Sessi
     }
     return vec;
 }
-void EBookRepository::addBook(std::shared_ptr<Session> session, std::shared_ptr<EBook> book)
+void EBookRepository::addBook(std::shared_ptr<Session<>> session, std::shared_ptr<EBook> book)
 {
     EBookConverter converter;
     DBEBook dbBook = converter.convert(book);
     int id;
-    if (session->exec("select id from Book "
-                      "where name = :name and author = '" + dbBook.get_author() + "'",
-                      dbBook.get_name(),
+    if (session->exec_into("select id from Book "
+                      "where name = '" + dbBook.get_name() + "' and author = '" + dbBook.get_author() + "'",
                       id) != 0)
     {
         session->exec("insert into Book (name, author) "
@@ -33,25 +32,22 @@ void EBookRepository::addBook(std::shared_ptr<Session> session, std::shared_ptr<
                            "from Book;", id);
     }
     dbBook.set_book_id(id);
-    session->exec_using("insert into EBook (book_id, link) "
-                        "values(:book_id, :link)",
-                        dbBook.get_mapped_ebook());
+    session->exec("insert into EBook (book_id, link) "
+                        "values(" + std::to_string(dbBook.get_mapped_ebook().book_id) + ", '" + dbBook.get_mapped_ebook().link + "')");
 }
-void EBookRepository::updateBook(std::shared_ptr<Session> session, std::shared_ptr<EBook> book)
+void EBookRepository::updateBook(std::shared_ptr<Session<>> session, std::shared_ptr<EBook> book)
 {
     EBookConverter converter;
     DBEBook dbbook = converter.convert(book);
-    std::string q = "update Book set name = :name, author = :author "
+    std::string q = "update Book set name = '" + dbbook.get_mapped_book().name + "', author = '" + dbbook.get_mapped_book().author + "' "
                     "where id = (select max(Book.id) from Book join EBook on book_id = Book.id "
                     "where Ebook.id = " + std::to_string(book->getID()) + ")";
-    session->exec_using(q,
-                        dbbook.get_mapped_book());
-    q = "update EBook set link = :link "
+    session->exec(q);
+    q = "update EBook set link = '" + book->getLink() + "' "
         "where id = " + std::to_string(book->getID());
-    session->exec_using(q,
-                        book->getLink());
+    session->exec(q);
 }
-void EBookRepository::removeBook(std::shared_ptr<Session> session, int id)
+void EBookRepository::removeBook(std::shared_ptr<Session<>> session, int id)
 {
     std::string q = "delete from EBook "
                     "where id = " + std::to_string(id);

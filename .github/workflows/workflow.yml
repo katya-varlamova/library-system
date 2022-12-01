@@ -1,0 +1,133 @@
+name: ci build
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    container: katyavarlamova/library-system-image
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: build
+      run: |
+        mkdir build && cd build
+        cmake ../server
+        make -j12
+    - uses: actions/upload-artifact@master
+      with:
+        name: build-artifact
+        path: ./build
+  
+  unit_tests:
+    needs: build
+    runs-on: ubuntu-latest
+    container: katyavarlamova/library-system-image
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@master
+      with:
+        name: build-artifact
+        path: ./build
+
+    - name: run_unit_tests
+      run: |
+        mv server/config.json build/test/config.json
+        cd build 
+        cd test
+        chmod +x test
+        ./test
+  integration_tests:
+    needs: build
+    runs-on: ubuntu-latest
+    container: katyavarlamova/library-system-image
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: rfktdf17
+
+        ports:
+          - 5432:5432
+
+        # set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@master
+      with:
+        name: build-artifact
+        path: ./build
+
+    - name: install psql
+      run: apt install -y postgresql postgresql-contrib
+    - name: test psql
+      run: psql -h postgres "sslmode=disable user=postgres port=5432 password=rfktdf17"
+    - name: init_database
+      run: |
+        cd deploy_database
+        bash init.sh
+    - name: run_integration_tests
+      run: |
+        mv server/itest_config.json build/integration_test/itest_config.json
+        cd build 
+        cd integration_test
+        chmod +x itest
+        ./itest
+  e2e_tests:
+    needs: build
+    runs-on: ubuntu-latest
+    container: katyavarlamova/library-system-image
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: rfktdf17
+
+        ports:
+          - 5432:5432
+
+        # set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/download-artifact@master
+      with:
+        name: build-artifact
+        path: ./build
+
+    - name: install psql
+      run: apt install -y postgresql postgresql-contrib
+    - name: install python
+      run: |
+        apt-get install -y python3-pip
+        pip3 install requests
+    - name: test psql
+      run: psql -h postgres "sslmode=disable user=postgres port=5432 password=rfktdf17"
+    - name: init_database
+      run: |
+        cd deploy_database
+        bash init.sh
+    - name: run_e2e_tests
+      run: |
+        mv server/itest_config.json build/main/config.json
+        cd build/main
+        chmod +x main
+        ./main &
+        cd ../../server
+        sleep 10
+        python3 e2e.py

@@ -4,7 +4,7 @@
 
 #include <unistd.h>
 #include "GetFreeBooks.h"
-std::vector<DBBook> GetFreeBooks::exec(std::shared_ptr<Session> session)
+std::vector<DBBook> GetFreeBooks::exec(std::shared_ptr<Session<>> session)
 {
     std::vector<DBBook> v_b;
     std::vector<MappedBookItem> bi;

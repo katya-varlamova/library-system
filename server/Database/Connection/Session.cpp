@@ -3,19 +3,53 @@
 //
 
 #include "Session.h"
-void Session::exec(const std::string &query)
+#if TEST_CONFIGURATION==0
+template<>
+void Session<>::exec(const std::string &query)
 {
     session << query;
 }
-void Session::begin_transaction()
+template<>
+void Session<>::begin_transaction()
 {
     session.begin();
 }
-void Session::commit_transaction()
+template<>
+void Session<>::commit_transaction()
 {
     session.commit();
 }
-void Session::rollback_transaction()
+template<>
+void Session<>::rollback_transaction()
 {
     session.rollback();
 }
+
+#endif
+#if TEST_CONFIGURATION==1
+template<>
+void Session<TestingSession>::exec(const std::string &query)
+{
+    session.analyze(query);
+}
+template<>
+void Session<TestingSession>::begin_transaction()
+{
+}
+template<>
+void Session<TestingSession>::commit_transaction()
+{
+}
+template<>
+void Session<TestingSession>::rollback_transaction()
+{
+}
+template <>
+template <>
+int Session<TestingSession>::exec_into(const std::string &query, int &into)
+{
+    session.analyze(query);
+    into = 1;
+    return 0;
+}
+#endif

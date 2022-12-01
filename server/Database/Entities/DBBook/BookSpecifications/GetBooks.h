@@ -13,7 +13,7 @@ public:
     {
         this->filters = filters;
     }
-    std::vector<DBBook> exec(std::shared_ptr<Session> session) override;
+    std::vector<DBBook> exec(std::shared_ptr<Session<>> session) override;
 
 protected:
     std::vector<std::shared_ptr<Filter>> filters;

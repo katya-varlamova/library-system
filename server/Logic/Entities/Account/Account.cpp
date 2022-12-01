@@ -10,19 +10,19 @@ Account::Account(const std::string &login, const std::string &password, const st
     this->role = role;
     this->password = password;
 }
-std::string Account::getPassword()
+std::string Account::getPassword() const
 {
     return password;
 }
-std::string Account::getLogin()
+std::string Account::getLogin() const
 {
     return login;
 }
-std::string Account::getRole()
+std::string Account::getRole() const
 {
     return role;
 }
-std::string Account::getName()
+std::string Account::getName() const
 {
     return name;
 }

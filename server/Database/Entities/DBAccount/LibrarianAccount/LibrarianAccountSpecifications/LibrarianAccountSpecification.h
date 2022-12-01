@@ -8,6 +8,6 @@
 #include "../../../../Connection/Session.h"
 class LibrarianAccountSpecification{
 public:
-    virtual std::vector<DBLibrarianAccount> exec(std::shared_ptr<Session> session) = 0;
+    virtual std::vector<DBLibrarianAccount> exec(std::shared_ptr<Session<>> session) = 0;
 };
 #endif //SRC_LIBRARIANACCOUNTSPECIFICATION_H

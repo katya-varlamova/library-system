@@ -9,8 +9,8 @@
 #include "Commands/Command.h"
 #include "DataAccessFacade.h"
 #include "../Connection/IConnectionPool.h"
-#include "Commands/AuthCommand/AuthCommand.h"
-#include "Commands/CreateDatabaseCommand/CreateDatabaseCommand.h"
+#include "Commands/AccountCommands/AuthCommand/AuthCommand.h"
+
 #include "../../Logic/LogicException.h"
 class DataAccessFacade {
 public:

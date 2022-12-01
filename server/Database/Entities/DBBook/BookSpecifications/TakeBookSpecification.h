@@ -18,7 +18,7 @@ public:
         this->login_user = login_user;
         this->login_lib = login_lib;
     }
-    std::vector<DBBook> exec(std::shared_ptr<Session> session) override;
+    std::vector<DBBook> exec(std::shared_ptr<Session<>> session) override;
 private:
     std::string login_user;
     std::string login_lib;

@@ -16,11 +16,11 @@
 #include "IBookRepository.h"
 class BookRepository : public IBookRepository{
 public:
-    void addBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book);
-    void removeBook(std::shared_ptr<Session> session, int id);
-    void updateBook(std::shared_ptr<Session> session, std::shared_ptr<Book> book);
+    void addBook(std::shared_ptr<Session<>> session, std::shared_ptr<Book> book);
+    void removeBook(std::shared_ptr<Session<>> session, int id);
+    void updateBook(std::shared_ptr<Session<>> session, std::shared_ptr<Book> book);
 
-    std::vector<std::shared_ptr<Book>> query(std::shared_ptr<Session> session, std::shared_ptr<BookSpecification> specification);
+    std::vector<std::shared_ptr<Book>> query(std::shared_ptr<Session<>> session, std::shared_ptr<BookSpecification> specification);
 };
 
 

@@ -4,6 +4,7 @@
 
 #ifndef SRC_FILTER_H
 #define SRC_FILTER_H
+#include <string>
 class Filter
 {
 public:

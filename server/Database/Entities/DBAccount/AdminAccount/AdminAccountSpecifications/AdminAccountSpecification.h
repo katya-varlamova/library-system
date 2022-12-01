@@ -9,7 +9,7 @@
 #include "../../../../Connection/Session.h"
 class AdminAccountSpecification{
 public:
-    virtual std::vector<DBAdminAccount> exec(std::shared_ptr<Session> session) = 0;
+    virtual std::vector<DBAdminAccount> exec(std::shared_ptr<Session<>> session) = 0;
 };
 
 
