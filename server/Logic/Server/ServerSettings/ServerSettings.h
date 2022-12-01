@@ -44,20 +44,20 @@ public:
     /**
      *  Create ConnectionProvider component which listens on the port
      */
-//    OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, serverConnectionProvider)([] {
-//        /* non_blocking connections should be used with AsyncHttpConnectionHandler for AsyncIO */
-//        return oatpp::network::tcp::server::ConnectionProvider::createShared({"0.0.0.0", 8000, oatpp::network::Address::IP_4});
-//    }());
-
-
     OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, serverConnectionProvider)([] {
-        OATPP_LOGD("oatpp::libressl::Config", "pem='%s'", CERT_PEM_PATH);
-        OATPP_LOGD("oatpp::libressl::Config", "crt='%s'", CERT_CRT_PATH);
-        auto config = oatpp::libressl::Config::createDefaultServerConfigShared(CERT_CRT_PATH,
-                                                                               CERT_PEM_PATH);
-
-        return oatpp::libressl::server::ConnectionProvider::createShared(config, {"0.0.0.0", 8000, oatpp::network::Address::IP_4});
+        /* non_blocking connections should be used with AsyncHttpConnectionHandler for AsyncIO */
+        return oatpp::network::tcp::server::ConnectionProvider::createShared({"0.0.0.0", 8000, oatpp::network::Address::IP_4});
     }());
+
+
+//    OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::network::ServerConnectionProvider>, serverConnectionProvider)([] {
+//        OATPP_LOGD("oatpp::libressl::Config", "pem='%s'", CERT_PEM_PATH);
+//        OATPP_LOGD("oatpp::libressl::Config", "crt='%s'", CERT_CRT_PATH);
+//        auto config = oatpp::libressl::Config::createDefaultServerConfigShared(CERT_CRT_PATH,
+//                                                                               CERT_PEM_PATH);
+//
+//        return oatpp::libressl::server::ConnectionProvider::createShared(config, {"0.0.0.0", 8000, oatpp::network::Address::IP_4});
+//    }());
 
     /**
      *  Create Router component
@@ -100,7 +100,7 @@ public:
                 .setContactName("Ekaterina Varlamova")
                 .setContactUrl("https://t.me/katya_varlamova")
 
-                .addServer("https://127.0.0.1:80", "server on localhost");
+                .addServer("http://127.0.0.1:80", "server on localhost");
 
         return builder.build();
 
