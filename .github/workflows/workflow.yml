@@ -129,4 +129,5 @@ jobs:
         chmod +x main
         ./main &
         cd ../../server
+        sleep 10
         python3 e2e.py
