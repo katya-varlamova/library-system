@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.1 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/boost-json.dir/boost-json.cpp.o -o boost-json  libboost_json.a /opt/local/lib/libssl.dylib /opt/local/lib/libcrypto.dylib 

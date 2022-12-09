@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk -mmacosx-version-min=11.1 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/partial-claim-verifier.dir/partial-claim-verifier.cpp.o -o partial-claim-verifier  /opt/local/lib/libssl.dylib /opt/local/lib/libcrypto.dylib 

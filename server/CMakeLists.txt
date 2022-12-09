@@ -4,6 +4,8 @@ project(src)
 
 find_package(SOCI REQUIRED)
 find_package(PostgreSQL REQUIRED)
+find_package (SQLite3)
+
 # find_package(MySQL REQUIRED)
 
 find_package(oatpp REQUIRED)
@@ -16,7 +18,7 @@ find_package(oatpp-libressl 1.3.0 REQUIRED)
 
 set (Boost_USE_STATIC_LIBS OFF)
 find_package (Boost REQUIRED COMPONENTS unit_test_framework)
-include_directories (${Boost_INCLUDE_DIRS})
+include_directories (${Boost_INCLUDE_DIRS} ${SQLite3_INCLUDE_DIRS})
 
 if(APPLE)
 add_library(jsoncpp SHARED IMPORTED)
@@ -39,4 +41,5 @@ add_subdirectory(Logger)
 add_subdirectory(Logic)
 add_subdirectory(test)
 add_subdirectory(integration_test)
+add_subdirectory(benchmark)
 add_subdirectory(main)

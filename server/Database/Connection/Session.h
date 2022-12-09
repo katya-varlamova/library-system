@@ -10,7 +10,6 @@
 #include <soci/soci.h>
 #include <soci/postgresql/soci-postgresql.h>
 
-
 #if TEST_CONFIGURATION==1
 #include "../../test/TestingSession.h"
 template<typename SESSION_T = TestingSession>
@@ -18,7 +17,9 @@ template<typename SESSION_T = TestingSession>
 #if TEST_CONFIGURATION==0
 template<typename SESSION_T = soci::session>
 #endif
-
+#if TEST_CONFIGURATION==2
+template<typename SESSION_T = soci::session>
+#endif
 class Session {
 public:
     Session(SESSION_T &session) : session(session) {}
@@ -38,12 +39,13 @@ private:
     SESSION_T &session;
 };
 
-
 #if TEST_CONFIGURATION==1
 #include "TestSession.hpp"
 #endif
 #if TEST_CONFIGURATION==0
 #include "SociSession.hpp"
 #endif
-
+#if TEST_CONFIGURATION==2
+#include "BenchSession.hpp"
+#endif
 #endif//SRC_SESSION_H

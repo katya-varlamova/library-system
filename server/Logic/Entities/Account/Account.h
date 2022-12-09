@@ -8,11 +8,30 @@
 #include <memory>
 class Account {
 public:
-    Account(const std::string &login, const std::string &password, const std::string &role, const std::string &name);
-    std::string getLogin() const;
-    std::string getPassword() const;
-    std::string getRole() const ;
-    std::string getName() const;
+    Account(const std::string &login, const std::string &password, const std::string &role, const std::string &name)
+    {
+        this->name = name;
+        this->login = login;
+        this->role = role;
+        this->password = password;
+    }
+    std::string getPassword() const
+    {
+        return password;
+    }
+    std::string getLogin() const
+    {
+        return login;
+    }
+    std::string getRole() const
+    {
+        return role;
+    }
+    std::string getName() const
+    {
+        return name;
+    }
+
     int getID() const
     {
         return id;

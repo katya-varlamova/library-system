@@ -24,7 +24,6 @@ void Session<>::rollback_transaction()
 {
     session.rollback();
 }
-
 #endif
 #if TEST_CONFIGURATION==1
 template<>
@@ -51,5 +50,32 @@ int Session<TestingSession>::exec_into(const std::string &query, int &into)
     session.analyze(query);
     into = 1;
     return 0;
+}
+#endif
+#if TEST_CONFIGURATION==2
+#include <sys/time.h>
+template<>
+void Session<>::exec(const std::string &query)
+{
+//    clock_t sTime = clock();
+    session << query;
+//    clock_t eTime = clock();
+//    double time = (eTime - sTime) / (.001 * CLOCKS_PER_SEC);
+//    printf("%lf\n", time);
+}
+template<>
+void Session<>::begin_transaction()
+{
+    session.begin();
+}
+template<>
+void Session<>::commit_transaction()
+{
+    session.commit();
+}
+template<>
+void Session<>::rollback_transaction()
+{
+    session.rollback();
 }
 #endif

@@ -1,0 +1,18 @@
+{
+  "reader": {
+    "conn_str" : "postgresql://host='host.docker.internal' port='5433' dbname='bench' user='reader' password='reader'",
+    "max_conn": 10
+  },
+  "admin": {
+    "conn_str" : "postgresql://host='host.docker.internal' port='5433' dbname='bench' user='postgres' password='rfktdf17'",
+    "max_conn": 10
+  },
+  "librarian": {
+    "conn_str" : "postgresql://host='host.docker.internal' port='5433' dbname='bench' user='librarian' password='librarian'",
+    "max_conn": 10
+  },
+  "logger": {
+    "level" : 5,
+    "filename" : "log.log"
+  }
+}

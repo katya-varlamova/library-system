@@ -36,6 +36,9 @@ std::shared_ptr<Session<>> SociConnectionPool::getConnectionByRole(const std::st
 #if TEST_CONFIGURATION==0
     return std::shared_ptr<Session<>>(new Session<soci::session>(pools[role]->at(pos)));
 #endif
+#if TEST_CONFIGURATION==2
+    return std::shared_ptr<Session<>>(new Session<soci::session>(pools[role]->at(pos)));
+#endif
 }
 void SociConnectionPool::putConnectionByRole(const std::string &role, int pos)
 {

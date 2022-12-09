@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libboost_json.a CMakeFiles/boost_json.dir/private-boost-json.cpp.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libboost_json.a
